@@ -504,6 +504,72 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
   .shoe-add-row input[placeholder="Max mi (opt)"]{width:90px;}
   .wk-target-inp{width:60px;}
 }
+
+/* ── COROS BADGE ── */
+.coros-badge{display:inline-flex;align-items:center;gap:3px;font-size:8.5px;font-weight:700;
+  letter-spacing:.10em;text-transform:uppercase;color:var(--text-tertiary);
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:99px;padding:2px 7px;margin-left:6px;vertical-align:middle;}
+
+/* ── RECOVERY TREND (inside Readiness card) ── */
+.recovery-trend-row{display:flex;align-items:center;gap:16px;padding:12px 0 0;
+  border-top:1px solid rgba(255,255,255,.06);margin-top:12px;}
+.recovery-pct-big{font-family:var(--font-mono);font-size:28px;font-weight:800;
+  font-variant-numeric:tabular-nums;line-height:1;}
+.recovery-pct-big.optimal{color:var(--success);}
+.recovery-pct-big.moderate{color:#F2C063;}
+.recovery-pct-big.low{color:var(--danger);}
+.recovery-level{font-size:10px;color:var(--text-tertiary);margin-top:3px;max-width:110px;line-height:1.3;}
+.recovery-spark-wrap{flex:1;}
+
+/* ── TRAINING LOAD PANEL ── */
+.tl-legend{display:flex;gap:14px;margin-bottom:8px;}
+.tl-legend-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:var(--text-tertiary);}
+.tl-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tl-ratio-bar{display:flex;align-items:center;gap:12px;margin-top:10px;}
+.tl-ratio-badge{font-family:var(--font-mono);font-size:17px;font-weight:800;
+  font-variant-numeric:tabular-nums;padding:4px 14px;border-radius:99px;flex-shrink:0;}
+.tl-ratio-badge.optimal{background:rgba(107,227,164,.15);color:var(--success);}
+.tl-ratio-badge.under{background:rgba(242,192,99,.15);color:#F2C063;}
+.tl-ratio-badge.over{background:rgba(255,107,107,.15);color:var(--danger);}
+.tl-ratio-label{font-size:11px;color:var(--text-secondary);margin-top:2px;}
+
+/* ── 7-DAY FEEL RECAP ── */
+.feel-legend{display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap;}
+.feel-legend-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:var(--text-tertiary);}
+.feel-insight{margin-top:10px;padding:10px 13px;border-radius:8px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  font-size:12px;color:var(--text-secondary);line-height:1.55;}
+
+/* ── WEEKLY NARRATIVE ── */
+.narrative-week{padding:14px;background:rgba(255,255,255,.04);border-radius:12px;
+  border:1px solid rgba(255,255,255,.07);margin-bottom:10px;}
+.narrative-week-hdr{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.narrative-week-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-tertiary);}
+.narrative-ta{width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;color:var(--text-primary);font-family:inherit;font-size:13px;
+  line-height:1.6;padding:10px 12px;resize:vertical;outline:none;min-height:72px;
+  transition:border-color .2s;}
+.narrative-ta:focus{border-color:rgba(255,255,255,.2);}
+.narrative-ta::placeholder{color:var(--text-tertiary);}
+.narrative-save-btn{background:rgba(107,227,164,.12);border:1px solid rgba(107,227,164,.25);
+  border-radius:7px;color:var(--success);font-size:11px;font-weight:600;padding:5px 12px;
+  cursor:pointer;transition:background .2s;white-space:nowrap;}
+.narrative-save-btn:hover{background:rgba(107,227,164,.22);}
+.narrative-saved-msg{font-family:var(--font-mono);font-size:10px;font-weight:700;
+  color:var(--success);opacity:0;transition:opacity .2s;}
+.narrative-prev-toggle{width:100%;background:none;border:1px dashed rgba(255,255,255,.10);
+  border-radius:8px;color:var(--text-tertiary);font-size:11px;padding:8px;cursor:pointer;
+  transition:all .2s;}
+.narrative-prev-toggle:hover{border-color:rgba(255,255,255,.22);color:var(--text-primary);}
+.narrative-prev-list{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+.narrative-prev-item{padding:12px 14px;background:rgba(255,255,255,.025);border-radius:10px;
+  border:1px solid rgba(255,255,255,.05);}
+.narrative-prev-date{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-tertiary);margin-bottom:5px;}
+.narrative-prev-text{font-size:12.5px;color:var(--text-secondary);line-height:1.55;white-space:pre-wrap;}
 </style>
 <!-- Firebase compat SDK — loaded from CDN, no build step needed -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -617,6 +683,8 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
       <div class="rf"><div class="rf-lbl">Avg HR (bpm)</div><input id="runHR" type="number" min="0" max="250" placeholder="145"></div>
       <div class="rf"><div class="rf-lbl">Perceived Effort (1–10)</div><input id="runEffort" type="number" min="1" max="10" placeholder="7"></div>
       <div class="rf"><div class="rf-lbl">Shoe</div><select class="hm-input" id="runShoe"><option value="">— none —</option></select></div>
+      <div class="rf"><div class="rf-lbl">Temp (°F)</div><input id="runTemp" type="number" min="-40" max="150" placeholder="72"></div>
+      <div class="rf"><div class="rf-lbl">Humidity (%)</div><input id="runHumidity" type="number" min="0" max="100" placeholder="65"></div>
       <div class="rf" style="grid-column:1/-1;"><div class="rf-lbl">Notes</div><textarea id="runNotes" placeholder="Legs felt heavy…"></textarea></div>
     </div>
     <label class="rest-toggle"><input type="checkbox" id="runRest"> Planned rest day</label>
@@ -651,6 +719,18 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
     <div class="chart-section">
       <div class="chart-lbl">30-Day Weekly Mileage</div>
       <svg id="mileChart" width="100%" height="90"></svg>
+    </div>
+
+    <!-- Pace vs Conditions scatter (shown only when runs have temp data) -->
+    <div class="chart-section" id="condChartWrap" style="display:none;">
+      <div class="chart-lbl">Pace vs Temperature <span class="chart-hint">(last 30 days with conditions)</span></div>
+      <svg id="condChart" width="100%" height="100"></svg>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:5px;flex-wrap:wrap;">
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#5BC4E8;">●</span> &lt;55°F</span>
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#6BE3A4;">●</span> 55–70°F</span>
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#F2C063;">●</span> 70–85°F</span>
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#FF6B6B;">●</span> &gt;85°F</span>
+      </div>
     </div>
   </div>
 
@@ -823,6 +903,49 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
       <span class="readiness-sleep-rec-icon">🌙</span>
       <span class="readiness-sleep-rec-text" id="readinessSleepRecText">Aim for 8–9 hrs tonight</span>
     </div>
+
+    <!-- Coros Recovery Trend — shown when data/daily.json is available -->
+    <div class="recovery-trend-row" id="recoveryTrendRow" style="display:none;">
+      <div style="flex-shrink:0;">
+        <div style="font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px;">
+          Coros Recovery
+        </div>
+        <div class="recovery-pct-big" id="recoveryPctBig">—</div>
+        <div class="recovery-level" id="recoveryLevel"></div>
+      </div>
+      <div class="recovery-spark-wrap">
+        <svg id="recoverySparkSvg" width="100%" height="36"></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Training Load (Coros) — hidden until data/daily.json loaded -->
+  <div class="gm-card" id="trainingLoadCard" style="display:none;">
+    <div class="gm-ey" style="margin-bottom:12px;">Weekly Training Load <span class="coros-badge">Coros</span></div>
+    <div class="tl-legend">
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#FF9650;"></div>STL — Acute Load</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#5BC4E8;"></div>LTL — Chronic Load</div>
+    </div>
+    <svg id="trainingLoadChart" width="100%" height="100"></svg>
+    <div class="tl-ratio-bar">
+      <div class="tl-ratio-badge" id="tlRatioBadge">—</div>
+      <div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:.08em;text-transform:uppercase;">ATL / CTL Ratio</div>
+        <div class="tl-ratio-label" id="tlRatioLabel">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7-Day Feel Recap -->
+  <div class="gm-card">
+    <div class="gm-ey" style="margin-bottom:12px;">7-Day Feel Recap</div>
+    <div class="feel-legend">
+      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#8B9FE8;"></div>Sleep Score</div>
+      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#6BE3A4;"></div>HRV (relative)</div>
+      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#F2C063;"></div>Run Effort</div>
+    </div>
+    <svg id="feelRecapChart" width="100%" height="100"></svg>
+    <div class="feel-insight" id="feelInsight">Log sleep, HRV, and runs to see your weekly feel recap.</div>
   </div>
 
   <!-- Iron Tracker -->
@@ -993,6 +1116,26 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
   </div>
 
 </div><!-- /todo section -->
+
+<!-- ═══ WEEKLY NARRATIVE ═══ -->
+<div class="section">
+  <div class="section-title">Weekly Reflection</div>
+  <div class="gm-card">
+    <div class="gm-ey" style="margin-bottom:12px;">This Week's Notes</div>
+    <div class="narrative-week">
+      <div class="narrative-week-hdr">
+        <span class="narrative-week-lbl" id="narrativeWeekLbl">Week of —</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="narrative-saved-msg" id="narrativeSavedMsg">Saved ✓</span>
+          <button class="narrative-save-btn" id="narrativeSaveBtn">Save</button>
+        </div>
+      </div>
+      <textarea class="narrative-ta" id="narrativeTa" placeholder="How did this week feel? Key workouts, challenges, highlights… (2–4 sentences)"></textarea>
+    </div>
+    <button class="narrative-prev-toggle" id="narrativePrevToggle" style="display:none;">▾ Show previous weeks</button>
+    <div class="narrative-prev-list" id="narrativePrevList" style="display:none;"></div>
+  </div>
+</div><!-- /narrative section -->
 
 </div><!-- /content -->
 
@@ -1803,17 +1946,27 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
   const notes=document.getElementById('runNotes').value.trim();
   const pace=calcPace(dist,dur);
   const shoeId=document.getElementById('runShoe').value||null;
+  // Temp/humidity: use run-form values, fall back to saved morning conditions
+  let temp=parseFloat(document.getElementById('runTemp').value)||null;
+  let humidity=parseFloat(document.getElementById('runHumidity').value)||null;
+  if(temp==null||humidity==null){
+    const wth=storeGet('weather:'+today);
+    if(wth){if(temp==null&&wth.temp!=null) temp=wth.temp;if(humidity==null&&wth.humidity!=null) humidity=wth.humidity;}
+  }
   const runs=storeGet('runs:'+today)||[];
   runs.unshift({date:today,dist:rest?0:dist,dur:rest?'':dur,pace:rest?'':(pace||''),
-    hr:rest?null:hr,effort:rest?null:effort,notes,rest,shoeId:rest?null:shoeId});
+    hr:rest?null:hr,effort:rest?null:effort,notes,rest,shoeId:rest?null:shoeId,
+    temp:rest?null:temp,humidity:rest?null:humidity});
   storeSet('runs:'+today,runs);
-  ['runDist','runDur','runHR','runEffort','runNotes'].forEach(id=>document.getElementById(id).value='');
+  ['runDist','runDur','runHR','runEffort','runNotes','runTemp','runHumidity'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('runRest').checked=false;
   document.getElementById('paceDisp').textContent='—';
   loadRunLog();updateWeekly();
   renderWater(hGet(today).water||0);
   updateSweatCalc();
   renderShoes();
+  renderFeelRecap();
+  renderConditionsChart();
 });
 
 // ── Pace trend chart  (#7)
@@ -2530,6 +2683,11 @@ function onNewDay(){
   updateReadiness();
   renderRunStreak();
   updateWeekly();
+  loadNarrative(); // update week label when date rolls over
+  renderFeelRecap();
+  renderConditionsChart();
+  renderRecoveryTrend();
+  renderTrainingLoadPanel();
   // Reset day type selector to moderate for the new day
   const dtSel=document.getElementById('dayTypeSel');
   if(dtSel){dtSel.value='moderate';storeSet('daytype:'+activeDate(),'moderate');}
@@ -2590,6 +2748,14 @@ renderIron();
 renderVitamin();
 updateReadiness();
 
+// New panels — render from localStorage immediately, then Coros async
+renderFeelRecap();
+renderConditionsChart();
+loadNarrative();
+
+// Fetch Coros data/daily.json asynchronously — auto-fills health fields + unlocks Coros panels
+loadCorosData();
+
 // Restore sweat rate setting
 {const sr=storeGet('sweat_rate');const ri=document.getElementById('sweatRateInp');if(sr&&ri) ri.value=sr;}
 
@@ -2612,7 +2778,11 @@ makeAddHandlers(()=>'goals:'+tomorrowDate(),
 
 window.addEventListener('resize',()=>{
   loadHealth();
-  requestAnimationFrame(()=>{drawPaceChart();drawMileage();});
+  requestAnimationFrame(()=>{
+    drawPaceChart();drawMileage();
+    renderFeelRecap();renderConditionsChart();
+    renderTrainingLoadPanel();
+  });
 });
 
 // ── Run migration: move 5.05mi back to Thursday 2026-05-21 ──
@@ -2692,6 +2862,9 @@ function _reRenderAll(){
   loadXT(); loadStrength(); loadMorningReadiness();
   updateSweatCalc(); updateWkMileTarget();
   renderElyte(); renderIron(); renderVitamin(); updateReadiness();
+  renderFeelRecap(); renderConditionsChart();
+  renderRecoveryTrend(); renderTrainingLoadPanel();
+  loadNarrative();
   const sr=storeGet('sweat_rate');const ri=document.getElementById('sweatRateInp');if(sr&&ri) ri.value=sr;
   const tw=storeGet('weather:'+activeDate());
   if(tw){
@@ -2700,6 +2873,394 @@ function _reRenderAll(){
     if(hi&&tw.humidity!=null) hi.value=tw.humidity;
     updateHeatResult();
   }
+}
+
+// ═══════════════════════════════════════════════
+// COROS AUTO-LOAD  — fetch data/daily.json once on init
+// Auto-fills health fields that are still null; stores raw data
+// so charts can use it. Gracefully no-ops if file is missing.
+// ═══════════════════════════════════════════════
+async function loadCorosData(){
+  try{
+    const r=await fetch('./data/daily.json',{cache:'no-cache'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    if(!data||!data.date) return;
+
+    // Cache today's record — older records accumulate for sparklines
+    storeSet('coros_daily:'+data.date,data);
+
+    // Auto-fill health fields that haven't been set manually today
+    const today=activeDate();
+    if(data.date===today){
+      const h=hGet(today);let changed=false;
+      if(data.sleep&&data.sleep.hours!=null&&h.sleep==null){
+        h.sleep=Math.round(data.sleep.hours*10)/10;changed=true;
+      }
+      if(data.hrv&&data.hrv.avg!=null&&h.hrv==null){
+        h.hrv=data.hrv.avg;changed=true;
+      }
+      if(data.rhr!=null&&h.rhr==null){
+        h.rhr=data.rhr;changed=true;
+      }
+      if(changed){hSet(today,h);loadHealth();updateWeekly();}
+    }
+
+    renderRecoveryTrend();
+    renderTrainingLoadPanel();
+    renderFeelRecap();
+  }catch(e){
+    // data/daily.json not yet committed or network error — silent fallback
+    console.info('[Coros] data/daily.json unavailable:',e.message||e);
+    renderFeelRecap(); // still draws from localStorage health data
+  }
+}
+
+// ═══════════════════════════════════════════════
+// RECOVERY TREND
+// ═══════════════════════════════════════════════
+function renderRecoveryTrend(){
+  const today=activeDate();
+  const todayData=storeGet('coros_daily:'+today);
+  const row=document.getElementById('recoveryTrendRow');
+  if(!row) return;
+  if(!todayData||!todayData.recovery||todayData.recovery.percentage==null){
+    row.style.display='none';return;
+  }
+  row.style.display='';
+  const pct=todayData.recovery.percentage;
+  const level=todayData.recovery.level||'';
+  const bigEl=document.getElementById('recoveryPctBig');
+  bigEl.textContent=pct+'%';
+  bigEl.className='recovery-pct-big '+(pct>=80?'optimal':pct>=50?'moderate':'low');
+  document.getElementById('recoveryLevel').textContent=level;
+  // Build 7-day recovery sparkline from cached coros_daily entries
+  const days=lastNDays(7);
+  const vals=days.map(d=>{
+    const cd=storeGet('coros_daily:'+d);
+    return cd&&cd.recovery&&cd.recovery.percentage!=null?cd.recovery.percentage:null;
+  });
+  requestAnimationFrame(()=>{
+    const svg=document.getElementById('recoverySparkSvg');
+    if(svg) drawSpark(svg,vals,'#6BE3A4');
+  });
+}
+
+// ═══════════════════════════════════════════════
+// TRAINING LOAD PANEL
+// ═══════════════════════════════════════════════
+function renderTrainingLoadPanel(){
+  const today=activeDate();
+  const cd=storeGet('coros_daily:'+today);
+  const card=document.getElementById('trainingLoadCard');
+  if(!card) return;
+  const history=(cd&&cd.history&&cd.history.training_load)||[];
+  if(!history.length){card.style.display='none';return;}
+  card.style.display='';
+
+  // Ratio badge for today
+  const todayTL=cd&&cd.training_load;
+  if(todayTL){
+    const ratio=todayTL.ratio||0;
+    const badge=document.getElementById('tlRatioBadge');
+    const label=document.getElementById('tlRatioLabel');
+    if(badge){
+      badge.textContent=ratio.toFixed(2);
+      if(ratio>=0.8&&ratio<=1.3){badge.className='tl-ratio-badge optimal';label.textContent='Optimal — balanced load';}
+      else if(ratio>0&&ratio<0.8){badge.className='tl-ratio-badge under';label.textContent='Undertraining — consider adding load';}
+      else if(ratio>1.3){badge.className='tl-ratio-badge over';label.textContent='Overreaching — prioritize recovery';}
+      else{badge.className='tl-ratio-badge under';label.textContent=todayTL.comment||'—';}
+    }
+  }
+  requestAnimationFrame(()=>drawTrainingLoadChart(history));
+}
+
+function drawTrainingLoadChart(history){
+  const svg=document.getElementById('trainingLoadChart');
+  if(!svg) return;
+  svg.innerHTML='';
+  const W=svgW(svg),H=100;
+  const PT=8,PB=22,PL=28,PR=6,chartW=W-PL-PR,chartH=H-PT-PB;
+  const stlVals=history.map(d=>d.stl||0);
+  const ltlVals=history.map(d=>d.ltl||0);
+  const allVals=[...stlVals,...ltlVals].filter(v=>v>0);
+  if(!allVals.length){
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',W/2);t.setAttribute('y',H/2+4);t.setAttribute('text-anchor','middle');
+    t.setAttribute('fill','rgba(255,255,255,0.2)');t.setAttribute('font-size','9');
+    t.setAttribute('font-family','ui-monospace,monospace');t.textContent='No load data yet';svg.appendChild(t);return;
+  }
+  const mx=Math.max(...allVals,1);
+  const n=history.length;
+  const pX=i=>PL+(n<=1?chartW/2:i/(n-1)*chartW);
+  const pY=v=>PT+chartH*(1-v/mx);
+  // Mid grid line
+  const gl=document.createElementNS('http://www.w3.org/2000/svg','line');
+  gl.setAttribute('x1',PL);gl.setAttribute('y1',pY(mx/2));gl.setAttribute('x2',W-PR);gl.setAttribute('y2',pY(mx/2));
+  gl.setAttribute('stroke','rgba(255,255,255,0.06)');gl.setAttribute('stroke-width','1');svg.appendChild(gl);
+  // Y max label
+  const yl=document.createElementNS('http://www.w3.org/2000/svg','text');
+  yl.setAttribute('x',PL-3);yl.setAttribute('y',PT+7);yl.setAttribute('text-anchor','end');
+  yl.setAttribute('fill','rgba(255,255,255,0.22)');yl.setAttribute('font-size','7');
+  yl.setAttribute('font-family','ui-monospace,monospace');yl.textContent=Math.round(mx);svg.appendChild(yl);
+  // LTL line (chronic — blue)
+  _drawTLLine(svg,history.map((d,i)=>({x:pX(i),y:pY(d.ltl||0)})),'#5BC4E8');
+  // STL line (acute — orange), drawn on top
+  _drawTLLine(svg,history.map((d,i)=>({x:pX(i),y:pY(d.stl||0)})),'#FF9650');
+  // X-axis day labels (show every other, always show last)
+  const dayAbbr=['Su','M','Tu','W','Th','F','Sa'];
+  history.forEach((d,i)=>{
+    if(i!==0&&i!==n-1&&(i%(Math.ceil(n/4))!==0)) return;
+    const dt=new Date(d.date+'T12:00:00');
+    const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+    lbl.setAttribute('x',pX(i));lbl.setAttribute('y',H-PB+12);
+    lbl.setAttribute('text-anchor','middle');lbl.setAttribute('fill','rgba(255,255,255,0.22)');
+    lbl.setAttribute('font-size','7');lbl.setAttribute('font-family','ui-monospace,monospace');
+    lbl.textContent=dayAbbr[dt.getDay()];svg.appendChild(lbl);
+  });
+}
+
+function _drawTLLine(svg,pts,color){
+  if(!pts.length) return;
+  let d='';pts.forEach((p,i)=>d+=i===0?`M${p.x} ${p.y}`:`L${p.x} ${p.y}`);
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',d);path.setAttribute('fill','none');
+  path.setAttribute('stroke',color);path.setAttribute('stroke-width','1.8');
+  path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
+  svg.appendChild(path);
+  const last=pts[pts.length-1];
+  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',last.x);c.setAttribute('cy',last.y);c.setAttribute('r','2.8');
+  c.setAttribute('fill',color);svg.appendChild(c);
+}
+
+// ═══════════════════════════════════════════════
+// 7-DAY FEEL RECAP
+// ═══════════════════════════════════════════════
+function renderFeelRecap(){
+  const days=lastNDays(7);
+  // Sleep: prefer Coros score, fall back to hours-based score
+  const sleepScores=days.map(d=>{
+    const cd=storeGet('coros_daily:'+d);
+    if(cd&&cd.sleep&&cd.sleep.score!=null) return cd.sleep.score;
+    const h=hGet(d);if(h.sleep==null) return null;
+    const s=h.sleep;
+    return s>=8&&s<=9?95:s>=7?82:s>=6?65:s>=5?38:15;
+  });
+  // HRV: raw values, normalized within their own 7-day range in the chart
+  const hrvVals=days.map(d=>hGet(d).hrv??null);
+  // Run effort: average effort for real runs that day
+  const effortVals=days.map(d=>{
+    const runs=(storeGet('runs:'+d)||[]).filter(r=>!r.rest&&r.effort!=null);
+    if(!runs.length) return null;
+    return runs.reduce((s,r)=>s+r.effort,0)/runs.length;
+  });
+  requestAnimationFrame(()=>drawFeelRecapChart(sleepScores,hrvVals,effortVals));
+  document.getElementById('feelInsight').textContent=generateFeelInsight(sleepScores,hrvVals,effortVals);
+}
+
+function drawFeelRecapChart(sleepScores,hrvVals,effortVals){
+  const svg=document.getElementById('feelRecapChart');if(!svg) return;
+  svg.innerHTML='';
+  const W=svgW(svg),H=100,PT=8,PB=18,PL=4,PR=4,chartW=W-PL-PR,chartH=H-PT-PB;
+  const n=7;
+  const hasAny=sleepScores.some(v=>v!=null)||hrvVals.some(v=>v!=null)||effortVals.some(v=>v!=null);
+  if(!hasAny) return;
+  const pX=i=>PL+(n<=1?chartW/2:i/(n-1)*chartW);
+  const pY=v=>v==null?null:PT+chartH*(1-v/100);
+  // Normalize HRV to 0-100 within its own week range
+  const validHRV=hrvVals.filter(v=>v!=null);
+  const hMin=validHRV.length?Math.min(...validHRV):40;
+  const hMax=validHRV.length?Math.max(...validHRV,hMin+1):120;
+  const hrvNorm=hrvVals.map(v=>v==null?null:Math.round((v-hMin)/(hMax-hMin)*100));
+  // Effort normalized to 0-100 (effort 1-10 → 10-100)
+  const effortNorm=effortVals.map(v=>v==null?null:Math.round(v*10));
+  // Draw sleep line (blue)
+  _drawFeelLine(svg,sleepScores.map((v,i)=>({x:pX(i),y:pY(v)})),'#8B9FE8');
+  // Draw HRV line (green)
+  _drawFeelLine(svg,hrvNorm.map((v,i)=>({x:pX(i),y:pY(v)})),'#6BE3A4');
+  // Draw effort dots (orange)
+  effortNorm.forEach((v,i)=>{
+    if(v==null) return;
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',pX(i));c.setAttribute('cy',pY(v)||PT+chartH/2);
+    c.setAttribute('r','3.5');c.setAttribute('fill','#F2C063');c.setAttribute('opacity','0.85');
+    svg.appendChild(c);
+  });
+  // X-axis day labels (every other)
+  const dayAbbr=['Su','M','Tu','W','Th','F','Sa'];
+  lastNDays(7).forEach((d,i)=>{
+    if(i%2!==0&&i!==6) return;
+    const dt=new Date(d+'T12:00:00');
+    const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+    lbl.setAttribute('x',pX(i));lbl.setAttribute('y',H-PB+12);
+    lbl.setAttribute('text-anchor','middle');lbl.setAttribute('fill','rgba(255,255,255,0.22)');
+    lbl.setAttribute('font-size','7');lbl.setAttribute('font-family','ui-monospace,monospace');
+    lbl.textContent=dayAbbr[dt.getDay()];svg.appendChild(lbl);
+  });
+}
+
+function _drawFeelLine(svg,pts,color){
+  const valid=pts.filter(p=>p.y!=null);
+  if(!valid.length) return;
+  if(valid.length===1){
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',valid[0].x);c.setAttribute('cy',valid[0].y);c.setAttribute('r','2.5');
+    c.setAttribute('fill',color);svg.appendChild(c);return;
+  }
+  let d='';let prev=false;
+  pts.forEach(p=>{
+    if(p.y==null){prev=false;return;}
+    d+=prev?`L${p.x} ${p.y}`:`M${p.x} ${p.y}`;prev=true;
+  });
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',d);path.setAttribute('fill','none');
+  path.setAttribute('stroke',color);path.setAttribute('stroke-width','1.5');
+  path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
+  path.setAttribute('stroke-opacity','0.85');svg.appendChild(path);
+  const last=valid[valid.length-1];
+  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',last.x);c.setAttribute('cy',last.y);c.setAttribute('r','2.5');
+  c.setAttribute('fill',color);svg.appendChild(c);
+}
+
+function generateFeelInsight(sleepScores,hrvVals,effortVals){
+  const vS=sleepScores.filter(v=>v!=null);
+  const vH=hrvVals.filter(v=>v!=null);
+  const vE=effortVals.filter(v=>v!=null);
+  if(vS.length+vH.length+vE.length<3){
+    return'Log sleep, HRV, and runs over a few days to see your feel recap.';
+  }
+  const avg=arr=>arr.reduce((a,b)=>a+b,0)/arr.length;
+  const avgS=vS.length?avg(vS):null;
+  const avgH=vH.length?avg(vH):null;
+  const avgE=vE.length?avg(vE):null;
+  const hrvTrend=vH.length>=4?
+    (avg(vH.slice(-2))>avg(vH.slice(0,2))?'up':'down'):null;
+  if(avgS!=null&&avgS<55&&avgE!=null&&avgE>6.5)
+    return'Running hard despite poor sleep — consider prioritizing recovery over the next few days.';
+  if(hrvTrend==='down'&&avgE!=null&&avgE>7)
+    return'HRV declining as effort increases — watch for overreaching and add easy days.';
+  if(avgS!=null&&avgS>82&&avgE!=null&&avgE<5&&vE.length>=2)
+    return'Great sleep, easy effort — well-rested and ready for a quality session.';
+  if(avgS!=null&&avgS>80&&hrvTrend==='up')
+    return'Sleep quality and HRV both trending up — strong recovery week, green light for hard training.';
+  if(avgE!=null&&avgE>7&&avgS!=null&&avgS>75)
+    return'High effort with solid sleep — strong training block, keep the balance.';
+  if(vE.length===0)
+    return avgS!=null&&avgS>75?'Good sleep this week — body is ready when you log some runs.':'Log runs and health metrics to build your feel recap.';
+  return'Mixed signals this week — keep logging consistently to spot patterns over time.';
+}
+
+// ═══════════════════════════════════════════════
+// CONDITIONS SCATTER CHART (pace vs temperature)
+// ═══════════════════════════════════════════════
+function renderConditionsChart(){
+  const runs=getAllRuns().filter(r=>!r.rest&&r.pace&&r.temp!=null).slice(0,30);
+  const wrap=document.getElementById('condChartWrap');
+  if(!wrap) return;
+  if(runs.length<3){wrap.style.display='none';return;}
+  wrap.style.display='';
+  requestAnimationFrame(()=>drawConditionsChart(runs));
+}
+
+function drawConditionsChart(runs){
+  const svg=document.getElementById('condChart');if(!svg) return;
+  svg.innerHTML='';
+  const W=svgW(svg),H=100,PT=8,PB=20,PL=38,PR=8;
+  const chartW=W-PL-PR,chartH=H-PT-PB;
+  const pacesSec=runs.map(r=>paceToSec(r.pace)).filter(v=>v!=null);
+  const temps=runs.map(r=>r.temp);
+  if(!pacesSec.length) return;
+  const tMin=Math.min(...temps),tMax=Math.max(...temps,tMin+1);
+  const pMin=Math.min(...pacesSec),pMax=Math.max(...pacesSec,pMin+1);
+  // X=temp, Y=pace (faster=bottom, slower=top — consistent with pace trend chart)
+  const pX=t=>PL+(t-tMin)/(tMax-tMin)*chartW;
+  const pY=p=>PT+chartH*(1-(p-pMin)/(pMax-pMin)); // faster (lower sec) → bottom
+  // Mid grid line
+  const gl=document.createElementNS('http://www.w3.org/2000/svg','line');
+  gl.setAttribute('x1',PL);gl.setAttribute('y1',PT+chartH/2);gl.setAttribute('x2',W-PR);gl.setAttribute('y2',PT+chartH/2);
+  gl.setAttribute('stroke','rgba(255,255,255,0.05)');gl.setAttribute('stroke-width','1');svg.appendChild(gl);
+  // Y labels (pace — slow at top, fast at bottom)
+  [[fmtPaceSec(pMax),PT+7],['⚡ '+fmtPaceSec(pMin),PT+chartH]].forEach(([txt,y])=>{
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',PL-3);t.setAttribute('y',y);t.setAttribute('text-anchor','end');
+    t.setAttribute('fill','rgba(255,255,255,0.25)');t.setAttribute('font-size','7');
+    t.setAttribute('font-family','ui-monospace,monospace');t.textContent=txt;svg.appendChild(t);
+  });
+  // X labels (temp)
+  [[tMin,PL],[tMax,W-PR]].forEach(([val,x])=>{
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',x);t.setAttribute('y',H-PB+13);t.setAttribute('text-anchor','middle');
+    t.setAttribute('fill','rgba(255,255,255,0.25)');t.setAttribute('font-size','7');
+    t.setAttribute('font-family','ui-monospace,monospace');t.textContent=Math.round(val)+'°';svg.appendChild(t);
+  });
+  // Dots colored by temperature range
+  runs.forEach(r=>{
+    const ps=paceToSec(r.pace);if(!ps) return;
+    const color=r.temp<55?'#5BC4E8':r.temp<70?'#6BE3A4':r.temp<85?'#F2C063':'#FF6B6B';
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',pX(r.temp));dot.setAttribute('cy',pY(ps));
+    dot.setAttribute('r','3.5');dot.setAttribute('fill',color);dot.setAttribute('opacity','0.75');
+    svg.appendChild(dot);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// WEEKLY NARRATIVE
+// ═══════════════════════════════════════════════
+function _narrativeKey(){return'narrative:'+currentWeekDays()[0];}
+
+function loadNarrative(){
+  const weekStart=currentWeekDays()[0];
+  const lbl=document.getElementById('narrativeWeekLbl');
+  if(lbl) lbl.textContent='Week of '+fmtDate(weekStart);
+  const ta=document.getElementById('narrativeTa');
+  if(ta&&!ta.dataset.dirty) ta.value=storeGet(_narrativeKey())||'';
+  _renderNarrativePrev();
+}
+
+function _renderNarrativePrev(){
+  const curKey=_narrativeKey();
+  const prevKeys=storeKeys('narrative:').filter(k=>k!==curKey).sort().reverse();
+  const toggle=document.getElementById('narrativePrevToggle');
+  const list=document.getElementById('narrativePrevList');
+  if(!toggle||!list) return;
+  const hasPrev=prevKeys.some(k=>(storeGet(k)||'').trim());
+  toggle.style.display=hasPrev?'':'none';
+  list.innerHTML='';
+  prevKeys.forEach(k=>{
+    const text=(storeGet(k)||'').trim();if(!text) return;
+    const weekDate=k.replace('narrative:','');
+    const item=document.createElement('div');item.className='narrative-prev-item';
+    item.innerHTML=`<div class="narrative-prev-date">Week of ${fmtDate(weekDate)}</div>
+      <div class="narrative-prev-text">${escHtml(text)}</div>`;
+    list.appendChild(item);
+  });
+}
+
+// Narrative save + prev-toggle wired up after DOM is ready (script runs at end of body)
+{
+  const saveBtn=document.getElementById('narrativeSaveBtn');
+  if(saveBtn) saveBtn.addEventListener('click',()=>{
+    const ta=document.getElementById('narrativeTa');if(!ta) return;
+    storeSet(_narrativeKey(),ta.value);
+    delete ta.dataset.dirty;
+    _renderNarrativePrev();
+    const msg=document.getElementById('narrativeSavedMsg');
+    if(!msg) return;
+    msg.style.opacity='1';clearTimeout(msg._t);
+    msg._t=setTimeout(()=>msg.style.opacity='0',1500);
+  });
+  const ta=document.getElementById('narrativeTa');
+  if(ta) ta.addEventListener('input',function(){this.dataset.dirty='1';});
+  const prevToggle=document.getElementById('narrativePrevToggle');
+  const prevList=document.getElementById('narrativePrevList');
+  if(prevToggle&&prevList) prevToggle.addEventListener('click',()=>{
+    const show=prevList.style.display==='none';
+    prevList.style.display=show?'':'none';
+    prevToggle.textContent=show?'▴ Hide previous weeks':'▾ Show previous weeks';
+  });
 }
 
 if(_db){

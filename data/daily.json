@@ -1,0 +1,42 @@
+{
+  "date": "2026-05-23",
+  "fetched_at": "2026-05-23T11:00:00Z",
+  "sleep": {
+    "score": 34,
+    "hours": 5.03,
+    "deep_ratio": 12,
+    "light_ratio": 50,
+    "rem_ratio": 21,
+    "awake_minutes": 62
+  },
+  "hrv": {
+    "avg": 83,
+    "baseline": 97,
+    "normal_low": 78,
+    "normal_high": 116,
+    "evaluation": "Normal"
+  },
+  "rhr": null,
+  "recovery": {
+    "percentage": 100,
+    "level": "Heavy training allowed"
+  },
+  "training_load": {
+    "date": "2026-05-23",
+    "stl": 53,
+    "ltl": 85,
+    "ratio": 0.62,
+    "comment": "Resuming"
+  },
+  "history": {
+    "training_load": [
+      {"date": "2026-05-17", "stl": 0,   "ltl": 0,  "ratio": 0.0,  "comment": ""},
+      {"date": "2026-05-18", "stl": 0,   "ltl": 0,  "ratio": 0.0,  "comment": ""},
+      {"date": "2026-05-19", "stl": 0,   "ltl": 0,  "ratio": 0.0,  "comment": ""},
+      {"date": "2026-05-20", "stl": 100, "ltl": 0,  "ratio": 0.0,  "comment": ""},
+      {"date": "2026-05-21", "stl": 68,  "ltl": 79, "ratio": 0.86, "comment": "Optimal"},
+      {"date": "2026-05-22", "stl": 57,  "ltl": 83, "ratio": 0.69, "comment": "Undertraining"},
+      {"date": "2026-05-23", "stl": 53,  "ltl": 85, "ratio": 0.62, "comment": "Resuming"}
+    ]
+  }
+}
