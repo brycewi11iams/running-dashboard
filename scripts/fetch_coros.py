@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
 """
-Daily Coros health data sync — writes data/daily.json.
-Scheduled via GitHub Actions (.github/workflows/coros-sync.yml).
-Set COROS_EMAIL and COROS_PASSWORD as GitHub Secrets.
+Fetch Coros health data and write to data/daily.json.
+Run locally after a workout, then push the file to update the dashboard.
+
+Usage (run from the repo root):
+  Windows PowerShell:
+    $env:COROS_EMAIL="you@example.com"; $env:COROS_PASSWORD="yourpass"; python scripts/fetch_coros.py
+    git add data/daily.json && git commit -m "chore: Coros sync" && git push
+
+  macOS / Linux:
+    COROS_EMAIL=you@example.com COROS_PASSWORD=yourpass python scripts/fetch_coros.py
+    git add data/daily.json && git commit -m "chore: Coros sync" && git push
 
 Endpoint note: Coros does not publish an official API. These endpoints are
 derived from community reverse-engineering and may change without notice.
-If a fetch fails the script writes whatever it did collect and exits 0,
-so the GitHub Action succeeds and the dashboard falls back to manual input.
+Each fetch is independently try/caught so partial data still writes to disk.
 """
 import hashlib
 import json
@@ -160,7 +167,7 @@ def main() -> None:
         print(f"[Coros] Authenticated as user {user_id}")
     except Exception as exc:
         print(f"ERROR: Login failed — {exc}", file=sys.stderr)
-        sys.exit(1)
+        sys.exit(1)  # hard fail so you know immediately if credentials are wrong
 
     sleep = fetch_sleep(token, user_id, today_ymd)
     hrv = fetch_hrv(token, user_id, today_ymd)
