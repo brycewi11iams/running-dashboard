@@ -891,7 +891,7 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
         <div class="hm-lbl">Resting HR</div>
         <div class="hm-val-row"><span class="hm-val" id="rhrVal">—</span><span class="hm-unit">bpm</span></div>
         <input class="hm-input" id="rhrInp" type="number" min="30" max="120" placeholder="bpm">
-        <div class="spark-wrap"><svg id="rhrSpark" width="100%" height="32"></svg></div>
+        <div class="spark-wrap"><svg id="rhrSpark" width="100%" height="60"></svg></div>
       </div>
 
       <!-- Mood -->
@@ -1610,6 +1610,65 @@ function drawSpark(svgEl,vals,color){
   svgEl.appendChild(rt);
 }
 
+function drawRhrChart(svgEl,vals){
+  svgEl.innerHTML='';
+  const W=svgW(svgEl),H=60,color='#FF6B6B';
+  const PT=8,PB=14,PL=26,PR=4,chartW=W-PL-PR,chartH=H-PT-PB;
+  const valid=vals.filter(v=>v!=null);
+  if(valid.length<2){
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',W/2);t.setAttribute('y',H/2+4);t.setAttribute('text-anchor','middle');
+    t.setAttribute('fill','rgba(255,255,255,0.2)');t.setAttribute('font-size','9');
+    t.setAttribute('font-family','ui-monospace,monospace');
+    t.textContent='No data';svgEl.appendChild(t);return;
+  }
+  const mn=Math.min(...valid),mx=Math.max(...valid),rng=mx-mn||1,n=vals.length;
+  const pX=i=>PL+i/(n-1)*chartW;
+  const pY=v=>PT+chartH*(1-(v-mn)/rng);
+  // Mid grid line
+  const midY=pY((mn+mx)/2);
+  const gl=document.createElementNS('http://www.w3.org/2000/svg','line');
+  gl.setAttribute('x1',PL);gl.setAttribute('y1',midY);gl.setAttribute('x2',W-PR);gl.setAttribute('y2',midY);
+  gl.setAttribute('stroke','rgba(255,255,255,0.06)');gl.setAttribute('stroke-width','1');svgEl.appendChild(gl);
+  // Y-axis labels
+  const mkLbl=(val,y)=>{const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',PL-3);t.setAttribute('y',y);t.setAttribute('text-anchor','end');
+    t.setAttribute('fill','rgba(255,255,255,0.28)');t.setAttribute('font-size','7');
+    t.setAttribute('font-family','ui-monospace,monospace');t.textContent=val;svgEl.appendChild(t);};
+  mkLbl(mx,PT+7);mkLbl(mn,PT+chartH);
+  // Build point list (skip nulls)
+  const pts=vals.map((v,i)=>v!=null?{x:pX(i),y:pY(v),v}:null);
+  const vpts=pts.filter(Boolean);
+  if(vpts.length<1) return;
+  // Area fill
+  let areaD=`M${vpts[0].x} ${PT+chartH}`;
+  vpts.forEach(p=>areaD+=`L${p.x} ${p.y}`);
+  areaD+=`L${vpts[vpts.length-1].x} ${PT+chartH}Z`;
+  const area=document.createElementNS('http://www.w3.org/2000/svg','path');
+  area.setAttribute('d',areaD);area.setAttribute('fill',color);area.setAttribute('fill-opacity','0.09');svgEl.appendChild(area);
+  // Line
+  let lineD='';vpts.forEach((p,i)=>lineD+=i===0?`M${p.x} ${p.y}`:`L${p.x} ${p.y}`);
+  const line=document.createElementNS('http://www.w3.org/2000/svg','path');
+  line.setAttribute('d',lineD);line.setAttribute('fill','none');line.setAttribute('stroke',color);
+  line.setAttribute('stroke-width','1.5');line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-linejoin','round');svgEl.appendChild(line);
+  // Dots
+  vpts.forEach((p,i)=>{
+    const isLast=i===vpts.length-1;
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',isLast?'3':'1.8');
+    c.setAttribute('fill',color);c.setAttribute('opacity',isLast?'1':'0.55');svgEl.appendChild(c);
+  });
+  // Last-value label
+  const last=vpts[vpts.length-1];
+  const lx=last.x>W-34?last.x-5:last.x+5;
+  const anch=last.x>W-34?'end':'start';
+  const lt=document.createElementNS('http://www.w3.org/2000/svg','text');
+  lt.setAttribute('x',lx);lt.setAttribute('y',last.y<PT+10?last.y+10:last.y-4);
+  lt.setAttribute('text-anchor',anch);lt.setAttribute('fill',color);lt.setAttribute('font-size','8');
+  lt.setAttribute('font-family','ui-monospace,monospace');lt.setAttribute('font-weight','700');
+  lt.textContent=last.v+' bpm';svgEl.appendChild(lt);
+}
+
 function renderWater(oz){
   const goal=getDailyWaterGoal();
   const cups=Math.ceil(goal/WATER_CUP);
@@ -1645,7 +1704,7 @@ function loadHealth(){
   requestAnimationFrame(()=>{
     drawSpark(document.getElementById('sleepSpark'),wk7.map(x=>hGet(x).sleep??null),'#8B9FE8');
     drawSpark(document.getElementById('hrvSpark'),wk14.map(x=>hGet(x).hrv??null),'#6BE3A4');
-    drawSpark(document.getElementById('rhrSpark'),wk14.map(x=>hGet(x).rhr??null),'#FF6B6B');
+    drawRhrChart(document.getElementById('rhrSpark'),wk14.map(x=>hGet(x).rhr??null));
     drawSpark(document.getElementById('moodSpark'),wk7.map(x=>hGet(x).mood??null),'#F2C063');
     drawSpark(document.getElementById('waterSpark'),wk7.map(x=>hGet(x).water??null),'#5BC4E8');
   });
@@ -2660,7 +2719,9 @@ if(_db){
     } else {
       // Firestore has data — pull anything newer into localStorage and re-render
       let changed=false;
+      const fsKeys=new Set();
       snap.forEach(doc=>{
+        fsKeys.add(doc.id);
         const d=doc.data();
         if(d&&d.v!==undefined){
           const nv=JSON.stringify(d.v);
@@ -2668,6 +2729,22 @@ if(_db){
         }
       });
       if(changed) _reRenderAll();
+      // Push any goals: keys that live in localStorage but are absent from Firestore
+      const missing=[];
+      for(let i=0;i<localStorage.length;i++){
+        const k=localStorage.key(i);
+        if(k&&k.startsWith('goals:')&&!fsKeys.has(k)) missing.push(k);
+      }
+      if(missing.length){
+        const batch=_db.batch();
+        missing.forEach(k=>{
+          try{const v=JSON.parse(localStorage.getItem(k));batch.set(_db.collection('store').doc(k),{v});}
+          catch(e){}
+        });
+        batch.commit()
+          .then(()=>console.log('[FS] Pushed',missing.length,'missing goal key(s) to Firestore'))
+          .catch(e=>console.warn('[FS] Goals push failed',e));
+      }
     }
   }).catch(e=>console.warn('[FS initial sync failed — offline?]',e));
 }
