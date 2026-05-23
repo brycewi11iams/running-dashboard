@@ -553,7 +553,7 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
   <div class="day-ring-info">
     <div class="ring-status" id="ringStatus">😴 Still sleeping</div>
     <div class="ring-remaining" id="ringRemaining"></div>
-    <div class="ring-range">5:00 AM – 9:00 PM</div>
+    <div class="ring-range" id="ringRange">—</div>
     <div class="ring-readiness">
       <span class="readiness-lbl">Today's Readiness</span>
       <span class="readiness-badge" id="readinessBadge">—</span>
@@ -1156,9 +1156,14 @@ function lerpColor(pct){
   const[r1,g1,b1]=SUN[lo],[r2,g2,b2]=SUN[hi];
   return`rgb(${Math.round(r1+(r2-r1)*t)},${Math.round(g1+(g2-g1)*t)},${Math.round(b1+(b2-b1)*t)})`;
 }
+function fmtHour(h){
+  const ap=h<12||h>=24?'AM':'PM';const h12=Math.round(h%12)||12;
+  const min=Math.round((h%1)*60);return`${h12}:${String(min).padStart(2,'0')} ${ap}`;
+}
 function updateRing(){
   const now=new Date();
   const{wake:wakeH,sleep:sleepH}=getDayBounds();
+  document.getElementById('ringRange').textContent=`${fmtHour(wakeH)} – ${fmtHour(sleepH)}`;
   let h=now.getHours()+now.getMinutes()/60+now.getSeconds()/3600;
   if(h<wakeH) h+=24;
 
