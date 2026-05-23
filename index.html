@@ -570,6 +570,22 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
 .narrative-prev-date{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
   color:var(--text-tertiary);margin-bottom:5px;}
 .narrative-prev-text{font-size:12.5px;color:var(--text-secondary);line-height:1.55;white-space:pre-wrap;}
+
+/* ── RUN INLINE EDIT ROW ── */
+.run-edit-row td{padding:2px 8px 10px;border-bottom:1px solid rgba(255,255,255,.04);}
+.run-edit-fields{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.run-edit-field{display:flex;align-items:center;gap:5px;}
+.run-edit-lbl{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-tertiary);white-space:nowrap;}
+.run-edit-inp{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;
+  color:var(--text-primary);font-family:var(--font-mono);font-size:11px;padding:4px 7px;
+  outline:none;transition:border-color .2s;}
+.run-edit-inp:focus{border-color:rgba(255,255,255,.22);}
+.run-edit-inp::placeholder{color:var(--text-tertiary);}
+.run-edit-inp[type=number]{width:52px;}
+.run-edit-inp.notes-inp{min-width:120px;flex:1;}
+select.run-edit-inp{width:120px;cursor:pointer;}
+select.run-edit-inp option{background:#1a1a1e;}
 </style>
 <!-- Firebase compat SDK — loaded from CDN, no build step needed -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -1910,17 +1926,30 @@ function getAllRuns(){
 function loadRunLog(){
   const runs=getAllRuns().slice(0,5);
   const tbody=document.getElementById('runBody');tbody.innerHTML='';
+  const shoes=getShoes();
+
   if(!runs.length){
-    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-tertiary);font-style:italic;padding:12px 8px;">No runs logged yet — log your first one above.</td></tr>';
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--text-tertiary);font-style:italic;padding:12px 8px;">No runs logged yet — log your first one above.</td></tr>';
   } else {
     runs.forEach(r=>{
       const tr=document.createElement('tr');
       const delBtn=`<button class="xt-del" title="Delete this run" style="font-size:14px;padding:2px 6px;">×</button>`;
+
       if(r.rest){
         tr.innerHTML=`<td>${fmtDate(r.date)}</td><td class="td-rest" colspan="4">Rest Day 🛌</td><td>${delBtn}</td>`;
-      } else {
-        tr.innerHTML=`<td>${fmtDate(r.date)}</td><td>${r.dist?r.dist.toFixed(2)+' mi':'—'}</td><td>${r.pace||'—'}</td><td>${r.hr?r.hr+' bpm':'—'}</td><td>${r.effort||'—'}</td><td>${delBtn}</td>`;
+        tr.querySelector('.xt-del').addEventListener('click',()=>{
+          const dayRuns=storeGet('runs:'+r._runDate)||[];
+          dayRuns.splice(r._runIdx,1);
+          if(dayRuns.length) storeSet('runs:'+r._runDate,dayRuns);
+          else storeDel('runs:'+r._runDate);
+          loadRunLog();updateWeekly();renderRunStreak();
+        });
+        tbody.appendChild(tr);
+        return;
       }
+
+      // Main data row
+      tr.innerHTML=`<td>${fmtDate(r.date)}</td><td>${r.dist?r.dist.toFixed(2)+' mi':'—'}</td><td>${r.pace||'—'}</td><td>${r.hr?r.hr+' bpm':'—'}</td><td class="run-effort-cell">${r.effort!=null?r.effort:'—'}</td><td>${delBtn}</td>`;
       tr.querySelector('.xt-del').addEventListener('click',()=>{
         const dayRuns=storeGet('runs:'+r._runDate)||[];
         dayRuns.splice(r._runIdx,1);
@@ -1929,6 +1958,64 @@ function loadRunLog(){
         loadRunLog();updateWeekly();renderRunStreak();
       });
       tbody.appendChild(tr);
+
+      // Inline edit row — always visible below each non-rest run
+      const editTr=document.createElement('tr');
+      editTr.className='run-edit-row';
+      const editTd=document.createElement('td');
+      editTd.colSpan=6;
+
+      // Effort input
+      const effortInp=document.createElement('input');
+      effortInp.type='number';effortInp.min='1';effortInp.max='10';
+      effortInp.className='run-edit-inp';effortInp.placeholder='1–10';
+      if(r.effort!=null) effortInp.value=r.effort;
+
+      // Shoe select
+      const shoeSel=document.createElement('select');
+      shoeSel.className='run-edit-inp';
+      let opts='<option value="">— none —</option>';
+      shoes.forEach(s=>opts+=`<option value="${escHtml(s.id)}"${r.shoeId===s.id?' selected':''}>${escHtml(s.name)}</option>`);
+      shoeSel.innerHTML=opts;
+
+      // Notes input
+      const notesInp=document.createElement('input');
+      notesInp.type='text';notesInp.className='run-edit-inp notes-inp';
+      notesInp.placeholder='Notes…';
+      notesInp.value=r.notes||'';
+
+      // Save all three fields to localStorage immediately on input
+      const effortCell=tr.querySelector('.run-effort-cell');
+      function _saveEdit(){
+        const dayRuns=storeGet('runs:'+r._runDate)||[];
+        if(!dayRuns[r._runIdx]) return;
+        const ev=parseInt(effortInp.value);
+        dayRuns[r._runIdx].effort=(ev>=1&&ev<=10)?ev:null;
+        dayRuns[r._runIdx].shoeId=shoeSel.value||null;
+        dayRuns[r._runIdx].notes=notesInp.value;
+        storeSet('runs:'+r._runDate,dayRuns);
+        // Keep effort cell in main row in sync without a full reload
+        if(effortCell) effortCell.textContent=dayRuns[r._runIdx].effort??'—';
+      }
+      effortInp.addEventListener('input',_saveEdit);
+      shoeSel.addEventListener('change',_saveEdit);
+      notesInp.addEventListener('input',_saveEdit);
+
+      // Layout
+      const wrap=document.createElement('div');wrap.className='run-edit-fields';
+      const ef=document.createElement('div');ef.className='run-edit-field';
+      ef.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Effort'}));
+      ef.appendChild(effortInp);
+      const sf=document.createElement('div');sf.className='run-edit-field';
+      sf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Shoe'}));
+      sf.appendChild(shoeSel);
+      const nf=document.createElement('div');nf.className='run-edit-field';nf.style.flex='1';
+      nf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Notes'}));
+      nf.appendChild(notesInp);
+      wrap.appendChild(ef);wrap.appendChild(sf);wrap.appendChild(nf);
+      editTd.appendChild(wrap);
+      editTr.appendChild(editTd);
+      tbody.appendChild(editTr);
     });
   }
   renderRunStreak();
