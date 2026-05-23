@@ -570,7 +570,7 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
   <div class="wk-pill"><span class="wk-pill-val" id="wkMiles">0.0</span><span class="wk-pill-lbl">👟 Miles</span></div>
   <div class="wk-pill"><span class="wk-pill-val" id="wkSleep">—</span><span class="wk-pill-lbl">🌙 Sleep</span></div>
   <div class="wk-pill"><span class="wk-pill-val" id="wkHRV">—</span><span class="wk-pill-lbl">💓 HRV</span></div>
-  <div class="wk-pill"><span class="wk-pill-val" id="wkMood">—</span><span class="wk-pill-lbl">😊 Mood</span></div>
+  <div class="wk-pill"><span class="wk-pill-val" id="wkMood">—</span><span class="wk-pill-lbl">⚡ Energy</span></div>
   <div class="wk-pill"><span class="wk-pill-val" id="wkWater">0/7</span><span class="wk-pill-lbl">💧 Water</span></div>
   <div class="wk-pill"><span class="wk-pill-val" id="wkGoals">0/0</span><span class="wk-pill-lbl">✅ Goals</span></div>
   <div class="wk-pill"><span class="wk-pill-val" id="wkXT">0m</span><span class="wk-pill-lbl">🚴 XT</span></div>
@@ -896,7 +896,7 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
 
       <!-- Mood -->
       <div class="hm-item">
-        <div class="hm-lbl">Mood / Energy</div>
+        <div class="hm-lbl">Energy Rating</div>
         <div class="hm-val-row"><span class="hm-val" id="moodVal">—</span><span class="hm-unit">/ 5</span></div>
         <div class="star-row" id="moodStars"></div>
         <div class="spark-wrap"><svg id="moodSpark" width="100%" height="32"></svg></div>
@@ -1001,8 +1001,11 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
 // CONFIG
 // ═══════════════════════════════════════════════
 const ANTHROPIC_API_KEY = '';
-const WAKE_HOUR  = 5;    // 5 AM
-const SLEEP_HOUR = 21;   // 9 PM
+// Weekday: 4:30 AM–8:30 PM  |  Weekend: 6:00 AM–10:00 PM
+function getDayBounds(){
+  const day=new Date().getDay();// 0=Sun,6=Sat
+  return (day===0||day===6)?{wake:6,sleep:22}:{wake:4.5,sleep:20.5};
+}
 const WATER_CUP  = 8;
 // Water goal is dynamic — see getDailyWaterGoal()
 const RING_C     = 2 * Math.PI * 52; // 326.73 — circumference for r=52
@@ -1155,18 +1158,16 @@ function lerpColor(pct){
 }
 function updateRing(){
   const now=new Date();
+  const{wake:wakeH,sleep:sleepH}=getDayBounds();
   let h=now.getHours()+now.getMinutes()/60+now.getSeconds()/3600;
-  // Hours before WAKE_HOUR (5 AM) are treated as "past bedtime" (previous active day continuation)
-  if(h<WAKE_HOUR) h+=24;
+  if(h<wakeH) h+=24;
 
   const rf=document.getElementById('ringFill');
-  // Clock (always show actual wall time)
   const hr12=now.getHours()%12||12,m2=String(now.getMinutes()).padStart(2,'0'),ap=now.getHours()<12?'AM':'PM';
   document.getElementById('ringClock').textContent=`${hr12}:${m2} ${ap}`;
 
-  if(h>=WAKE_HOUR&&h<SLEEP_HOUR){
-    // 8 AM–midnight: active window
-    const pct=Math.min((h-WAKE_HOUR)/(SLEEP_HOUR-WAKE_HOUR)*100,100);
+  if(h>=wakeH&&h<sleepH){
+    const pct=Math.min((h-wakeH)/(sleepH-wakeH)*100,100);
     rf.setAttribute('stroke-dashoffset',RING_C*(1-pct/100));
     rf.setAttribute('stroke',lerpColor(pct));
     document.getElementById('ringPct').textContent=Math.round(pct)+'%';
@@ -1180,9 +1181,8 @@ function updateRing(){
     for(const[thr,ph,st] of phases){
       if(pct<thr){document.getElementById('ringPhase').textContent=ph;document.getElementById('ringStatus').textContent=st;break;}
     }
-    document.getElementById('ringRemaining').textContent=fmtMins((SLEEP_HOUR-h)*60)+' awake time left';
+    document.getElementById('ringRemaining').textContent=fmtMins((sleepH-h)*60)+' awake time left';
   } else {
-    // past 9 PM or before 5 AM = past bedtime
     rf.setAttribute('stroke-dashoffset',0);rf.setAttribute('stroke','#E25D7A');
     document.getElementById('ringPct').textContent='100%';
     document.getElementById('ringPhase').textContent='PAST BEDTIME';
@@ -1555,13 +1555,6 @@ document.getElementById('pushBtn').addEventListener('click',()=>{
 // FIRST-RUN PLACEHOLDER GOALS  (#12)
 // ═══════════════════════════════════════════════
 function seedPlaceholders(){
-  if(storeGet('goals_seeded')) return;
-  if(storeKeys('goals:').length>0){storeSet('goals_seeded',true);return;}
-  storeSet('goals:'+activeDate(),[
-    {text:'Morning run — log it in the Running section',done:false},
-    {text:'Log today\'s health metrics (sleep, HRV, mood)',done:false},
-    {text:'Add your first PR to the PR Board',done:false}
-  ]);
   storeSet('goals_seeded',true);
 }
 
@@ -2171,6 +2164,9 @@ document.getElementById('wkTargetInp').addEventListener('blur',function(){
   if(!isNaN(v)&&v>0) storeSet(_wkKey,v);
   else if(this.value==='') storeDel(_wkKey);
   updateWkMileTarget();
+});
+document.getElementById('wkTargetInp').addEventListener('keydown',function(e){
+  if(e.key==='Enter') this.blur();
 });
 
 // ═══════════════════════════════════════════════
