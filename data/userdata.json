@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-24T21:28:01.269Z",
+  "lastUpdated": "2026-05-24T21:57:00.438Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -79,10 +79,11 @@
     "elyte:2026-05-23": 1,
     "goals:2026-05-25": [
       {
-        "text": "Laundry",
-        "done": false
+        "done": false,
+        "text": "Laundry"
       }
     ],
     "goals:2026-05-23": []
-  }
+  },
+  "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
