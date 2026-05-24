@@ -1299,11 +1299,16 @@ select.run-edit-inp option{background:#1a1a1e;}
   let storedHash=localStorage.getItem(PW_HASH_KEY);
   if(!storedHash){
     try{
-      const r=await fetch(GH_RAW+'?t='+Date.now(),{cache:'no-cache'});
+      // Omit {cache:'no-cache'} — that header can trigger CORS preflight failures on iOS Safari.
+      // Cache-busting via ?t= query param is sufficient.
+      const r=await fetch(GH_RAW+'?t='+Date.now());
       if(r.ok){const d=await r.json();if(d&&d._pwHash){storedHash=d._pwHash;localStorage.setItem(PW_HASH_KEY,storedHash);}}
     }catch(e){}
-    // loadGhUserdata() may have run concurrently and stored the hash — check again
-    if(!storedHash) storedHash=localStorage.getItem(PW_HASH_KEY);
+    // Poll localStorage for up to 3 s — loadGhUserdata() may be storing the hash concurrently
+    for(let i=0;i<10&&!storedHash;i++){
+      await new Promise(res=>setTimeout(res,300));
+      storedHash=localStorage.getItem(PW_HASH_KEY);
+    }
   }
 
   btn.disabled=false; btn.style.opacity='';
