@@ -604,14 +604,48 @@ select.run-edit-inp option{background:#1a1a1e;}
 .heat-adj-callout.severe .heat-adj-main{color:#FF6B6B;}
 .heat-adj-pace{font-size:10.5px;color:var(--text-secondary);}
 
+/* ── LOCK SCREEN ── */
+#lockScreen{position:fixed;inset:0;background:#050506;display:flex;align-items:center;
+  justify-content:center;z-index:99999;transition:opacity .3s;}
+#lockCard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;padding:36px 32px;width:300px;display:flex;flex-direction:column;gap:14px;
+  box-shadow:0 24px 64px rgba(0,0,0,.6);}
+#lockTitle{font-size:18px;font-weight:700;color:var(--text-primary);letter-spacing:-.01em;text-align:center;}
+#lockSub{font-size:11px;color:var(--text-tertiary);text-align:center;margin-top:-6px;line-height:1.5;}
+#lockInp{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  color:var(--text-primary);font-family:var(--font-mono);font-size:14px;padding:10px 14px;
+  outline:none;transition:border-color .2s;letter-spacing:.08em;}
+#lockInp:focus{border-color:rgba(255,255,255,.28);}
+#lockInp2{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  color:var(--text-primary);font-family:var(--font-mono);font-size:14px;padding:10px 14px;
+  outline:none;transition:border-color .2s;letter-spacing:.08em;}
+#lockInp2:focus{border-color:rgba(255,255,255,.28);}
+#lockBtn{background:rgba(139,159,232,.18);border:1px solid rgba(139,159,232,.35);border-radius:10px;
+  color:#8B9FE8;font-family:var(--font-mono);font-size:13px;font-weight:600;padding:11px;
+  cursor:pointer;transition:all .2s;letter-spacing:.04em;}
+#lockBtn:hover{background:rgba(139,159,232,.28);}
+#lockErr{font-size:11px;color:#FF6B6B;text-align:center;min-height:14px;font-family:var(--font-mono);}
 </style>
 <!-- Firebase compat SDK — loaded from CDN, no build step needed -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
+
+<!-- ═══ LOCK SCREEN ═══ -->
+<div id="lockScreen" style="display:none;">
+  <div id="lockCard">
+    <div id="lockTitle">My Dashboard</div>
+    <div id="lockSub"></div>
+    <input id="lockInp" type="password" placeholder="Password" autocomplete="current-password" spellcheck="false">
+    <input id="lockInp2" type="password" placeholder="Confirm password" style="display:none;" spellcheck="false">
+    <button id="lockBtn">Unlock</button>
+    <div id="lockErr"></div>
+  </div>
+</div>
+
 <div class="grain"></div>
-<div class="content">
+<div class="content" id="appContent" style="display:none;">
 
 <!-- ═══ PAGE TITLE ═══ -->
 <h1 class="dash-title">My Dashboard</h1>
@@ -1204,11 +1238,83 @@ select.run-edit-inp option{background:#1a1a1e;}
              color:var(--text-tertiary);font-family:var(--font-mono);font-size:11px;padding:7px 10px;cursor:pointer;">Clear</button>
   </div>
   <div id="ghTokenStatus" style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);margin-top:8px;min-height:14px;"></div>
+
+  <div style="border-top:1px solid rgba(255,255,255,.06);margin-top:16px;padding-top:16px;">
+    <div style="font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:10px;">Change Password</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input id="newPwInp" type="password" placeholder="New password (min 4 chars)"
+        style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;
+               color:var(--text-primary);font-family:var(--font-mono);font-size:11px;padding:7px 10px;outline:none;">
+      <button id="newPwBtn" style="background:rgba(139,159,232,.15);border:1px solid rgba(139,159,232,.3);border-radius:8px;
+               color:#8B9FE8;font-family:var(--font-mono);font-size:11px;padding:7px 14px;cursor:pointer;white-space:nowrap;">Update</button>
+    </div>
+    <div id="newPwStatus" style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);margin-top:8px;min-height:14px;"></div>
+  </div>
 </div>
 
 </div><!-- /content -->
 
 <script>
+// ═══════════════════════════════════════════════
+// ACCESS CONTROL — runs first, before anything is shown
+// ═══════════════════════════════════════════════
+(async function initLock(){
+  const PW_HASH_KEY  = 'dash_pw_hash';
+  const SESSION_KEY  = 'dash_unlocked';
+
+  async function sha256(str){
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function showApp(){
+    document.getElementById('lockScreen').style.display='none';
+    document.getElementById('appContent').style.display='';
+    sessionStorage.setItem(SESSION_KEY,'1');
+  }
+
+  // Already unlocked this session — skip straight in
+  if(sessionStorage.getItem(SESSION_KEY)){showApp();return;}
+
+  const storedHash=localStorage.getItem(PW_HASH_KEY);
+  const screen=document.getElementById('lockScreen');
+  const inp=document.getElementById('lockInp');
+  const inp2=document.getElementById('lockInp2');
+  const btn=document.getElementById('lockBtn');
+  const err=document.getElementById('lockErr');
+  const sub=document.getElementById('lockSub');
+
+  if(!storedHash){
+    // ── First run: let user create a password ──────────────────
+    sub.textContent='Create a password to protect your dashboard.';
+    inp.placeholder='Create password (min 4 chars)';
+    inp2.style.display='';
+    btn.textContent='Set Password';
+    btn.addEventListener('click',async()=>{
+      err.textContent='';
+      const pw=inp.value;
+      if(pw.length<4){err.textContent='At least 4 characters required.';return;}
+      if(pw!==inp2.value){err.textContent='Passwords do not match.';inp2.value='';inp2.focus();return;}
+      localStorage.setItem(PW_HASH_KEY,await sha256(pw));
+      showApp();
+    });
+  } else {
+    // ── Returning visit: require password ─────────────────────
+    sub.textContent='Your personal running dashboard.';
+    btn.textContent='Unlock';
+    const tryUnlock=async()=>{
+      err.textContent='';
+      if((await sha256(inp.value))===storedHash){showApp();}
+      else{err.textContent='Incorrect password.';inp.value='';inp.focus();}
+    };
+    btn.addEventListener('click',tryUnlock);
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter') tryUnlock();});
+  }
+
+  screen.style.display='flex';
+  requestAnimationFrame(()=>inp.focus());
+})();
+
 // ═══════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════
@@ -3660,7 +3766,7 @@ if(_db){
   function _updateTokenStatus(){
     const t=getGhToken();
     if(t){
-      status.textContent='Token saved — sync writes enabled. ('+(t.slice(0,12))+'…)';
+      status.textContent='Token saved — sync writes enabled.';
       status.style.color='#6BE3A4';
     } else {
       status.textContent='No token — reads work, writes disabled.';
@@ -3690,6 +3796,24 @@ if(_db){
     localStorage.removeItem('gh_token');
     inp.value='';
     _updateTokenStatus();
+  });
+}
+
+// ── Change Password (Sync Settings panel) ──────────────────────
+{
+  const PW_HASH_KEY='dash_pw_hash';
+  async function sha256(str){
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  document.getElementById('newPwBtn').addEventListener('click',async()=>{
+    const st=document.getElementById('newPwStatus');
+    const val=document.getElementById('newPwInp').value.trim();
+    if(val.length<4){st.textContent='At least 4 characters required.';st.style.color='#F2C063';return;}
+    localStorage.setItem(PW_HASH_KEY,await sha256(val));
+    document.getElementById('newPwInp').value='';
+    st.textContent='Password updated. Takes effect next session.';
+    st.style.color='#6BE3A4';
   });
 }
 </script>
