@@ -643,7 +643,7 @@ select.run-edit-inp option{background:#1a1a1e;}
       <input id="lockRemember" type="checkbox" style="width:14px;height:14px;accent-color:#8B9FE8;cursor:pointer;">
       <span style="font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono);">Remember this device</span>
     </label>
-    <button id="lockBtn">Unlock</button>
+    <button id="lockBtn" disabled style="opacity:.4;"></button>
     <div id="lockErr"></div>
   </div>
 </div>
@@ -1302,9 +1302,11 @@ select.run-edit-inp option{background:#1a1a1e;}
       const r=await fetch(GH_RAW+'?t='+Date.now(),{cache:'no-cache'});
       if(r.ok){const d=await r.json();if(d&&d._pwHash){storedHash=d._pwHash;localStorage.setItem(PW_HASH_KEY,storedHash);}}
     }catch(e){}
+    // loadGhUserdata() may have run concurrently and stored the hash — check again
+    if(!storedHash) storedHash=localStorage.getItem(PW_HASH_KEY);
   }
 
-  btn.disabled=false;
+  btn.disabled=false; btn.style.opacity='';
 
   if(!storedHash){
     // ── First run: let user create a password ──────────────────
@@ -3177,6 +3179,13 @@ loadCorosData();
 
 // Pull cross-device health data from GitHub (reads data/userdata.json from the public repo)
 loadGhUserdata();
+
+// If this device has a password hash + PAT, push to GitHub so other devices can find it.
+// Runs once 2s after load — ensures the hash is always in userdata.json without waiting
+// for health data to change.
+setTimeout(()=>{
+  if(localStorage.getItem('dash_pw_hash')&&getGhToken()) _ghPush();
+},2000);
 
 // Restore sweat rate setting
 {const sr=storeGet('sweat_rate');const ri=document.getElementById('sweatRateInp');if(sr&&ri) ri.value=sr;}
