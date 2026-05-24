@@ -2019,7 +2019,19 @@ function loadRunLog(){
       notesInp.placeholder='Notes…';
       notesInp.value=r.notes||'';
 
-      // Save all three fields to localStorage immediately on input
+      // Temp input (°F)
+      const tempInp=document.createElement('input');
+      tempInp.type='number';tempInp.className='run-edit-inp';
+      tempInp.placeholder='°F';tempInp.min='-40';tempInp.max='150';
+      if(r.temp!=null) tempInp.value=r.temp;
+
+      // Humidity input (%)
+      const humInp=document.createElement('input');
+      humInp.type='number';humInp.className='run-edit-inp';
+      humInp.placeholder='%';humInp.min='0';humInp.max='100';
+      if(r.humidity!=null) humInp.value=r.humidity;
+
+      // Save all fields to localStorage immediately on input
       const effortCell=tr.querySelector('.run-effort-cell');
       function _saveEdit(){
         const dayRuns=storeGet('runs:'+r._runDate)||[];
@@ -2028,13 +2040,24 @@ function loadRunLog(){
         dayRuns[r._runIdx].effort=(ev>=1&&ev<=10)?ev:null;
         dayRuns[r._runIdx].shoeId=shoeSel.value||null;
         dayRuns[r._runIdx].notes=notesInp.value;
+        const tv=parseFloat(tempInp.value);
+        dayRuns[r._runIdx].temp=isNaN(tv)?null:tv;
+        const hv=parseFloat(humInp.value);
+        dayRuns[r._runIdx].humidity=isNaN(hv)?null:hv;
         storeSet('runs:'+r._runDate,dayRuns);
         // Keep effort cell in main row in sync without a full reload
         if(effortCell) effortCell.textContent=dayRuns[r._runIdx].effort??'—';
+        // Update weather:date key so heat callout stays current
+        if(dayRuns[r._runIdx].temp!=null&&dayRuns[r._runIdx].humidity!=null){
+          storeSet('weather:'+r._runDate,{temp:dayRuns[r._runIdx].temp,humidity:dayRuns[r._runIdx].humidity});
+          if(r._runDate===activeDate()) renderHeatAdjCallout();
+        }
       }
       effortInp.addEventListener('input',_saveEdit);
       shoeSel.addEventListener('change',_saveEdit);
       notesInp.addEventListener('input',_saveEdit);
+      tempInp.addEventListener('change',_saveEdit);
+      humInp.addEventListener('change',_saveEdit);
 
       // Layout
       const wrap=document.createElement('div');wrap.className='run-edit-fields';
@@ -2047,7 +2070,13 @@ function loadRunLog(){
       const nf=document.createElement('div');nf.className='run-edit-field';nf.style.flex='1';
       nf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Notes'}));
       nf.appendChild(notesInp);
-      wrap.appendChild(ef);wrap.appendChild(sf);wrap.appendChild(nf);
+      const tf=document.createElement('div');tf.className='run-edit-field';
+      tf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Temp °F'}));
+      tf.appendChild(tempInp);
+      const hf=document.createElement('div');hf.className='run-edit-field';
+      hf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Humidity %'}));
+      hf.appendChild(humInp);
+      wrap.appendChild(ef);wrap.appendChild(sf);wrap.appendChild(nf);wrap.appendChild(tf);wrap.appendChild(hf);
       editTd.appendChild(wrap);
       editTr.appendChild(editTd);
       tbody.appendChild(editTr);
