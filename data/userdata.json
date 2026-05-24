@@ -1,89 +1,89 @@
 {
-  "lastUpdated": "2026-05-24T21:57:35.976Z",
+  "lastUpdated": "2026-05-24T22:05:39.185Z",
   "data": {
-    "goals:2026-05-24": [
-      {
-        "text": "SQL",
-        "done": true,
-        "doneAt": 1779643832741
-      },
-      {
-        "text": "FBD debrief (cost/tablet)",
-        "done": true,
-        "doneAt": 1779638921283
-      },
-      {
-        "done": false,
-        "text": "Shave"
-      }
-    ],
-    "elyte:2026-05-24": 1,
-    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
-    "health:2026-05-21": {
-      "tiredness": 2,
-      "mood": 4,
-      "sleep": 5.5,
-      "hrv": 121,
-      "soreness": 2,
-      "water": 128,
-      "hr": 51,
-      "soreLocs": [
-        "Left Foot",
-        "Right Foot"
-      ],
-      "sleepQuality": 2
-    },
+    "goals:2026-05-23": [],
     "health:2026-05-24": {
-      "sleepQuality": 3,
+      "soreness": 2,
+      "water": 96,
+      "mood": 2,
+      "fatigue": 5,
+      "rhr": 53,
       "soreLocs": [
         "Left Foot",
         "Quads"
       ],
       "tiredness": 3,
-      "soreness": 2,
-      "water": 96,
       "sleep": 8.43,
-      "mood": 2,
       "hrv": 100,
-      "fatigue": 5,
-      "rhr": 53
+      "sleepQuality": 3
     },
-    "health:2026-05-22": {
-      "tiredness": 2,
-      "sleep": 5,
-      "water": 124,
-      "mood": 3,
-      "soreness": 2,
-      "soreLocs": [
-        "Left Foot",
-        "Right Foot"
-      ],
-      "hrv": 96,
-      "sleepQuality": 2
-    },
-    "elyte:2026-05-21": 1,
     "elyte:2026-05-22": 1,
-    "note:2026-05-23": "i felt very tired for almost all day",
-    "health:2026-05-23": {
-      "water": 110,
-      "mood": 2,
-      "hrv": 83,
-      "soreness": 1,
-      "rhr": 53,
-      "sleep": 5,
-      "tiredness": 1,
-      "soreLocs": [
-        "Quads"
-      ]
-    },
-    "elyte:2026-05-23": 1,
     "goals:2026-05-25": [
       {
         "done": false,
         "text": "Laundry"
       }
     ],
-    "goals:2026-05-23": []
+    "elyte:2026-05-23": 1,
+    "health:2026-05-23": {
+      "mood": 2,
+      "water": 110,
+      "soreLocs": [
+        "Quads"
+      ],
+      "tiredness": 1,
+      "hrv": 83,
+      "sleep": 5,
+      "rhr": 53,
+      "soreness": 1
+    },
+    "health:2026-05-21": {
+      "sleep": 5.5,
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot"
+      ],
+      "hr": 51,
+      "tiredness": 2,
+      "soreness": 2,
+      "hrv": 121,
+      "sleepQuality": 2,
+      "mood": 4,
+      "water": 128
+    },
+    "elyte:2026-05-21": 1,
+    "note:2026-05-23": "i felt very tired for almost all day",
+    "health:2026-05-22": {
+      "water": 124,
+      "mood": 3,
+      "sleepQuality": 2,
+      "sleep": 5,
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot"
+      ],
+      "hrv": 96,
+      "soreness": 2,
+      "tiredness": 2
+    },
+    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
+    "elyte:2026-05-24": 1,
+    "goals:2026-05-24": [
+      {
+        "text": "SQL",
+        "doneAt": 1779643832741,
+        "done": true
+      },
+      {
+        "doneAt": 1779638921283,
+        "text": "FBD debrief (cost/tablet)",
+        "done": true
+      },
+      {
+        "done": false,
+        "text": "Shave"
+      }
+    ]
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
