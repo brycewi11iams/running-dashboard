@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-24T18:00:45.703Z",
+  "lastUpdated": "2026-05-24T18:55:23.705Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -34,18 +34,19 @@
       "sleepQuality": 2
     },
     "health:2026-05-24": {
-      "soreness": 2,
-      "mood": 2,
       "hrv": 100,
+      "rhr": 53,
+      "water": 64,
+      "soreness": 2,
+      "sleepQuality": 3,
+      "tiredness": 3,
       "soreLocs": [
         "Left Foot",
         "Quads"
       ],
-      "tiredness": 3,
-      "sleepQuality": 3,
-      "rhr": 53,
       "sleep": 8.43,
-      "water": 64
+      "mood": 2,
+      "fatigue": 5
     },
     "health:2026-05-22": {
       "tiredness": 2,
