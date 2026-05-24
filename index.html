@@ -1266,6 +1266,7 @@ select.run-edit-inp option{background:#1a1a1e;}
   const PW_HASH_KEY   = 'dash_pw_hash';
   const SESSION_KEY   = 'dash_unlocked';
   const REMEMBER_KEY  = 'dash_remembered';
+  const GH_RAW        = 'https://raw.githubusercontent.com/brycewi11iams/running-dashboard/main/data/userdata.json';
 
   async function sha256(str){
     const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
@@ -1281,7 +1282,6 @@ select.run-edit-inp option{background:#1a1a1e;}
   // Already unlocked this session or remembered on this device — skip straight in
   if(sessionStorage.getItem(SESSION_KEY)||localStorage.getItem(REMEMBER_KEY)){showApp();return;}
 
-  const storedHash=localStorage.getItem(PW_HASH_KEY);
   const screen=document.getElementById('lockScreen');
   const inp=document.getElementById('lockInp');
   const inp2=document.getElementById('lockInp2');
@@ -1290,6 +1290,21 @@ select.run-edit-inp option{background:#1a1a1e;}
   const sub=document.getElementById('lockSub');
   const rememberChk=document.getElementById('lockRemember');
   const rememberWrap=document.getElementById('lockRememberWrap');
+
+  // Show lock screen immediately with a loading state while we fetch
+  screen.style.display='flex';
+  btn.disabled=true; btn.textContent='Loading…'; sub.textContent='';
+
+  // Get hash — local first, then fall back to GitHub sync file
+  let storedHash=localStorage.getItem(PW_HASH_KEY);
+  if(!storedHash){
+    try{
+      const r=await fetch(GH_RAW+'?t='+Date.now(),{cache:'no-cache'});
+      if(r.ok){const d=await r.json();if(d&&d._pwHash){storedHash=d._pwHash;localStorage.setItem(PW_HASH_KEY,storedHash);}}
+    }catch(e){}
+  }
+
+  btn.disabled=false;
 
   if(!storedHash){
     // ── First run: let user create a password ──────────────────
@@ -1304,6 +1319,8 @@ select.run-edit-inp option{background:#1a1a1e;}
       if(pw.length<4){err.textContent='At least 4 characters required.';return;}
       if(pw!==inp2.value){err.textContent='Passwords do not match.';inp2.value='';inp2.focus();return;}
       localStorage.setItem(PW_HASH_KEY,await sha256(pw));
+      // Push hash to GitHub so other devices pick it up
+      setTimeout(()=>{try{_ghPush();}catch(e){}},800);
       showApp();
     });
   } else {
@@ -3244,6 +3261,10 @@ async function loadGhUserdata(){
     if(!r.ok) return; // file may not exist yet — silent no-op
     const payload=await r.json();
     if(!payload||!payload.data) return;
+    // Cache password hash if this device doesn't have one yet
+    if(payload._pwHash&&!localStorage.getItem('dash_pw_hash')){
+      localStorage.setItem('dash_pw_hash',payload._pwHash);
+    }
     let changed=false;
     Object.entries(payload.data).forEach(([k,v])=>{
       const nv=JSON.stringify(v);
@@ -3274,7 +3295,8 @@ async function _ghPush(){
       try{syncData[k]=JSON.parse(localStorage.getItem(k));}catch(e){}
     }
   }
-  const payload={lastUpdated:new Date().toISOString(),data:syncData};
+  const pwHash=localStorage.getItem('dash_pw_hash');
+  const payload={lastUpdated:new Date().toISOString(),data:syncData,...(pwHash?{_pwHash:pwHash}:{})};
   const headers={
     'Authorization':'Bearer '+token,
     'Accept':'application/vnd.github.v3+json',
@@ -3825,8 +3847,9 @@ if(_db){
     localStorage.setItem(PW_HASH_KEY,await sha256(val));
     localStorage.removeItem('dash_remembered'); // force re-auth on all remembered devices
     document.getElementById('newPwInp').value='';
-    st.textContent='Password updated. All devices will need to log in again.';
+    st.textContent='Password updated — syncing to GitHub…';
     st.style.color='#6BE3A4';
+    try{ await _ghPush(); st.textContent='Password updated. All devices will need to log in again.'; }catch(e){}
   });
 }
 </script>
