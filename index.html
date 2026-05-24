@@ -586,6 +586,16 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
 .run-edit-inp.notes-inp{min-width:120px;flex:1;}
 select.run-edit-inp{width:120px;cursor:pointer;}
 select.run-edit-inp option{background:#1a1a1e;}
+/* ─── Heat Adjustment Callout ─── */
+.heat-adj-callout{margin:0 0 14px;padding:10px 14px;border-radius:10px;
+  border-left:3px solid #F2C063;background:rgba(242,192,99,.07);font-family:var(--font-mono);}
+.heat-adj-callout.severe{border-left-color:#FF6B6B;background:rgba(255,107,107,.07);}
+.heat-adj-ttl{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-tertiary);margin-bottom:4px;}
+.heat-adj-main{font-size:12px;color:#F2C063;font-weight:700;margin-bottom:3px;}
+.heat-adj-callout.severe .heat-adj-main{color:#FF6B6B;}
+.heat-adj-pace{font-size:10.5px;color:var(--text-secondary);}
+
 </style>
 <!-- Firebase compat SDK — loaded from CDN, no build step needed -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -689,6 +699,13 @@ select.run-edit-inp option{background:#1a1a1e;}
         </div>
         <div class="rsb-sub" id="runStreakSub">Log a run to start your streak</div>
       </div>
+    </div>
+
+    <!-- Heat adjustment callout — shown when conditions warrant pace adjustment -->
+    <div class="heat-adj-callout" id="heatAdjCallout" style="display:none;">
+      <div class="heat-adj-ttl">Conditions Alert</div>
+      <div class="heat-adj-main" id="heatAdjMain">—</div>
+      <div class="heat-adj-pace" id="heatAdjPace"></div>
     </div>
 
     <div class="gm-ey" style="margin-bottom:12px;">Log a Run</div>
@@ -871,30 +888,6 @@ select.run-edit-inp option{background:#1a1a1e;}
       <div class="hm-item hm-full">
         <div class="hm-lbl">Sore Locations</div>
         <div class="soreness-tags" id="sorenessTags"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Morning Conditions (Heat/Humidity) -->
-  <div class="gm-card">
-    <div class="gm-ey" style="margin-bottom:12px;">Morning Conditions</div>
-    <div class="health-grid">
-      <div class="hm-item">
-        <div class="hm-lbl">Temperature (°F)</div>
-        <input class="hm-input" id="condTempInp" type="number" min="-40" max="150" placeholder="72">
-      </div>
-      <div class="hm-item">
-        <div class="hm-lbl">Humidity (%)</div>
-        <input class="hm-input" id="condHumInp" type="number" min="0" max="100" placeholder="65">
-      </div>
-      <div class="hm-item hm-full" style="flex-direction:row;align-items:center;gap:10px;padding:8px 12px;">
-        <button class="water-tap" id="condSaveBtn" style="white-space:nowrap;font-size:11px;">Save</button>
-        <span id="condSaveHint" style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);"></span>
-      </div>
-      <div class="hm-item hm-full" id="heatResult" style="display:none;">
-        <div class="hm-lbl">Adjusted Effort</div>
-        <div class="heat-label" id="heatLabel">—</div>
-        <div id="heatWarnEl"></div>
       </div>
     </div>
   </div>
@@ -1153,6 +1146,30 @@ select.run-edit-inp option{background:#1a1a1e;}
   </div>
 </div><!-- /narrative section -->
 
+<!-- ═══ SYNC SETTINGS ═══ -->
+<div style="text-align:center;margin:32px 0 8px;">
+  <button id="syncSettingsToggle" style="background:none;border:none;color:var(--text-tertiary);font-size:11px;font-family:var(--font-mono);cursor:pointer;letter-spacing:.06em;opacity:.6;">⚙ Sync Settings</button>
+</div>
+<div id="syncSettingsPanel" style="display:none;max-width:480px;margin:0 auto 32px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px 20px;">
+  <div style="font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:12px;">GitHub Sync</div>
+  <div style="font-size:11px;color:var(--text-secondary);margin-bottom:14px;line-height:1.6;">
+    Paste a fine-grained GitHub PAT to sync health data across devices.<br>
+    Token is stored only in this browser — never sent to any server or committed to the repo.<br>
+    <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#8B9FE8;text-decoration:none;">Generate token ↗</a>
+    — set <em>Contents: Read &amp; Write</em> on <em>brycewi11iams/running-dashboard</em> only.
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="ghTokenInp" type="password" placeholder="github_pat_…"
+      style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;
+             color:var(--text-primary);font-family:var(--font-mono);font-size:11px;padding:7px 10px;outline:none;">
+    <button id="ghTokenSave" style="background:rgba(139,159,232,.15);border:1px solid rgba(139,159,232,.3);border-radius:8px;
+             color:#8B9FE8;font-family:var(--font-mono);font-size:11px;padding:7px 14px;cursor:pointer;white-space:nowrap;">Save</button>
+    <button id="ghTokenClear" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;
+             color:var(--text-tertiary);font-family:var(--font-mono);font-size:11px;padding:7px 10px;cursor:pointer;">Clear</button>
+  </div>
+  <div id="ghTokenStatus" style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);margin-top:8px;min-height:14px;"></div>
+</div>
+
 </div><!-- /content -->
 
 <script>
@@ -1160,6 +1177,17 @@ select.run-edit-inp option{background:#1a1a1e;}
 // CONFIG
 // ═══════════════════════════════════════════════
 const ANTHROPIC_API_KEY = '';
+
+// ─── GitHub sync ───────────────────────────────────────────────
+// Token is stored in localStorage['gh_token'], never in source.
+// Use the ⚙ Sync Settings panel at the bottom of the page to set it.
+function getGhToken(){ return localStorage.getItem('gh_token')||''; }
+const GITHUB_REPO   = 'brycewi11iams/running-dashboard';
+const GITHUB_BRANCH = 'main';
+const USERDATA_PATH = 'data/userdata.json';
+// Keys whose prefixes are synced to GitHub (health data, not UI prefs)
+const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:'];
+
 // Weekday: 4:30 AM–8:30 PM  |  Weekend: 6:00 AM–10:00 PM
 function getDayBounds(){
   const day=new Date().getDay();// 0=Sun,6=Sat
@@ -1204,6 +1232,7 @@ function storeSet(k,v){
   localStorage.setItem(k,JSON.stringify(v));
   if(k.startsWith('goals:')) window.dispatchEvent(new CustomEvent('goals-changed'));
   if(_db) _db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS write]',e));
+  if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))) _scheduleGhPush();
 }
 function storeDel(k){
   localStorage.removeItem(k);
@@ -1357,7 +1386,7 @@ function updateRing(){
 
 // ═══════════════════════════════════════════════
 // READINESS SCORE (0–100)
-// Factors: sleep (30%), HRV (25%), RHR (20%), tiredness (25%)
+// Factors: sleep (30%), HRV (30%), tiredness (25%), energy/mood (15%)
 // + run-load bonus/penalty
 // ═══════════════════════════════════════════════
 function calcReadinessScore(d){
@@ -1367,19 +1396,25 @@ function calcReadinessScore(d){
   const isRest=runs.some(r=>r.rest)&&todayMi===0;
 
   const parts=[];
-  // sleep 35%, HRV 35%, tiredness 30%
+  // sleep 30%, HRV 30%, tiredness 25%, energy/mood 15%
   if(d.sleep!=null){
     let s=d.sleep>=8&&d.sleep<=9?100:d.sleep>=7?88:d.sleep>=6?65:d.sleep>=5?38:15;
-    parts.push({w:35,s,key:'sleep',label:d.sleep>=8?'Great sleep':d.sleep>=6?'OK sleep':'Poor sleep'});
+    parts.push({w:30,s,key:'sleep',label:d.sleep>=8?'Great sleep':d.sleep>=6?'OK sleep':'Poor sleep'});
   }
   if(d.hrv!=null){
     let s=d.hrv>=70?100:d.hrv>=55?82:d.hrv>=40?62:d.hrv>=25?38:15;
-    parts.push({w:35,s,key:'hrv',label:d.hrv>=60?'High HRV':d.hrv>=40?'Moderate HRV':'Low HRV'});
+    parts.push({w:30,s,key:'hrv',label:d.hrv>=60?'High HRV':d.hrv>=40?'Moderate HRV':'Low HRV'});
   }
   if(d.tiredness!=null){
     const map=[100,75,48,22,5];
     const s=map[Math.min(d.tiredness-1,4)];
-    parts.push({w:30,s,key:'tiredness',label:d.tiredness<=2?'Feeling fresh':d.tiredness<=3?'Moderate fatigue':'High fatigue'});
+    parts.push({w:25,s,key:'tiredness',label:d.tiredness<=2?'Feeling fresh':d.tiredness<=3?'Moderate fatigue':'High fatigue'});
+  }
+  if(d.mood!=null){
+    // mood/energy: 1=low energy → 0pts, 5=high energy → 100pts
+    const moodMap=[5,25,50,80,100];
+    const s=moodMap[Math.min(d.mood-1,4)];
+    parts.push({w:15,s,key:'mood',label:d.mood>=4?'High energy':d.mood>=3?'Moderate energy':'Low energy'});
   }
   if(!parts.length) return null;
   const totalW=parts.reduce((a,p)=>a+p.w,0);
@@ -2581,31 +2616,42 @@ function getEffortAdjustment(T,RH){
   if(hi<105) return{label:'Add ~90–120 sec/mi — consider XT instead',level:2};
   return{label:'Extreme heat — run indoors or skip',level:2};
 }
-function updateHeatResult(){
-  const T=parseFloat(document.getElementById('condTempInp').value);
-  const RH=parseFloat(document.getElementById('condHumInp').value);
-  if(isNaN(T)||isNaN(RH)) return;
-  storeSet('weather:'+activeDate(),{temp:T,humidity:RH});
-  const res=getEffortAdjustment(T,RH);
-  document.getElementById('heatResult').style.display='';
-  document.getElementById('heatLabel').textContent=res.label;
-  const warnEl=document.getElementById('heatWarnEl');warnEl.innerHTML='';
-  if(T>70){const d=document.createElement('div');d.className=res.level===2?'heat-danger':'heat-warn';d.textContent='⚠️ Temperature above 70°F';warnEl.appendChild(d);}
-  if(RH>80){const d=document.createElement('div');d.className=res.level===2?'heat-danger':'heat-warn';d.textContent='⚠️ Humidity above 80%';warnEl.appendChild(d);}
+function calcHeatAdjSec(T,RH){
+  const hi=calcHeatIndex(T,RH);
+  if(hi<75) return 0;
+  if(hi<80) return 10;
+  if(hi<85) return 20;
+  if(hi<90) return 35;
+  if(hi<95) return 60;
+  if(hi<105) return 105;
+  return 150;
 }
-['condTempInp','condHumInp'].forEach(id=>{
-  document.getElementById(id).addEventListener('change',updateHeatResult);
-});
-document.getElementById('condSaveBtn').addEventListener('click',()=>{
-  const T=parseFloat(document.getElementById('condTempInp').value);
-  const RH=parseFloat(document.getElementById('condHumInp').value);
-  if(isNaN(T)||isNaN(RH)) return;
-  storeSet('weather:'+activeDate(),{temp:T,humidity:RH});
-  const hint=document.getElementById('condSaveHint');
-  hint.textContent='Saved!';
-  setTimeout(()=>hint.textContent='',2000);
-});
-
+function getRecentEasyPaceSec(){
+  const runs=getAllRuns().filter(r=>!r.rest&&r.pace).slice(0,10);
+  if(!runs.length) return null;
+  const paces=runs.map(r=>paceToSec(r.pace)).filter(p=>p&&p>330&&p<900);
+  if(!paces.length) return null;
+  return Math.round(paces.reduce((s,p)=>s+p,0)/paces.length);
+}
+function renderHeatAdjCallout(){
+  const el=document.getElementById('heatAdjCallout');
+  if(!el) return;
+  const wx=storeGet('weather:'+activeDate());
+  if(!wx||wx.temp==null||wx.humidity==null){el.style.display='none';return;}
+  const adj=calcHeatAdjSec(wx.temp,wx.humidity);
+  if(adj<10){el.style.display='none';return;}
+  el.style.display='';
+  el.classList.toggle('severe',adj>=60);
+  document.getElementById('heatAdjMain').textContent=
+    `Today's conditions add ~${adj} sec/mi to your easy pace`;
+  const easyPace=getRecentEasyPaceSec();
+  const paceEl=document.getElementById('heatAdjPace');
+  if(easyPace){
+    paceEl.textContent=`Recent avg ${fmtPaceSec(easyPace)}/mi → target ${fmtPaceSec(easyPace+adj)}/mi · ${wx.temp}°F / ${wx.humidity}% RH`;
+  } else {
+    paceEl.textContent=`${wx.temp}°F · ${wx.humidity}% humidity · Heat index: ${calcHeatIndex(wx.temp,wx.humidity)}°F`;
+  }
+}
 // ═══════════════════════════════════════════════
 // SWEAT LOSS / ELECTROLYTE REMINDER
 // ═══════════════════════════════════════════════
@@ -2775,6 +2821,7 @@ function onNewDay(){
   renderConditionsChart();
   renderRecoveryTrend();
   renderTrainingLoadPanel();
+  renderHeatAdjCallout();
   // Reset day type selector to moderate for the new day
   const dtSel=document.getElementById('dayTypeSel');
   if(dtSel){dtSel.value='moderate';storeSet('daytype:'+activeDate(),'moderate');}
@@ -2785,19 +2832,6 @@ function onNewDay(){
   const si=document.getElementById('sleepInp');if(si) si.value='';
   const hi=document.getElementById('hrvInp');if(hi) hi.value='';
   const rhrI=document.getElementById('rhrInp');if(rhrI) rhrI.value='';
-  // Clear weather inputs — new day starts blank, no default carry-over
-  const tempInp=document.getElementById('condTempInp');
-  const humInp=document.getElementById('condHumInp');
-  if(tempInp) tempInp.value='';
-  if(humInp) humInp.value='';
-  const hr=document.getElementById('heatResult');if(hr) hr.style.display='none';
-  // Restore if today's weather was already saved
-  const wth=storeGet('weather:'+activeDate());
-  if(wth){
-    if(tempInp&&wth.temp!=null) tempInp.value=wth.temp;
-    if(humInp&&wth.humidity!=null) humInp.value=wth.humidity;
-    updateHeatResult();
-  }
 }
 
 // ═══════════════════════════════════════════════
@@ -2838,23 +2872,17 @@ updateReadiness();
 // New panels — render from localStorage immediately, then Coros async
 renderFeelRecap();
 renderConditionsChart();
+renderHeatAdjCallout();
 loadNarrative();
 
 // Fetch Coros data/daily.json asynchronously — auto-fills health fields + unlocks Coros panels
 loadCorosData();
 
+// Pull cross-device health data from GitHub (reads data/userdata.json from the public repo)
+loadGhUserdata();
+
 // Restore sweat rate setting
 {const sr=storeGet('sweat_rate');const ri=document.getElementById('sweatRateInp');if(sr&&ri) ri.value=sr;}
-
-// Restore saved weather for today only
-{
-  const todayWth=storeGet('weather:'+activeDate());
-  if(todayWth){
-    if(todayWth.temp!=null) document.getElementById('condTempInp').value=todayWth.temp;
-    if(todayWth.humidity!=null) document.getElementById('condHumInp').value=todayWth.humidity;
-    updateHeatResult();
-  }
-}
 
 makeAddHandlers(()=>'goals:'+activeDate(),
   document.getElementById('goalInp'),document.getElementById('goalAdd'),
@@ -2931,6 +2959,74 @@ document.addEventListener('visibilitychange',()=>{
 window.addEventListener('storage',()=>_reRenderAll());
 
 // ═══════════════════════════════════════════════
+// GITHUB SYNC — read/write data/userdata.json
+// Reads on every page load (public raw URL, no auth).
+// Writes are debounced 30 s after any sync-key storeSet().
+// Set token via the ⚙ Sync Settings panel — stored in localStorage, not source.
+// ═══════════════════════════════════════════════
+
+async function loadGhUserdata(){
+  const rawUrl=`https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${USERDATA_PATH}?t=${Date.now()}`;
+  try{
+    const r=await fetch(rawUrl);
+    if(!r.ok) return; // file may not exist yet — silent no-op
+    const payload=await r.json();
+    if(!payload||!payload.data) return;
+    let changed=false;
+    Object.entries(payload.data).forEach(([k,v])=>{
+      const nv=JSON.stringify(v);
+      if(localStorage.getItem(k)!==nv){localStorage.setItem(k,nv);changed=true;}
+    });
+    if(changed) _reRenderAll();
+    console.info('[GH sync] loaded from GitHub',Object.keys(payload.data).length,'keys');
+  }catch(e){
+    console.info('[GH sync] load failed — offline or file missing:',e.message||e);
+  }
+}
+
+let _ghPushTimer=null;
+function _scheduleGhPush(){
+  if(!getGhToken()) return;
+  clearTimeout(_ghPushTimer);
+  _ghPushTimer=setTimeout(_ghPush,30000);
+}
+
+async function _ghPush(){
+  const token=getGhToken();
+  if(!token) return;
+  // Collect all keys that match sync prefixes
+  const syncData={};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&GH_SYNC_PREFIXES.some(p=>k.startsWith(p))){
+      try{syncData[k]=JSON.parse(localStorage.getItem(k));}catch(e){}
+    }
+  }
+  const payload={lastUpdated:new Date().toISOString(),data:syncData};
+  const headers={
+    'Authorization':'Bearer '+token,
+    'Accept':'application/vnd.github.v3+json',
+    'Content-Type':'application/json'
+  };
+  const apiUrl=`https://api.github.com/repos/${GITHUB_REPO}/contents/${USERDATA_PATH}`;
+  // Get current SHA (required to update an existing file)
+  let sha=null;
+  try{
+    const r=await fetch(apiUrl,{headers});
+    if(r.ok){const d=await r.json();sha=d.sha;}
+  }catch(e){}
+  // Base64-encode payload
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
+  const body={message:'sync: dashboard userdata',content,branch:GITHUB_BRANCH};
+  if(sha) body.sha=sha;
+  try{
+    const r=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body)});
+    if(r.ok) console.info('[GH sync] pushed',Object.keys(syncData).length,'keys');
+    else console.warn('[GH sync] push failed HTTP',r.status);
+  }catch(e){console.warn('[GH sync] push error',e);}
+}
+
+// ═══════════════════════════════════════════════
 // FIRESTORE INITIAL SYNC
 // Pulls every document from the remote 'store'
 // collection into localStorage, then re-renders
@@ -2951,15 +3047,9 @@ function _reRenderAll(){
   renderElyte(); renderIron(); renderVitamin(); updateReadiness();
   renderFeelRecap(); renderConditionsChart();
   renderRecoveryTrend(); renderTrainingLoadPanel();
+  renderHeatAdjCallout();
   loadNarrative();
   const sr=storeGet('sweat_rate');const ri=document.getElementById('sweatRateInp');if(sr&&ri) ri.value=sr;
-  const tw=storeGet('weather:'+activeDate());
-  if(tw){
-    const ti=document.getElementById('condTempInp'),hi=document.getElementById('condHumInp');
-    if(ti&&tw.temp!=null) ti.value=tw.temp;
-    if(hi&&tw.humidity!=null) hi.value=tw.humidity;
-    updateHeatResult();
-  }
 }
 
 // ═══════════════════════════════════════════════
@@ -3353,7 +3443,16 @@ function _renderNarrativePrev(){
 if(_db){
   _db.collection('store').get().then(snap=>{
     if(snap.empty){
-      // Firestore is empty — this is the first open after migration.
+      // Firestore is empty. Only migrate if this device actually has
+      // meaningful data — prevents a phone with empty localStorage
+      // from wiping a freshly-cleared Firestore collection.
+      const hasData=storeGet('health:'+activeDate())!=null
+        || storeKeys('runs:').length>0
+        || storeKeys('goals:').length>0;
+      if(!hasData){
+        console.info('[FS] Firestore empty and localStorage empty — skipping migration.');
+        return;
+      }
       // Push every localStorage key up so other devices get the data.
       const batch=_db.batch();
       for(let i=0;i<localStorage.length;i++){
@@ -3396,6 +3495,54 @@ if(_db){
       }
     }
   }).catch(e=>console.warn('[FS initial sync failed — offline?]',e));
+}
+
+// ═══════════════════════════════════════════════
+// SYNC SETTINGS PANEL
+// ═══════════════════════════════════════════════
+{
+  const toggle=document.getElementById('syncSettingsToggle');
+  const panel=document.getElementById('syncSettingsPanel');
+  const inp=document.getElementById('ghTokenInp');
+  const saveBtn=document.getElementById('ghTokenSave');
+  const clearBtn=document.getElementById('ghTokenClear');
+  const status=document.getElementById('ghTokenStatus');
+
+  // Show current token state on open
+  function _updateTokenStatus(){
+    const t=getGhToken();
+    if(t){
+      status.textContent='Token saved — sync writes enabled. ('+(t.slice(0,12))+'…)';
+      status.style.color='#6BE3A4';
+    } else {
+      status.textContent='No token — reads work, writes disabled.';
+      status.style.color='var(--text-tertiary)';
+    }
+    inp.value='';// don't pre-fill — keeps it out of view
+  }
+
+  toggle.addEventListener('click',()=>{
+    const open=panel.style.display==='none';
+    panel.style.display=open?'':'none';
+    toggle.textContent=open?'⚙ Sync Settings ▴':'⚙ Sync Settings';
+    if(open) _updateTokenStatus();
+  });
+
+  saveBtn.addEventListener('click',()=>{
+    const val=inp.value.trim();
+    if(!val){status.textContent='Paste a token first.';status.style.color='#F2C063';return;}
+    localStorage.setItem('gh_token',val);
+    inp.value='';
+    _updateTokenStatus();
+    // Trigger a push immediately so the saved data goes up right away
+    _ghPush();
+  });
+
+  clearBtn.addEventListener('click',()=>{
+    localStorage.removeItem('gh_token');
+    inp.value='';
+    _updateTokenStatus();
+  });
 }
 </script>
 </body>
