@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-24T14:11:31.262Z",
+  "lastUpdated": "2026-05-24T16:09:19.877Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -7,12 +7,17 @@
         "done": false
       },
       {
-        "text": "SQL",
-        "done": false
+        "done": false,
+        "text": "SQL"
       },
       {
+        "done": true,
         "text": "FBD debrief (cost/tablet)",
-        "done": false
+        "doneAt": 1779638921283
+      },
+      {
+        "done": false,
+        "text": "Shave"
       }
     ],
     "elyte:2026-05-24": 1,
@@ -32,17 +37,18 @@
       "sleepQuality": 2
     },
     "health:2026-05-24": {
-      "mood": 2,
-      "sleepQuality": 3,
-      "sleep": 8.43,
-      "hrv": 100,
-      "rhr": 53,
-      "tiredness": 2,
       "soreness": 2,
+      "mood": 2,
+      "hrv": 100,
       "soreLocs": [
         "Left Foot",
         "Quads"
-      ]
+      ],
+      "tiredness": 2,
+      "sleepQuality": 3,
+      "rhr": 53,
+      "sleep": 8.43,
+      "water": 64
     },
     "health:2026-05-22": {
       "tiredness": 2,
