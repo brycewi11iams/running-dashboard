@@ -1079,7 +1079,7 @@ select.run-edit-inp option{background:#1a1a1e;}
         <div class="hm-val-row"><span class="hm-val" id="sleepVal">—</span><span class="hm-unit">hrs</span></div>
         <div class="star-row" id="sleepStars"></div>
         <input class="hm-input" id="sleepInp" type="number" min="0" max="24" step="0.5" placeholder="Hours slept">
-        <div class="spark-wrap"><svg id="sleepSpark" width="100%" height="32"></svg></div>
+        <div class="spark-wrap"><svg id="sleepSpark" width="100%" height="60"></svg></div>
       </div>
 
       <!-- HRV -->
@@ -1087,7 +1087,7 @@ select.run-edit-inp option{background:#1a1a1e;}
         <div class="hm-lbl">HRV</div>
         <div class="hm-val-row"><span class="hm-val" id="hrvVal">—</span><span class="hm-unit">ms</span></div>
         <input class="hm-input" id="hrvInp" type="number" min="0" max="300" placeholder="ms">
-        <div class="spark-wrap"><svg id="hrvSpark" width="100%" height="32"></svg></div>
+        <div class="spark-wrap"><svg id="hrvSpark" width="100%" height="60"></svg></div>
       </div>
 
       <!-- RHR -->
@@ -1103,7 +1103,7 @@ select.run-edit-inp option{background:#1a1a1e;}
         <div class="hm-lbl">Energy Rating</div>
         <div class="hm-val-row"><span class="hm-val" id="moodVal">—</span><span class="hm-unit">/ 5</span></div>
         <div class="star-row" id="moodStars"></div>
-        <div class="spark-wrap"><svg id="moodSpark" width="100%" height="32"></svg></div>
+        <div class="spark-wrap"><svg id="moodSpark" width="100%" height="60"></svg></div>
       </div>
 
       <!-- Water — full width -->
@@ -1121,7 +1121,7 @@ select.run-edit-inp option{background:#1a1a1e;}
           <input class="hm-input" id="waterCustInp" type="number" min="1" max="256" placeholder="Custom oz">
           <button class="water-tap" id="waterCustBtn">Add</button>
         </div>
-        <div class="spark-wrap" style="margin-top:8px;"><svg id="waterSpark" width="100%" height="32"></svg></div>
+        <div class="spark-wrap" style="margin-top:8px;"><svg id="waterSpark" width="100%" height="60"></svg></div>
 
         <!-- Electrolyte tracker -->
         <div class="hm-lbl" style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);">Liquid IV</div>
@@ -1456,8 +1456,8 @@ function lastNDays(n){
 }
 function weekStart(ymd){
   const[y,m,d]=ymd.split('-').map(Number);const dt=new Date(y,m-1,d);
-  // ISO week: Monday start (used only for the mileage chart grouping)
-  const day=dt.getDay()||7;dt.setDate(dt.getDate()-(day-1));return localYMD(dt);
+  // Sun–Sat week (matches currentWeekDays and the weekly strip)
+  dt.setDate(dt.getDate()-dt.getDay());return localYMD(dt);
 }
 // Sun–Sat week: returns all 7 dates of the current calendar week (local)
 function currentWeekDays(){
@@ -2002,41 +2002,13 @@ function buildStars(container,val,onChange){
   }
 }
 
-function drawSpark(svgEl,vals,color){
+// Unified metric chart — y-axis, mid-grid, area fill, line, dots, last-value label.
+// suffix: unit string appended to last-value label (e.g. 'bpm', 'hrs', 'ms', 'oz', '/ 5')
+function drawMetricChart(svgEl,vals,color,suffix){
   svgEl.innerHTML='';
-  const w=svgW(svgEl),h=32;
-  const valid=vals.filter(v=>v!=null);if(valid.length<2) return;
-  const mn=Math.min(...valid),mx=Math.max(...valid),rng=mx-mn||1,n=vals.length;
-  const pts=vals.map((v,i)=>({x:i/(n-1)*w,y:v==null?null:h-((v-mn)/rng)*(h-6)-3}));
-  let d='';
-  pts.forEach(p=>{if(p.y==null) return;d+=d===''?`M${p.x} ${p.y}`:`L${p.x} ${p.y}`;});
-  if(d){
-    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d',d);path.setAttribute('fill','none');
-    path.setAttribute('stroke',color||'rgba(255,255,255,0.4)');path.setAttribute('stroke-width','1.5');
-    path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
-    svgEl.appendChild(path);
-  }
-  const last=pts.filter(p=>p.y!=null).pop();
-  if(last){
-    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx',last.x);c.setAttribute('cy',last.y);c.setAttribute('r','2.5');
-    c.setAttribute('fill',color||'rgba(255,255,255,0.6)');svgEl.appendChild(c);
-  }
-  // 7-day range label below the sparkline
-  const fmt=v=>Number.isInteger(v)?String(v):v.toFixed(1);
-  const rt=document.createElementNS('http://www.w3.org/2000/svg','text');
-  rt.setAttribute('x',w/2);rt.setAttribute('y',h+10);rt.setAttribute('text-anchor','middle');
-  rt.setAttribute('fill','rgba(255,255,255,0.22)');rt.setAttribute('font-size','7');
-  rt.setAttribute('font-family','ui-monospace,monospace');
-  rt.textContent=mn!==mx?fmt(mn)+' – '+fmt(mx):fmt(mn);
-  svgEl.appendChild(rt);
-}
-
-function drawRhrChart(svgEl,vals){
-  svgEl.innerHTML='';
-  const W=svgW(svgEl),H=60,color='#FF6B6B';
+  const W=svgW(svgEl),H=60;
   const PT=8,PB=14,PL=26,PR=4,chartW=W-PL-PR,chartH=H-PT-PB;
+  const fmt=v=>Number.isInteger(v)?String(v):v.toFixed(1);
   const valid=vals.filter(v=>v!=null);
   if(valid.length<2){
     const t=document.createElementNS('http://www.w3.org/2000/svg','text');
@@ -2046,23 +2018,23 @@ function drawRhrChart(svgEl,vals){
     t.textContent='No data';svgEl.appendChild(t);return;
   }
   const mn=Math.min(...valid),mx=Math.max(...valid),rng=mx-mn||1,n=vals.length;
-  const pX=i=>PL+i/(n-1)*chartW;
+  const pX=i=>PL+(n<=1?chartW/2:i/(n-1)*chartW);
   const pY=v=>PT+chartH*(1-(v-mn)/rng);
   // Mid grid line
   const midY=pY((mn+mx)/2);
   const gl=document.createElementNS('http://www.w3.org/2000/svg','line');
   gl.setAttribute('x1',PL);gl.setAttribute('y1',midY);gl.setAttribute('x2',W-PR);gl.setAttribute('y2',midY);
   gl.setAttribute('stroke','rgba(255,255,255,0.06)');gl.setAttribute('stroke-width','1');svgEl.appendChild(gl);
-  // Y-axis labels
+  // Y-axis labels (top = max, bottom = min)
   const mkLbl=(val,y)=>{const t=document.createElementNS('http://www.w3.org/2000/svg','text');
     t.setAttribute('x',PL-3);t.setAttribute('y',y);t.setAttribute('text-anchor','end');
     t.setAttribute('fill','rgba(255,255,255,0.28)');t.setAttribute('font-size','7');
-    t.setAttribute('font-family','ui-monospace,monospace');t.textContent=val;svgEl.appendChild(t);};
-  mkLbl(mx,PT+7);mkLbl(mn,PT+chartH);
-  // Build point list (skip nulls)
+    t.setAttribute('font-family','ui-monospace,monospace');t.textContent=fmt(val);svgEl.appendChild(t);};
+  mkLbl(mx,PT+7);if(mn!==mx) mkLbl(mn,PT+chartH);
+  // Points (skip nulls)
   const pts=vals.map((v,i)=>v!=null?{x:pX(i),y:pY(v),v}:null);
   const vpts=pts.filter(Boolean);
-  if(vpts.length<1) return;
+  if(!vpts.length) return;
   // Area fill
   let areaD=`M${vpts[0].x} ${PT+chartH}`;
   vpts.forEach(p=>areaD+=`L${p.x} ${p.y}`);
@@ -2071,10 +2043,10 @@ function drawRhrChart(svgEl,vals){
   area.setAttribute('d',areaD);area.setAttribute('fill',color);area.setAttribute('fill-opacity','0.09');svgEl.appendChild(area);
   // Line
   let lineD='';vpts.forEach((p,i)=>lineD+=i===0?`M${p.x} ${p.y}`:`L${p.x} ${p.y}`);
-  const line=document.createElementNS('http://www.w3.org/2000/svg','path');
-  line.setAttribute('d',lineD);line.setAttribute('fill','none');line.setAttribute('stroke',color);
-  line.setAttribute('stroke-width','1.5');line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-linejoin','round');svgEl.appendChild(line);
-  // Dots
+  const ln=document.createElementNS('http://www.w3.org/2000/svg','path');
+  ln.setAttribute('d',lineD);ln.setAttribute('fill','none');ln.setAttribute('stroke',color);
+  ln.setAttribute('stroke-width','1.5');ln.setAttribute('stroke-linecap','round');ln.setAttribute('stroke-linejoin','round');svgEl.appendChild(ln);
+  // Dots — all visible, last one larger
   vpts.forEach((p,i)=>{
     const isLast=i===vpts.length-1;
     const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
@@ -2083,13 +2055,13 @@ function drawRhrChart(svgEl,vals){
   });
   // Last-value label
   const last=vpts[vpts.length-1];
-  const lx=last.x>W-34?last.x-5:last.x+5;
-  const anch=last.x>W-34?'end':'start';
+  const lx=last.x>W-40?last.x-5:last.x+5;
+  const anch=last.x>W-40?'end':'start';
   const lt=document.createElementNS('http://www.w3.org/2000/svg','text');
   lt.setAttribute('x',lx);lt.setAttribute('y',last.y<PT+10?last.y+10:last.y-4);
   lt.setAttribute('text-anchor',anch);lt.setAttribute('fill',color);lt.setAttribute('font-size','8');
   lt.setAttribute('font-family','ui-monospace,monospace');lt.setAttribute('font-weight','700');
-  lt.textContent=last.v+' bpm';svgEl.appendChild(lt);
+  lt.textContent=fmt(last.v)+(suffix?' '+suffix:'');svgEl.appendChild(lt);
 }
 
 function renderWater(oz){
@@ -2122,14 +2094,14 @@ function loadHealth(){
     const dd=hGet(today);dd.mood=v;hSet(today,dd);loadHealth();updateWeekly();
   });
   updateReadiness();
-  // HRV and HR get 14-day sparklines; sleep/mood/water get 7-day
+  // HRV and RHR get 14-day charts; sleep/mood/water get 7-day
   const wk7=lastNDays(7),wk14=lastNDays(14);
   requestAnimationFrame(()=>{
-    drawSpark(document.getElementById('sleepSpark'),wk7.map(x=>hGet(x).sleep??null),'#8B9FE8');
-    drawSpark(document.getElementById('hrvSpark'),wk14.map(x=>hGet(x).hrv??null),'#6BE3A4');
-    drawRhrChart(document.getElementById('rhrSpark'),wk14.map(x=>hGet(x).rhr??null));
-    drawSpark(document.getElementById('moodSpark'),wk7.map(x=>hGet(x).mood??null),'#F2C063');
-    drawSpark(document.getElementById('waterSpark'),wk7.map(x=>hGet(x).water??null),'#5BC4E8');
+    drawMetricChart(document.getElementById('sleepSpark'),wk7.map(x=>hGet(x).sleep??null),'#8B9FE8','hrs');
+    drawMetricChart(document.getElementById('hrvSpark'),wk14.map(x=>hGet(x).hrv??null),'#6BE3A4','ms');
+    drawMetricChart(document.getElementById('rhrSpark'),wk14.map(x=>hGet(x).rhr??null),'#FF6B6B','bpm');
+    drawMetricChart(document.getElementById('moodSpark'),wk7.map(x=>hGet(x).mood??null),'#F2C063','/ 5');
+    drawMetricChart(document.getElementById('waterSpark'),wk7.map(x=>hGet(x).water??null),'#5BC4E8','oz');
   });
 }
 
@@ -2433,79 +2405,81 @@ function drawPaceChart(){
   ll.textContent=fmtPaceSec(paces[n-1]);svg.appendChild(ll);
 }
 
-// ── 30-day weekly mileage chart  (#3 fix)
-// Always renders grid + background bars even with no data
+// ── 30-day weekly mileage line chart (Sun–Sat weeks)
 function drawMileage(){
   const svg=document.getElementById('mileChart');svg.innerHTML='';
   const days=lastNDays(30);
+  // Accumulate miles per Sun–Sat week
   const wkMap={};
   days.forEach(d=>{
-    const wk=weekStart(d);if(!wkMap[wk]) wkMap[wk]={miles:0,rest:false};
-    (storeGet('runs:'+d)||[]).forEach(r=>{
-      if(r.rest) wkMap[wk].rest=true; else wkMap[wk].miles+=r.dist||0;
-    });
+    const wk=weekStart(d);if(!(wk in wkMap)) wkMap[wk]=0;
+    (storeGet('runs:'+d)||[]).forEach(r=>{if(!r.rest) wkMap[wk]+=r.dist||0;});
   });
-  const weeks=Object.keys(wkMap).sort();if(!weeks.length) return;
+  const weeks=Object.keys(wkMap).sort();
+  if(!weeks.length) return;
 
   const W=svgW(svg),H=90;
-  const PT=6,PB=20,gap=4;
-  const chartH=H-PT-PB;
-  const bw=Math.max(Math.floor((W-(weeks.length-1)*gap)/weeks.length),6);
-  const maxM=Math.max(...weeks.map(w=>wkMap[w].miles),0.01);
+  const PT=10,PB=22,PL=30,PR=6;
+  const chartW=W-PL-PR,chartH=H-PT-PB;
+  const miles=weeks.map(w=>wkMap[w]);
+  const maxM=Math.max(...miles,0.01);
+  const n=weeks.length;
+  const pX=i=>PL+(n<=1?chartW/2:i/(n-1)*chartW);
+  const pY=v=>PT+chartH*(1-v/maxM);
 
-  // Axis line
-  const ax=document.createElementNS('http://www.w3.org/2000/svg','line');
-  ax.setAttribute('x1',0);ax.setAttribute('y1',H-PB);
-  ax.setAttribute('x2',W);ax.setAttribute('y2',H-PB);
-  ax.setAttribute('stroke','rgba(255,255,255,0.08)');ax.setAttribute('stroke-width','1');
-  svg.appendChild(ax);
+  // Baseline
+  const base=document.createElementNS('http://www.w3.org/2000/svg','line');
+  base.setAttribute('x1',PL);base.setAttribute('y1',H-PB);base.setAttribute('x2',W-PR);base.setAttribute('y2',H-PB);
+  base.setAttribute('stroke','rgba(255,255,255,0.08)');base.setAttribute('stroke-width','1');svg.appendChild(base);
 
-  // Max reference — dashed line at top of chart + label showing peak weekly miles
-  if(maxM>0.01){
-    const ml=document.createElementNS('http://www.w3.org/2000/svg','line');
-    ml.setAttribute('x1',0);ml.setAttribute('y1',PT);ml.setAttribute('x2',W);ml.setAttribute('y2',PT);
-    ml.setAttribute('stroke','rgba(255,255,255,0.06)');ml.setAttribute('stroke-width','1');
-    ml.setAttribute('stroke-dasharray','2,4');svg.appendChild(ml);
-    const mt=document.createElementNS('http://www.w3.org/2000/svg','text');
-    mt.setAttribute('x',2);mt.setAttribute('y',PT+8);
-    mt.setAttribute('fill','var(--text-tertiary)');mt.setAttribute('font-size','7.5');
-    mt.setAttribute('font-family','ui-monospace,monospace');
-    mt.textContent=maxM.toFixed(1)+' mi max';svg.appendChild(mt);
+  // Dashed top reference + y-axis label
+  const tl=document.createElementNS('http://www.w3.org/2000/svg','line');
+  tl.setAttribute('x1',PL);tl.setAttribute('y1',PT);tl.setAttribute('x2',W-PR);tl.setAttribute('y2',PT);
+  tl.setAttribute('stroke','rgba(255,255,255,0.06)');tl.setAttribute('stroke-width','1');tl.setAttribute('stroke-dasharray','2,4');svg.appendChild(tl);
+  const yt=document.createElementNS('http://www.w3.org/2000/svg','text');
+  yt.setAttribute('x',PL-3);yt.setAttribute('y',PT+7);yt.setAttribute('text-anchor','end');
+  yt.setAttribute('fill','rgba(255,255,255,0.28)');yt.setAttribute('font-size','7');
+  yt.setAttribute('font-family','ui-monospace,monospace');yt.textContent=maxM.toFixed(1);svg.appendChild(yt);
+
+  const pts=weeks.map((wk,i)=>({x:pX(i),y:pY(miles[i]),v:miles[i],wk}));
+
+  // Area fill
+  if(pts.length>=2){
+    let areaD=`M${pts[0].x} ${H-PB}`;
+    pts.forEach(p=>areaD+=`L${p.x} ${p.y}`);
+    areaD+=`L${pts[pts.length-1].x} ${H-PB}Z`;
+    const area=document.createElementNS('http://www.w3.org/2000/svg','path');
+    area.setAttribute('d',areaD);area.setAttribute('fill','rgba(107,227,164,1)');area.setAttribute('fill-opacity','0.1');svg.appendChild(area);
   }
 
-  weeks.forEach((wk,i)=>{
-    const{miles,rest}=wkMap[wk];
-    const x=i*(bw+gap);
+  // Line
+  let lineD='';pts.forEach((p,i)=>lineD+=i===0?`M${p.x} ${p.y}`:`L${p.x} ${p.y}`);
+  const ln=document.createElementNS('http://www.w3.org/2000/svg','path');
+  ln.setAttribute('d',lineD);ln.setAttribute('fill','none');ln.setAttribute('stroke','rgba(107,227,164,0.85)');
+  ln.setAttribute('stroke-width','1.8');ln.setAttribute('stroke-linecap','round');ln.setAttribute('stroke-linejoin','round');svg.appendChild(ln);
 
-    // Background lane — always visible, shows the chart area
-    const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    bg.setAttribute('x',x);bg.setAttribute('y',PT);
-    bg.setAttribute('width',bw);bg.setAttribute('height',chartH);
-    bg.setAttribute('rx',3);bg.setAttribute('fill','rgba(255,255,255,0.025)');
-    svg.appendChild(bg);
-
-    const bh=miles>0?Math.max((miles/maxM)*chartH,4):0;
-    if(bh>0){
-      const bar=document.createElementNS('http://www.w3.org/2000/svg','rect');
-      bar.setAttribute('x',x);bar.setAttribute('y',H-PB-bh);
-      bar.setAttribute('width',bw);bar.setAttribute('height',bh);
-      bar.setAttribute('rx',3);bar.setAttribute('fill','rgba(107,227,164,0.55)');
-      svg.appendChild(bar);
-    } else if(rest){
-      const rdot=document.createElementNS('http://www.w3.org/2000/svg','rect');
-      rdot.setAttribute('x',x);rdot.setAttribute('y',H-PB-4);
-      rdot.setAttribute('width',bw);rdot.setAttribute('height',4);
-      rdot.setAttribute('rx',2);rdot.setAttribute('fill','rgba(242,192,99,0.4)');
-      svg.appendChild(rdot);
+  // Dots + labels
+  pts.forEach((p,i)=>{
+    const isLast=i===pts.length-1;
+    // Dot
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',isLast?'3.5':'2');
+    c.setAttribute('fill','rgba(107,227,164,0.9)');c.setAttribute('opacity',isLast?'1':'0.6');svg.appendChild(c);
+    // Miles label above dot (skip 0-mile weeks)
+    if(p.v>0){
+      const mt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      mt.setAttribute('x',p.x);mt.setAttribute('y',p.y-6);mt.setAttribute('text-anchor','middle');
+      mt.setAttribute('fill','rgba(107,227,164,0.9)');mt.setAttribute('font-size','7.5');
+      mt.setAttribute('font-family','ui-monospace,monospace');mt.setAttribute('font-weight','600');
+      mt.textContent=p.v.toFixed(1);svg.appendChild(mt);
     }
-
-    if(miles>0){
-      const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
-      lbl.setAttribute('x',x+bw/2);lbl.setAttribute('y',H-4);
-      lbl.setAttribute('text-anchor','middle');lbl.setAttribute('fill','var(--text-tertiary)');
-      lbl.setAttribute('font-size','8');lbl.setAttribute('font-family','ui-monospace,monospace');
-      lbl.textContent=miles.toFixed(1);svg.appendChild(lbl);
-    }
+    // Week label at bottom (M/D of the Sunday)
+    const[,mm,dd]=p.wk.split('-');
+    const wt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    wt.setAttribute('x',p.x);wt.setAttribute('y',H-4);wt.setAttribute('text-anchor','middle');
+    wt.setAttribute('fill','rgba(255,255,255,0.3)');wt.setAttribute('font-size','7.5');
+    wt.setAttribute('font-family','ui-monospace,monospace');
+    wt.textContent=`${parseInt(mm)}/${parseInt(dd)}`;svg.appendChild(wt);
   });
 }
 
