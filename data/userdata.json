@@ -1,10 +1,11 @@
 {
-  "lastUpdated": "2026-05-24T01:54:50.364Z",
+  "lastUpdated": "2026-05-24T14:05:19.669Z",
   "data": {
+    "goals:2026-05-23": [],
     "goals:2026-05-24": [
       {
-        "done": false,
-        "text": "Find more work pants"
+        "text": "Find more work pants",
+        "done": false
       },
       {
         "text": "SQL",
@@ -15,50 +16,56 @@
         "done": false
       }
     ],
-    "goals:2026-05-23": [],
+    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
+    "health:2026-05-23": {
+      "water": 110,
+      "mood": 2,
+      "hrv": 83,
+      "soreness": 1,
+      "rhr": 53,
+      "sleep": 5,
+      "tiredness": 1,
+      "soreLocs": [
+        "Quads"
+      ]
+    },
     "health:2026-05-21": {
+      "tiredness": 2,
+      "mood": 4,
       "sleep": 5.5,
+      "hrv": 121,
+      "soreness": 2,
+      "water": 128,
+      "hr": 51,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "hr": 51,
-      "tiredness": 2,
-      "soreness": 2,
-      "hrv": 121,
-      "sleepQuality": 2,
-      "mood": 4,
-      "water": 128
+      "sleepQuality": 2
     },
-    "elyte:2026-05-22": 1,
-    "elyte:2026-05-23": 1,
-    "health:2026-05-23": {
-      "mood": 2,
-      "water": 110,
-      "soreLocs": [
-        "Quads"
-      ],
-      "tiredness": 1,
-      "hrv": 83,
-      "sleep": 5,
+    "health:2026-05-24": {
       "rhr": 53,
-      "soreness": 1
+      "hrv": 100,
+      "sleep": 8.43,
+      "sleepQuality": 3,
+      "mood": 2
     },
-    "elyte:2026-05-21": 1,
-    "note:2026-05-23": "i felt very tired for almost all day",
     "health:2026-05-22": {
+      "tiredness": 2,
+      "sleep": 5,
       "water": 124,
       "mood": 3,
-      "sleepQuality": 2,
-      "sleep": 5,
+      "soreness": 2,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
       "hrv": 96,
-      "soreness": 2,
-      "tiredness": 2
+      "sleepQuality": 2
     },
-    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all"
+    "elyte:2026-05-21": 1,
+    "elyte:2026-05-22": 1,
+    "elyte:2026-05-23": 1,
+    "note:2026-05-23": "i felt very tired for almost all day"
   }
 }
