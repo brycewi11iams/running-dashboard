@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-24T18:55:23.705Z",
+  "lastUpdated": "2026-05-24T21:28:01.269Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -34,19 +34,19 @@
       "sleepQuality": 2
     },
     "health:2026-05-24": {
-      "hrv": 100,
-      "rhr": 53,
-      "water": 64,
-      "soreness": 2,
       "sleepQuality": 3,
-      "tiredness": 3,
       "soreLocs": [
         "Left Foot",
         "Quads"
       ],
+      "tiredness": 3,
+      "soreness": 2,
+      "water": 96,
       "sleep": 8.43,
       "mood": 2,
-      "fatigue": 5
+      "hrv": 100,
+      "fatigue": 5,
+      "rhr": 53
     },
     "health:2026-05-22": {
       "tiredness": 2,
@@ -77,6 +77,12 @@
       ]
     },
     "elyte:2026-05-23": 1,
+    "goals:2026-05-25": [
+      {
+        "text": "Laundry",
+        "done": false
+      }
+    ],
     "goals:2026-05-23": []
   }
 }
