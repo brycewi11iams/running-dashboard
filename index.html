@@ -639,6 +639,10 @@ select.run-edit-inp option{background:#1a1a1e;}
     <div id="lockSub"></div>
     <input id="lockInp" type="password" placeholder="Password" autocomplete="current-password" spellcheck="false">
     <input id="lockInp2" type="password" placeholder="Confirm password" style="display:none;" spellcheck="false">
+    <label id="lockRememberWrap" style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;">
+      <input id="lockRemember" type="checkbox" style="width:14px;height:14px;accent-color:#8B9FE8;cursor:pointer;">
+      <span style="font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono);">Remember this device</span>
+    </label>
     <button id="lockBtn">Unlock</button>
     <div id="lockErr"></div>
   </div>
@@ -1259,8 +1263,9 @@ select.run-edit-inp option{background:#1a1a1e;}
 // ACCESS CONTROL — runs first, before anything is shown
 // ═══════════════════════════════════════════════
 (async function initLock(){
-  const PW_HASH_KEY  = 'dash_pw_hash';
-  const SESSION_KEY  = 'dash_unlocked';
+  const PW_HASH_KEY   = 'dash_pw_hash';
+  const SESSION_KEY   = 'dash_unlocked';
+  const REMEMBER_KEY  = 'dash_remembered';
 
   async function sha256(str){
     const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
@@ -1273,8 +1278,8 @@ select.run-edit-inp option{background:#1a1a1e;}
     sessionStorage.setItem(SESSION_KEY,'1');
   }
 
-  // Already unlocked this session — skip straight in
-  if(sessionStorage.getItem(SESSION_KEY)){showApp();return;}
+  // Already unlocked this session or remembered on this device — skip straight in
+  if(sessionStorage.getItem(SESSION_KEY)||localStorage.getItem(REMEMBER_KEY)){showApp();return;}
 
   const storedHash=localStorage.getItem(PW_HASH_KEY);
   const screen=document.getElementById('lockScreen');
@@ -1283,12 +1288,15 @@ select.run-edit-inp option{background:#1a1a1e;}
   const btn=document.getElementById('lockBtn');
   const err=document.getElementById('lockErr');
   const sub=document.getElementById('lockSub');
+  const rememberChk=document.getElementById('lockRemember');
+  const rememberWrap=document.getElementById('lockRememberWrap');
 
   if(!storedHash){
     // ── First run: let user create a password ──────────────────
     sub.textContent='Create a password to protect your dashboard.';
     inp.placeholder='Create password (min 4 chars)';
     inp2.style.display='';
+    rememberWrap.style.display='none'; // hide remember on setup screen
     btn.textContent='Set Password';
     btn.addEventListener('click',async()=>{
       err.textContent='';
@@ -1304,8 +1312,12 @@ select.run-edit-inp option{background:#1a1a1e;}
     btn.textContent='Unlock';
     const tryUnlock=async()=>{
       err.textContent='';
-      if((await sha256(inp.value))===storedHash){showApp();}
-      else{err.textContent='Incorrect password.';inp.value='';inp.focus();}
+      if((await sha256(inp.value))===storedHash){
+        if(rememberChk.checked) localStorage.setItem(REMEMBER_KEY,'1');
+        showApp();
+      } else {
+        err.textContent='Incorrect password.';inp.value='';inp.focus();
+      }
     };
     btn.addEventListener('click',tryUnlock);
     inp.addEventListener('keydown',e=>{if(e.key==='Enter') tryUnlock();});
@@ -3811,8 +3823,9 @@ if(_db){
     const val=document.getElementById('newPwInp').value.trim();
     if(val.length<4){st.textContent='At least 4 characters required.';st.style.color='#F2C063';return;}
     localStorage.setItem(PW_HASH_KEY,await sha256(val));
+    localStorage.removeItem('dash_remembered'); // force re-auth on all remembered devices
     document.getElementById('newPwInp').value='';
-    st.textContent='Password updated. Takes effect next session.';
+    st.textContent='Password updated. All devices will need to log in again.';
     st.style.color='#6BE3A4';
   });
 }
