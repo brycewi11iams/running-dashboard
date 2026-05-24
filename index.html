@@ -1492,20 +1492,24 @@ function calcReadinessScore(d){
     parts.push({w:20,s,key:'fatigue',label:d.fatigue>=8?'Feeling strong':d.fatigue>=5?'Moderate fatigue':'High fatigue'});
   }
 
-  // ── 5. Weekly training load (20%, inverse) — vs 4-wk rolling avg ─
+  // ── 5. Weekly training load (20%, inverse) — blended seed baseline ─
+  // Seed = 44.2 min/day. Each past day uses real data if any activity key
+  // exists, otherwise the seed. Seed naturally phases out as data fills in.
   {
-    const thisWeekMin=calcWeeklyMins(lastNDays(7));
-    // 4-week rolling avg — fall back to 310 min/wk if < 3 weeks have data
+    const SEED_DAILY=44.2;
     const days28=lastNDays(28);
-    const weekTotals=[];
-    for(let w=0;w<4;w++){
-      const wkMin=calcWeeklyMins(days28.slice(w*7,(w+1)*7));
-      weekTotals.push(wkMin);
-    }
-    const avgMin=weekTotals.filter(v=>v>0).length>=3
-      ?weekTotals.reduce((a,b)=>a+b,0)/weekTotals.length
-      :310;
-    const ratio=thisWeekMin/Math.max(avgMin,1);
+    const blendedSum=days28.reduce((sum,d)=>{
+      const hasData=storeGet('runs:'+d)!==null||storeGet('strength:'+d)!==null||storeGet('xt:'+d)!==null;
+      const mins=hasData
+        ?(storeGet('runs:'+d)||[]).filter(r=>!r.rest).reduce((s,r)=>s+durToMin(r.dur||''),0)
+          +(storeGet('strength:'+d)||[]).reduce((s,r)=>s+(r.duration||0),0)
+          +(storeGet('xt:'+d)||[]).reduce((s,r)=>s+(r.duration||0),0)
+        :SEED_DAILY;
+      return sum+mins;
+    },0);
+    const dailyBaseline=blendedSum/28;
+    const thisWeekDailyAvg=calcWeeklyMins(lastNDays(7))/7;
+    const ratio=thisWeekDailyAvg/Math.max(dailyBaseline,1);
     const s=ratio<=1?100:Math.max(0,Math.round(100*(2-ratio)));
     parts.push({w:20,s,key:'load',label:s>=80?'Load well managed':s>=50?'Moderate load spike':'High load — watch for injury'});
   }
