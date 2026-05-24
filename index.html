@@ -869,6 +869,10 @@ select.run-edit-inp option{background:#1a1a1e;}
         <input class="hm-input" id="xtDur" type="number" min="1" max="480" placeholder="45">
       </div>
       <div class="rf">
+        <div class="rf-lbl">Avg HR (bpm)</div>
+        <input class="hm-input" id="xtHR" type="number" min="40" max="220" placeholder="—">
+      </div>
+      <div class="rf">
         <div class="rf-lbl">Effort</div>
         <select class="hm-input" id="xtEffort">
           <option value="easy">Easy</option>
@@ -2806,6 +2810,7 @@ function loadXT(){
     item.innerHTML=`<span class="xt-type">${escHtml(s.type)}</span>
       <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);white-space:nowrap;">${fmtDate(s.date)}</span>
       <span class="xt-dur">${s.duration} min</span>
+      ${s.hr!=null?`<span style="font-family:var(--font-mono);font-size:11px;color:#FF6B6B;white-space:nowrap;">${s.hr} bpm</span>`:''}
       <span class="xt-effort-badge ${s.effort}">${s.effort}</span>
       <button class="xt-del" title="Delete">×</button>`;
     item.querySelector('.xt-del').addEventListener('click',()=>{
@@ -2822,11 +2827,14 @@ document.getElementById('logXTBtn').addEventListener('click',()=>{
   const dur=parseInt(document.getElementById('xtDur').value)||0;
   if(dur<=0) return;
   const effort=document.getElementById('xtEffort').value;
+  const hrRaw=parseInt(document.getElementById('xtHR').value);
+  const hr=isNaN(hrRaw)?null:hrRaw;
   const today=activeDate();
   const sessions=storeGet('xt:'+today)||[];
-  sessions.unshift({type,duration:dur,effort});
+  sessions.unshift({type,duration:dur,effort,...(hr!=null?{hr}:{})});
   storeSet('xt:'+today,sessions);
   document.getElementById('xtDur').value='';
+  document.getElementById('xtHR').value='';
   loadXT();updateWeekly();
   renderWater(hGet(today).water||0);
 });
