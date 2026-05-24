@@ -442,6 +442,14 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
 .readiness-sleep-rec-icon{font-size:14px;}
 .readiness-sleep-rec-text{font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);}
 
+/* ── WEEKLY LOAD SUMMARY ── */
+.weekly-load-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.wl-stat{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px;
+  background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.05);}
+.wl-val{font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;}
+.wl-lbl{font-size:9px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-tertiary);text-align:center;line-height:1.4;}
+@media(max-width:480px){.weekly-load-grid{grid-template-columns:repeat(2,1fr);}}
+
 /* ── SUPPLEMENT TRACKERS (Iron / Vitamins) ── */
 .supple-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
 .supple-take-btn{background:rgba(107,227,164,.10);border:1px solid rgba(107,227,164,.22);
@@ -867,6 +875,29 @@ select.run-edit-inp option{background:#1a1a1e;}
     <div class="xt-list" id="strengthList"></div>
   </div>
 
+  <!-- 7-Day Training Summary -->
+  <div class="gm-card">
+    <div class="gm-ey" style="margin-bottom:14px;">7-Day Training Summary</div>
+    <div class="weekly-load-grid">
+      <div class="wl-stat">
+        <div class="wl-val" id="wlMiles">—</div>
+        <div class="wl-lbl">Miles Run</div>
+      </div>
+      <div class="wl-stat">
+        <div class="wl-val" id="wlRunTime">—</div>
+        <div class="wl-lbl">Run Time</div>
+      </div>
+      <div class="wl-stat">
+        <div class="wl-val" id="wlStrTime">—</div>
+        <div class="wl-lbl">Strength</div>
+      </div>
+      <div class="wl-stat">
+        <div class="wl-val" id="wlXtTime">—</div>
+        <div class="wl-lbl">Cross Training</div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /running section -->
 
 <!-- ═══ HEALTH & FITNESS ═══ -->
@@ -882,8 +913,11 @@ select.run-edit-inp option{background:#1a1a1e;}
         <div class="star-row" id="sorenessStars"></div>
       </div>
       <div class="hm-item">
-        <div class="hm-lbl">Fatigue Level (1=fresh, 5=exhausted)</div>
-        <div class="star-row" id="tirednessStars"></div>
+        <div class="hm-lbl">Fatigue Rating (1=exhausted · 10=perfect)</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+          <input class="hm-input" id="fatigueInp" type="number" min="1" max="10" placeholder="—" style="width:72px;text-align:center;">
+          <span id="fatigueLbl" style="font-size:11px;color:var(--text-tertiary);"></span>
+        </div>
       </div>
       <div class="hm-item hm-full">
         <div class="hm-lbl">Sore Locations</div>
@@ -905,7 +939,7 @@ select.run-edit-inp option{background:#1a1a1e;}
         <div class="readiness-score-bar-track">
           <div class="readiness-score-bar-fill" id="readinessScoreBar" style="width:0%"></div>
         </div>
-        <div class="readiness-score-summary" id="readinessScoreSummary">Log sleep, HRV, RHR, or fatigue level in Morning Readiness to see your score.</div>
+        <div class="readiness-score-summary" id="readinessScoreSummary">Log your fatigue rating in Morning Readiness to see your score. HRV and sleep are pulled from Coros automatically.</div>
       </div>
     </div>
     <div class="readiness-sleep-rec" id="readinessSleepRec" style="display:none;">
@@ -1295,6 +1329,22 @@ function currentWeekDays(){
 function fmtMins(totalMin){
   const h=Math.floor(totalMin/60),m=Math.round(totalMin%60);return h>0?`${h}h ${m}m`:`${m}m`;
 }
+function durToMin(str){
+  if(!str) return 0;
+  const p=str.split(':').map(Number);
+  if(p.length===3) return p[0]*60+p[1]+p[2]/60;
+  if(p.length===2) return p[0]+p[1]/60;
+  return 0;
+}
+function calcWeeklyMins(days){
+  let m=0;
+  days.forEach(d=>{
+    (storeGet('runs:'+d)||[]).filter(r=>!r.rest).forEach(r=>m+=durToMin(r.dur||''));
+    (storeGet('strength:'+d)||[]).forEach(s=>m+=s.duration||0);
+    (storeGet('xt:'+d)||[]).forEach(s=>m+=s.duration||0);
+  });
+  return m;
+}
 function fmtPaceSec(sec){
   const m=Math.floor(sec/60),s=Math.round(sec%60);return`${m}:${String(s).padStart(2,'0')}`;
 }
@@ -1388,62 +1438,95 @@ function updateRing(){
 
 // ═══════════════════════════════════════════════
 // READINESS SCORE (0–100)
-// Factors: sleep (30%), HRV (30%), tiredness (25%), energy/mood (15%)
-// + run-load bonus/penalty
+// Readiness Score — 5 components
+// HRV 25% · Last Sleep 15% · Rolling Sleep 20% · Fatigue 20% · Training Load 20%
 // ═══════════════════════════════════════════════
 function calcReadinessScore(d){
   const today=activeDate();
-  const runs=storeGet('runs:'+today)||[];
-  const todayMi=runs.filter(r=>!r.rest).reduce((s,r)=>s+(r.dist||0),0);
-  const isRest=runs.some(r=>r.rest)&&todayMi===0;
-
+  const todayCoros=storeGet('coros_daily:'+today);
   const parts=[];
-  // sleep 30%, HRV 30%, tiredness 25%, energy/mood 15%
-  if(d.sleep!=null){
-    let s=d.sleep>=8&&d.sleep<=9?100:d.sleep>=7?88:d.sleep>=6?65:d.sleep>=5?38:15;
-    parts.push({w:30,s,key:'sleep',label:d.sleep>=8?'Great sleep':d.sleep>=6?'OK sleep':'Poor sleep'});
+
+  // ── 1. HRV (25%) — baseline-relative if available ─────────────────
+  const hrvAvg=todayCoros&&todayCoros.hrv&&todayCoros.hrv.avg!=null?todayCoros.hrv.avg:d.hrv;
+  const hrvBase=todayCoros&&todayCoros.hrv&&todayCoros.hrv.baseline!=null?todayCoros.hrv.baseline:null;
+  if(hrvAvg!=null){
+    let s;
+    if(hrvBase){
+      const r=hrvAvg/hrvBase;
+      s=r>=1.10?100:r>=0.95?85:r>=0.85?65:r>=0.75?40:15;
+    } else {
+      s=hrvAvg>=70?100:hrvAvg>=55?82:hrvAvg>=40?62:hrvAvg>=25?38:15;
+    }
+    parts.push({w:25,s,key:'hrv',label:s>=80?'Strong HRV':s>=55?'Normal HRV':'Suppressed HRV'});
   }
-  if(d.hrv!=null){
-    let s=d.hrv>=70?100:d.hrv>=55?82:d.hrv>=40?62:d.hrv>=25?38:15;
-    parts.push({w:30,s,key:'hrv',label:d.hrv>=60?'High HRV':d.hrv>=40?'Moderate HRV':'Low HRV'});
+
+  // ── 2. Last night's sleep (15%) — Coros score preferred ──────────
+  const sleepScore=todayCoros&&todayCoros.sleep&&todayCoros.sleep.score!=null?todayCoros.sleep.score:null;
+  const sleepHrs=todayCoros&&todayCoros.sleep&&todayCoros.sleep.hours!=null?todayCoros.sleep.hours:(d.sleep!=null?d.sleep:null);
+  if(sleepScore!=null){
+    parts.push({w:15,s:sleepScore,key:'sleep',label:sleepScore>=80?'Great sleep':sleepScore>=55?'OK sleep':'Poor sleep'});
+  } else if(sleepHrs!=null){
+    const s=sleepHrs>=8&&sleepHrs<=9?100:sleepHrs>=7?85:sleepHrs>=6?62:sleepHrs>=5?35:12;
+    parts.push({w:15,s,key:'sleep',label:sleepHrs>=8?'Great sleep':sleepHrs>=6?'OK sleep':'Poor sleep'});
   }
-  if(d.tiredness!=null){
-    const map=[100,75,48,22,5];
-    const s=map[Math.min(d.tiredness-1,4)];
-    parts.push({w:25,s,key:'tiredness',label:d.tiredness<=2?'Feeling fresh':d.tiredness<=3?'Moderate fatigue':'High fatigue'});
+
+  // ── 3. Rolling 7-night sleep average (20%) — exp. decay weights ──
+  // Weights: night-0 (last night)=30%, night-1=25%, ..., night-6=2%
+  const SLEEP_W=[0.30,0.25,0.18,0.12,0.08,0.05,0.02];
+  const days7=lastNDays(7);
+  let rollingNum=0,rollingDen=0;
+  [...days7].reverse().forEach((day,i)=>{
+    const w=SLEEP_W[i]||0;
+    const cd=storeGet('coros_daily:'+day);
+    const hrs=cd&&cd.sleep&&cd.sleep.hours!=null?cd.sleep.hours:hGet(day).sleep;
+    if(hrs!=null){rollingNum+=w*Math.min(hrs/8,1)*100;rollingDen+=w;}
+  });
+  if(rollingDen>0){
+    const s=Math.round(rollingNum/rollingDen);
+    parts.push({w:20,s,key:'rollingSleep',label:s>=87?'Consistent sleep':s>=70?'Adequate sleep pattern':'Sleep debt building'});
   }
-  if(d.mood!=null){
-    // mood/energy: 1=low energy → 0pts, 5=high energy → 100pts
-    const moodMap=[5,25,50,80,100];
-    const s=moodMap[Math.min(d.mood-1,4)];
-    parts.push({w:15,s,key:'mood',label:d.mood>=4?'High energy':d.mood>=3?'Moderate energy':'Low energy'});
+
+  // ── 4. Fatigue rating (20%) — manual 1-10, 10=perfect ────────────
+  if(d.fatigue!=null){
+    const s=Math.round((d.fatigue-1)/9*100);
+    parts.push({w:20,s,key:'fatigue',label:d.fatigue>=8?'Feeling strong':d.fatigue>=5?'Moderate fatigue':'High fatigue'});
   }
+
+  // ── 5. Weekly training load (20%, inverse) — vs 4-wk rolling avg ─
+  {
+    const thisWeekMin=calcWeeklyMins(lastNDays(7));
+    // 4-week rolling avg — fall back to 310 min/wk if < 3 weeks have data
+    const days28=lastNDays(28);
+    const weekTotals=[];
+    for(let w=0;w<4;w++){
+      const wkMin=calcWeeklyMins(days28.slice(w*7,(w+1)*7));
+      weekTotals.push(wkMin);
+    }
+    const avgMin=weekTotals.filter(v=>v>0).length>=3
+      ?weekTotals.reduce((a,b)=>a+b,0)/weekTotals.length
+      :310;
+    const ratio=thisWeekMin/Math.max(avgMin,1);
+    const s=ratio<=1?100:Math.max(0,Math.round(100*(2-ratio)));
+    parts.push({w:20,s,key:'load',label:s>=80?'Load well managed':s>=50?'Moderate load spike':'High load — watch for injury'});
+  }
+
   if(!parts.length) return null;
   const totalW=parts.reduce((a,p)=>a+p.w,0);
-  let score=Math.round(parts.reduce((a,p)=>a+p.s*p.w,0)/totalW);
-  // Run-load adjustment
-  if(isRest) score=Math.min(100,score+4);
-  else if(todayMi>=10) score=Math.max(0,score-9);
-  else if(todayMi>=6) score=Math.max(0,score-5);
+  const score=Math.round(parts.reduce((a,p)=>a+p.s*p.w,0)/totalW);
 
-  // Label
   const cls=score>=90?'elite':score>=75?'high':score>=55?'moderate':score>=35?'low':'rest';
   const labelText={elite:'Elite',high:'High',moderate:'Moderate',low:'Low',rest:'Rest Needed'}[cls];
 
-  // Summary — list the 2 most-influential factors (high & low)
   const sorted=[...parts].sort((a,b)=>b.s-a.s);
   const positives=sorted.filter(p=>p.s>=70).map(p=>p.label);
   const negatives=sorted.filter(p=>p.s<50).map(p=>p.label);
   let summary='';
   if(positives.length&&negatives.length) summary=positives.slice(0,2).join(', ')+', but '+negatives.slice(0,2).join(', ').toLowerCase()+'.';
-  else if(positives.length) summary=positives.slice(0,2).join(' · ')+(todayMi>6?' · Heavy run load today.':'.');
-  else if(negatives.length) summary=negatives.slice(0,2).join(' · ')+(todayMi>6?' · Heavy run load today.':'.');
+  else if(positives.length) summary=positives.slice(0,2).join(' · ')+'.';
+  else if(negatives.length) summary=negatives.slice(0,2).join(' · ')+'.';
   else summary='Mixed signals across metrics.';
-  if(isRest) summary+=' Rest day — recovery bonus applied.';
 
-  // Sleep recommendation for tonight
   const sleepRec=score>=80?'7.5–8 hrs':score>=60?'8–9 hrs':'9+ hrs';
-
   return{score,cls,labelText,summary,sleepRec};
 }
 
@@ -2411,6 +2494,27 @@ function updateWeekly(){
   document.getElementById('wkElyte').textContent=String(elyteCount);
 
   updateWkMileTarget();
+  renderWeeklyLoadSummary();
+}
+
+// ═══════════════════════════════════════════════
+// 7-DAY TRAINING SUMMARY
+// ═══════════════════════════════════════════════
+function renderWeeklyLoadSummary(){
+  const days=lastNDays(7);
+  let totalMiles=0,runMin=0,strMin=0,xtMin=0;
+  days.forEach(d=>{
+    (storeGet('runs:'+d)||[]).filter(r=>!r.rest).forEach(r=>{
+      totalMiles+=r.dist||0;
+      runMin+=durToMin(r.dur||'');
+    });
+    (storeGet('strength:'+d)||[]).forEach(s=>strMin+=s.duration||0);
+    (storeGet('xt:'+d)||[]).forEach(s=>xtMin+=s.duration||0);
+  });
+  document.getElementById('wlMiles').textContent=totalMiles>=0.05?totalMiles.toFixed(1):'0.0';
+  document.getElementById('wlRunTime').textContent=runMin>0?fmtMins(runMin):'—';
+  document.getElementById('wlStrTime').textContent=strMin>0?fmtMins(strMin):'—';
+  document.getElementById('wlXtTime').textContent=xtMin>0?fmtMins(xtMin):'—';
 }
 
 // ═══════════════════════════════════════════════
@@ -2631,13 +2735,27 @@ function loadMorningReadiness(){
   buildStars(document.getElementById('sorenessStars'),d.soreness||0,v=>{
     const dd=hGet(today);dd.soreness=v;hSet(today,dd);loadMorningReadiness();updateReadiness();
   });
-  buildStars(document.getElementById('tirednessStars'),d.tiredness||0,v=>{
-    const dd=hGet(today);dd.tiredness=v;hSet(today,dd);loadMorningReadiness();updateReadiness();
-  });
+  // Fatigue 1-10 input
+  const fi=document.getElementById('fatigueInp');
+  if(fi) fi.value=d.fatigue!=null?d.fatigue:'';
+  _updateFatigueLbl(d.fatigue);
   buildSorenessTags(document.getElementById('sorenessTags'),[...(d.soreLocs||[])],locs=>{
     const dd=hGet(today);dd.soreLocs=locs;hSet(today,dd);
   });
 }
+function _updateFatigueLbl(v){
+  const lbl=document.getElementById('fatigueLbl');
+  if(!lbl) return;
+  const labels=['','Completely exhausted','Very tired','Tired','Below average','Average','Decent','Good','Very good','Excellent','Perfect'];
+  lbl.textContent=v!=null&&v>=1&&v<=10?labels[v]:'';
+}
+document.getElementById('fatigueInp').addEventListener('input',()=>{
+  const v=parseInt(document.getElementById('fatigueInp').value);
+  if(!v||v<1||v>10) return;
+  _updateFatigueLbl(v);
+  const today=activeDate(),dd=hGet(today);
+  dd.fatigue=v;hSet(today,dd);updateReadiness();
+});
 
 // ═══════════════════════════════════════════════
 // HEAT / HUMIDITY CONDITIONS
