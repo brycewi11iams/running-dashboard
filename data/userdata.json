@@ -1,18 +1,15 @@
 {
-  "lastUpdated": "2026-05-24T16:09:19.877Z",
+  "lastUpdated": "2026-05-24T18:00:45.703Z",
   "data": {
     "goals:2026-05-24": [
       {
-        "text": "Find more work pants",
-        "done": false
-      },
-      {
-        "done": false,
-        "text": "SQL"
-      },
-      {
+        "text": "SQL",
         "done": true,
+        "doneAt": 1779643832741
+      },
+      {
         "text": "FBD debrief (cost/tablet)",
+        "done": true,
         "doneAt": 1779638921283
       },
       {
@@ -44,7 +41,7 @@
         "Left Foot",
         "Quads"
       ],
-      "tiredness": 2,
+      "tiredness": 3,
       "sleepQuality": 3,
       "rhr": 53,
       "sleep": 8.43,
