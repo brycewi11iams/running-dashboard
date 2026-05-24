@@ -1038,8 +1038,11 @@ select.run-edit-inp option{background:#1a1a1e;}
       <div class="hm-item hm-full">
         <div class="hm-lbl">Water Intake <span id="waterGoalHint" style="font-weight:400;text-transform:none;letter-spacing:.04em;color:var(--text-tertiary);font-size:9px;margin-left:4px;"></span></div>
         <div class="water-bar" id="waterBar"></div>
-        <div class="water-controls">
-          <button class="water-tap" id="waterTapBtn">+ 8 oz (1 cup)</button>
+        <div class="water-controls" style="flex-wrap:wrap;gap:6px;">
+          <button class="water-tap" data-oz="8">+ 8 oz</button>
+          <button class="water-tap" data-oz="12">+ 12 oz</button>
+          <button class="water-tap" data-oz="16">+ 16 oz</button>
+          <button class="water-tap" data-oz="32">+ 32 oz</button>
           <span class="water-txt" id="waterTxt">0 / 128 oz (0%)</span>
         </div>
         <div class="water-custom-row">
@@ -1054,7 +1057,6 @@ select.run-edit-inp option{background:#1a1a1e;}
           <button class="water-tap" id="elyte1Btn">+1 Serving</button>
           <button class="water-tap" id="elyte2Btn">+2 Servings</button>
           <span class="water-txt" id="elyteTxt">💊 0/2</span>
-          <button class="water-tap" id="resetWaterElyteBtn" style="font-size:10px;opacity:.6;">↺ Reset</button>
         </div>
       </div>
 
@@ -1914,10 +1916,13 @@ wireHealthInput('sleepInp','sleep','sleepVal');
 wireHealthInput('hrvInp','hrv','hrvVal');
 wireHealthInput('rhrInp','rhr','rhrVal');
 
-document.getElementById('waterTapBtn').addEventListener('click',()=>{
-  const today=activeDate(),d=hGet(today);
-  d.water=Math.min((d.water||0)+WATER_CUP,300);
-  hSet(today,d);renderWater(d.water);loadHealth();updateWeekly();
+document.querySelectorAll('.water-tap[data-oz]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const oz=parseInt(btn.dataset.oz);
+    const today=activeDate(),d=hGet(today);
+    d.water=Math.min((d.water||0)+oz,300);
+    hSet(today,d);renderWater(d.water);loadHealth();updateWeekly();
+  });
 });
 document.getElementById('waterCustBtn').addEventListener('click',()=>{
   const inp=document.getElementById('waterCustInp'),oz=parseInt(inp.value);
@@ -2561,23 +2566,29 @@ document.getElementById('shoeAddBtn').addEventListener('click',()=>{
 // CROSS-TRAINING LOGGER
 // ═══════════════════════════════════════════════
 function loadXT(){
-  const today=activeDate();
-  const sessions=storeGet('xt:'+today)||[];
   const list=document.getElementById('xtList');list.innerHTML='';
-  if(!sessions.length){
-    list.innerHTML='<div style="font-size:12px;color:var(--text-tertiary);font-style:italic;padding:8px 0;text-align:center;">No XT sessions logged today.</div>';
+  const days=lastNDays(7);
+  const allSessions=[];
+  days.forEach(d=>{
+    (storeGet('xt:'+d)||[]).forEach((s,i)=>allSessions.push({...s,date:d,origIdx:i}));
+  });
+  if(!allSessions.length){
+    list.innerHTML='<div style="font-size:12px;color:var(--text-tertiary);font-style:italic;padding:8px 0;text-align:center;">No XT sessions in the last 7 days.</div>';
     return;
   }
-  sessions.forEach((s,i)=>{
+  allSessions.sort((a,b)=>b.date.localeCompare(a.date));
+  allSessions.forEach(s=>{
     const item=document.createElement('div');item.className='xt-item';
     item.innerHTML=`<span class="xt-type">${escHtml(s.type)}</span>
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);white-space:nowrap;">${fmtDate(s.date)}</span>
       <span class="xt-dur">${s.duration} min</span>
       <span class="xt-effort-badge ${s.effort}">${s.effort}</span>
-      <button class="xt-del" data-i="${i}">×</button>`;
+      <button class="xt-del" title="Delete">×</button>`;
     item.querySelector('.xt-del').addEventListener('click',()=>{
-      const ss=storeGet('xt:'+activeDate())||[];ss.splice(i,1);
-      storeSet('xt:'+activeDate(),ss);loadXT();updateWeekly();
-      renderWater(hGet(activeDate()).water||0);
+      const ss=storeGet('xt:'+s.date)||[];
+      ss.splice(s.origIdx,1);
+      storeSet('xt:'+s.date,ss);
+      loadXT();updateWeekly();
     });
     list.appendChild(item);
   });
@@ -2948,14 +2959,6 @@ window.addEventListener('resize',()=>{
   }
 }
 
-// ── Reset water & Liquid IV for today ──────────────
-document.getElementById('resetWaterElyteBtn').addEventListener('click',()=>{
-  if(!confirm('Reset today\'s water and Liquid IV to zero?')) return;
-  const today=activeDate(),d=hGet(today);
-  d.water=0;hSet(today,d);
-  storeDel('elyte:'+today);
-  renderWater(0);renderElyte();updateWeekly();
-});
 
 // ── Active date display + debug box ─────────────────
 {
