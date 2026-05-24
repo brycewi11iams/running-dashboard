@@ -6,8 +6,11 @@
 - **Stack:** Single-file static site — all CSS, HTML, and JS live in `index.html`. No build step, no framework, no bundler. Deployed via GitHub Pages from `main`.
 - **Other files:** `data/daily.json` (Coros run data, pushed by a separate Claude chat via Coros MCP + GitHub MCP), `data/userdata.json` (health sync file, written by the dashboard itself via GitHub API)
 
+## Permissions
+You have full permission to read and edit `index.html` directly — no need to ask. Make changes, commit, and push to `main` without confirmation unless the change is architecturally significant or destructive.
+
 ## Working rule — never read the whole file
-`index.html` is ~3500 lines. Always use **Grep** to find the exact lines needed, then **Read** only that range. Full-file reads are slow and almost never necessary.
+`index.html` is ~3700 lines. Always use **Grep** to find the exact lines needed, then **Read** only that range. Full-file reads are slow and almost never necessary.
 
 ---
 
