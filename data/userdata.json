@@ -1,7 +1,6 @@
 {
-  "lastUpdated": "2026-05-24T14:05:19.669Z",
+  "lastUpdated": "2026-05-24T14:11:31.262Z",
   "data": {
-    "goals:2026-05-23": [],
     "goals:2026-05-24": [
       {
         "text": "Find more work pants",
@@ -16,19 +15,8 @@
         "done": false
       }
     ],
+    "elyte:2026-05-24": 1,
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
-    "health:2026-05-23": {
-      "water": 110,
-      "mood": 2,
-      "hrv": 83,
-      "soreness": 1,
-      "rhr": 53,
-      "sleep": 5,
-      "tiredness": 1,
-      "soreLocs": [
-        "Quads"
-      ]
-    },
     "health:2026-05-21": {
       "tiredness": 2,
       "mood": 4,
@@ -44,11 +32,17 @@
       "sleepQuality": 2
     },
     "health:2026-05-24": {
-      "rhr": 53,
-      "hrv": 100,
-      "sleep": 8.43,
+      "mood": 2,
       "sleepQuality": 3,
-      "mood": 2
+      "sleep": 8.43,
+      "hrv": 100,
+      "rhr": 53,
+      "tiredness": 2,
+      "soreness": 2,
+      "soreLocs": [
+        "Left Foot",
+        "Quads"
+      ]
     },
     "health:2026-05-22": {
       "tiredness": 2,
@@ -65,7 +59,20 @@
     },
     "elyte:2026-05-21": 1,
     "elyte:2026-05-22": 1,
+    "note:2026-05-23": "i felt very tired for almost all day",
+    "health:2026-05-23": {
+      "water": 110,
+      "mood": 2,
+      "hrv": 83,
+      "soreness": 1,
+      "rhr": 53,
+      "sleep": 5,
+      "tiredness": 1,
+      "soreLocs": [
+        "Quads"
+      ]
+    },
     "elyte:2026-05-23": 1,
-    "note:2026-05-23": "i felt very tired for almost all day"
+    "goals:2026-05-23": []
   }
 }
