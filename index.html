@@ -3285,14 +3285,8 @@ function drawFeelRecapChart(sleepScores,hrvVals,effortVals){
   _drawFeelLine(svg,sleepScores.map((v,i)=>({x:pX(i),y:pY(v)})),'#8B9FE8');
   // Draw HRV line (green)
   _drawFeelLine(svg,hrvNorm.map((v,i)=>({x:pX(i),y:pY(v)})),'#6BE3A4');
-  // Draw effort dots (orange)
-  effortNorm.forEach((v,i)=>{
-    if(v==null) return;
-    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx',pX(i));c.setAttribute('cy',pY(v)||PT+chartH/2);
-    c.setAttribute('r','3.5');c.setAttribute('fill','#F2C063');c.setAttribute('opacity','0.85');
-    svg.appendChild(c);
-  });
+  // Draw effort line + dots (orange)
+  _drawFeelLine(svg,effortNorm.map((v,i)=>({x:pX(i),y:pY(v)})),'#F2C063');
   // X-axis day labels (every other)
   const dayAbbr=['Su','M','Tu','W','Th','F','Sa'];
   lastNDays(7).forEach((d,i)=>{
