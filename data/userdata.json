@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-25T14:04:09.874Z",
+  "lastUpdated": "2026-05-25T14:04:15.886Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -17,75 +17,75 @@
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "goals:2026-05-23": [],
     "health:2026-05-21": {
-      "sleep": 5.5,
-      "hrv": 121,
-      "tiredness": 2,
-      "water": 128,
       "hr": 51,
-      "mood": 4,
-      "soreness": 2,
-      "sleepQuality": 2,
+      "sleep": 5.5,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
-      ]
+      ],
+      "water": 128,
+      "sleepQuality": 2,
+      "mood": 4,
+      "soreness": 2,
+      "tiredness": 2,
+      "hrv": 121
     },
     "health:2026-05-24": {
-      "tiredness": 3,
-      "rhr": 53,
-      "sleep": 8.43,
       "hrv": 100,
+      "tiredness": 3,
+      "soreness": 2,
+      "mood": 2,
+      "sleep": 8.43,
       "sleepQuality": 3,
+      "rhr": 53,
+      "water": 152,
       "soreLocs": [
         "Left Foot",
         "Quads"
       ],
-      "fatigue": 5,
-      "soreness": 2,
-      "mood": 2,
-      "water": 152
+      "fatigue": 5
     },
     "health:2026-05-22": {
+      "tiredness": 2,
+      "sleep": 5,
+      "hrv": 96,
       "mood": 3,
       "soreness": 2,
-      "water": 124,
       "sleepQuality": 2,
-      "tiredness": 2,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "sleep": 5,
-      "hrv": 96
+      "water": 124
     },
     "elyte:2026-05-21": 1,
     "elyte:2026-05-22": 1,
     "health:2026-05-25": {
-      "water": 16,
-      "soreness": 1,
       "mood": 3,
-      "fatigue": 6,
-      "sleepQuality": 3,
+      "soreness": 1,
+      "hrv": 86,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "sleep": 7.78,
-      "hrv": 86,
-      "rhr": 52
+      "fatigue": 6,
+      "rhr": 52,
+      "water": 16,
+      "sleepQuality": 3,
+      "sleep": 7.78
     },
     "note:2026-05-23": "i felt very tired for almost all day",
     "health:2026-05-23": {
-      "tiredness": 1,
-      "rhr": 53,
       "soreLocs": [
         "Quads"
       ],
-      "sleep": 5,
+      "water": 110,
+      "rhr": 53,
+      "tiredness": 1,
       "hrv": 83,
-      "soreness": 1,
+      "sleep": 5,
       "mood": 2,
-      "water": 110
+      "soreness": 1
     },
     "elyte:2026-05-25": 1,
     "elyte:2026-05-23": 1,
