@@ -729,6 +729,72 @@ select.run-edit-inp option{background:#1a1a1e;}
   <div class="wk-target-status" id="wkTargetStatus">Set a weekly mileage target above</div>
 </div>
 
+<!-- ═══ TO DO LIST ═══ -->
+<div class="section">
+  <div class="section-title">To Do List</div>
+
+  <!-- TODAY -->
+  <div class="gm-card" id="todayCard">
+    <div class="gm-hdr">
+      <div class="gm-hdr-l">
+        <div class="gm-ey" id="todayLbl">Today</div>
+        <div class="gm-progress-row">
+          <div class="gm-pnum" id="gmPNum">0</div>
+          <div class="gm-ptot" id="gmPTot">/ 0</div>
+          <div class="gm-plbl" id="gmPLbl">no goals yet</div>
+        </div>
+      </div>
+      <div class="gm-streak" id="gmStreak">
+        <span class="si">⚡</span>
+        <span class="sn" id="gmStreakN">0</span>
+        <span class="sl">day streak</span>
+      </div>
+    </div>
+    <div class="gm-bar" id="gmBar"></div>
+    <ul class="goal-list" id="goalList"></ul>
+    <div class="empty-st" id="todayEmpty">No goals for today yet — add one below.</div>
+    <button class="push-btn" id="pushBtn" style="display:none;">Push remaining to tomorrow →</button>
+    <div class="add-row">
+      <input class="g-inp" id="goalInp" type="text" placeholder="Add a goal for today…">
+      <button class="btn-add" id="goalAdd">+ Add</button>
+      <button class="btn-pol" id="goalPol">✨ Polish</button>
+    </div>
+    <div class="pol-st" id="polSt"></div>
+  </div>
+
+  <!-- PLAN TOMORROW -->
+  <div class="gm-card gm-card-tomorrow" id="tomCard">
+    <div class="gm-hdr">
+      <div class="gm-hdr-l">
+        <div class="gm-ey" id="tomLbl">Plan Tomorrow</div>
+        <div class="gm-tom-sub">Write tonight, locked until 6 AM.</div>
+      </div>
+      <div class="tom-ct" id="tomCt">0 planned</div>
+    </div>
+    <ul class="goal-list" id="tomList"></ul>
+    <div class="empty-st" id="tomEmpty">Nothing planned for tomorrow yet.</div>
+    <div class="add-row">
+      <input class="g-inp" id="tomInp" type="text" placeholder="Add a goal for tomorrow…">
+      <button class="btn-add" id="tomAdd">+ Add</button>
+      <button class="btn-pol" id="tomPol">✨ Polish</button>
+    </div>
+    <div class="pol-st" id="tomSt"></div>
+  </div>
+
+</div><!-- /todo section -->
+
+<!-- 7-Day Feel Recap -->
+<div class="gm-card">
+  <div class="gm-ey" style="margin-bottom:12px;">7-Day Feel Recap</div>
+  <div class="feel-legend">
+    <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#8B9FE8;"></div>Sleep Score</div>
+    <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#6BE3A4;"></div>HRV (relative)</div>
+    <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#F2C063;"></div>Run Effort</div>
+  </div>
+  <svg id="feelRecapChart" width="100%" height="100"></svg>
+  <div class="feel-insight" id="feelInsight">Log sleep, HRV, and runs to see your weekly feel recap.</div>
+</div>
+
 <!-- ═══ RUNNING ═══ -->
 <div class="section">
   <div class="section-title">Running</div>
@@ -813,134 +879,75 @@ select.run-edit-inp option{background:#1a1a1e;}
     </div>
   </div>
 
-  <!-- PR Board card -->
-  <div class="gm-card">
-    <div class="gm-ey" style="margin-bottom:14px;">Personal Records</div>
-
-    <!-- Add PR form -->
-    <div class="pr-add-form">
-      <select id="prEventSel" class="hm-input" style="min-width:130px;">
-        <option value="Mile">Mile</option>
-        <option value="3K">3K</option>
-        <option value="6K">6K</option>
-        <option value="5K">5K</option>
-        <option value="10K">10K</option>
-        <option value="Half Marathon">Half Marathon</option>
-        <option value="Marathon">Marathon</option>
-        <option value="Other">Other…</option>
-      </select>
-      <span id="prCustomWrap"><input id="prCustomInp" placeholder="Event name" style="width:120px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;padding:7px 10px;outline:none;"></span>
-      <input id="prTimeInp" placeholder="mm:ss or h:mm:ss" style="width:148px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;padding:7px 10px;outline:none;">
-      <input id="prDateInp" type="date" style="width:148px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;padding:7px 10px;outline:none;">
-      <button class="btn-add" id="prAddBtn">+ Add PR</button>
-    </div>
-
-    <div class="pr-list" id="prList"></div>
-  </div>
-
-  <!-- Shoe Mileage Tracker -->
-  <div class="gm-card">
-    <div class="gm-ey" style="margin-bottom:12px;">Shoe Mileage Tracker</div>
-    <div class="shoe-add-row">
-      <input id="shoeNameInp" placeholder="Shoe name (e.g. Nike Pegasus)" style="flex:1;min-width:140px;">
-      <input id="shoeMaxInp" type="number" min="1" placeholder="Max mi (opt)" style="width:110px;">
-      <button class="btn-add" id="shoeAddBtn">+ Add</button>
-    </div>
-    <div class="shoe-list" id="shoeList"></div>
-  </div>
-
-  <!-- Cross-Training Logger -->
-  <div class="gm-card">
-    <div class="gm-ey" style="margin-bottom:12px;">Cross-Training Log</div>
-    <div class="xt-form">
-      <div class="rf">
-        <div class="rf-lbl">Type</div>
-        <select class="hm-input" id="xtType">
-          <option value="Bike">Bike</option>
-          <option value="Pool">Pool</option>
-          <option value="Elliptical">Elliptical</option>
-          <option value="Weights">Weights</option>
-          <option value="Yoga">Yoga</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="rf">
-        <div class="rf-lbl">Duration (min)</div>
-        <input class="hm-input" id="xtDur" type="number" min="1" max="480" placeholder="45">
-      </div>
-      <div class="rf">
-        <div class="rf-lbl">Avg HR (bpm)</div>
-        <input class="hm-input" id="xtHR" type="number" min="40" max="220" placeholder="—">
-      </div>
-      <div class="rf">
-        <div class="rf-lbl">Effort</div>
-        <select class="hm-input" id="xtEffort">
-          <option value="easy">Easy</option>
-          <option value="moderate">Moderate</option>
-          <option value="hard">Hard</option>
-        </select>
-      </div>
-      <div class="rf" style="align-self:end;">
-        <button class="btn-log-run" id="logXTBtn" style="margin-bottom:0;">Log XT</button>
-      </div>
-    </div>
-    <div class="xt-list" id="xtList"></div>
-  </div>
-
-  <!-- Abs / Strength Log -->
-  <div class="gm-card">
-    <div class="gm-ey" style="margin-bottom:12px;">Abs / Strength Log</div>
-    <div class="xt-form">
-      <div class="rf">
-        <div class="rf-lbl">Session Type</div>
-        <select class="hm-input" id="strengthType">
-          <option value="Core (Abs)">Core (Abs)</option>
-          <option value="Upper Body">Upper Body</option>
-          <option value="Lower Body (Non-Run)">Lower Body (Non-Run)</option>
-          <option value="Full Body">Full Body</option>
-          <option value="Stretching/Mobility">Stretching/Mobility</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="rf">
-        <div class="rf-lbl">Duration (min)</div>
-        <input class="hm-input" id="strengthDur" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="20">
-      </div>
-      <div class="rf" style="grid-column:1/-1;">
-        <div class="rf-lbl">Notes (optional)</div>
-        <input class="hm-input" id="strengthNotes" type="text" placeholder="3×20 crunches, 2 min plank…">
-      </div>
-      <div class="rf" style="grid-column:1/-1;">
-        <button class="btn-log-run" id="logStrengthBtn" style="margin-bottom:0;">Log Session</button>
-      </div>
-    </div>
-    <div class="xt-list" id="strengthList"></div>
-  </div>
-
-  <!-- 7-Day Training Summary -->
-  <div class="gm-card">
-    <div class="gm-ey" style="margin-bottom:14px;">7-Day Training Summary</div>
-    <div class="weekly-load-grid">
-      <div class="wl-stat">
-        <div class="wl-val" id="wlMiles">—</div>
-        <div class="wl-lbl">Miles Run</div>
-      </div>
-      <div class="wl-stat">
-        <div class="wl-val" id="wlRunTime">—</div>
-        <div class="wl-lbl">Run Time</div>
-      </div>
-      <div class="wl-stat">
-        <div class="wl-val" id="wlStrTime">—</div>
-        <div class="wl-lbl">Strength</div>
-      </div>
-      <div class="wl-stat">
-        <div class="wl-val" id="wlXtTime">—</div>
-        <div class="wl-lbl">Cross Training</div>
-      </div>
-    </div>
-  </div>
-
 </div><!-- /running section -->
+
+<!-- Cross-Training Log -->
+<div class="gm-card">
+  <div class="gm-ey" style="margin-bottom:12px;">Cross-Training Log</div>
+  <div class="xt-form">
+    <div class="rf">
+      <div class="rf-lbl">Type</div>
+      <select class="hm-input" id="xtType">
+        <option value="Bike">Bike</option>
+        <option value="Pool">Pool</option>
+        <option value="Elliptical">Elliptical</option>
+        <option value="Weights">Weights</option>
+        <option value="Yoga">Yoga</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="rf">
+      <div class="rf-lbl">Duration (min)</div>
+      <input class="hm-input" id="xtDur" type="number" min="1" max="480" placeholder="45">
+    </div>
+    <div class="rf">
+      <div class="rf-lbl">Avg HR (bpm)</div>
+      <input class="hm-input" id="xtHR" type="number" min="40" max="220" placeholder="—">
+    </div>
+    <div class="rf">
+      <div class="rf-lbl">Effort</div>
+      <select class="hm-input" id="xtEffort">
+        <option value="easy">Easy</option>
+        <option value="moderate">Moderate</option>
+        <option value="hard">Hard</option>
+      </select>
+    </div>
+    <div class="rf" style="align-self:end;">
+      <button class="btn-log-run" id="logXTBtn" style="margin-bottom:0;">Log XT</button>
+    </div>
+  </div>
+  <div class="xt-list" id="xtList"></div>
+</div>
+
+<!-- Abs / Strength Log -->
+<div class="gm-card">
+  <div class="gm-ey" style="margin-bottom:12px;">Abs / Strength Log</div>
+  <div class="xt-form">
+    <div class="rf">
+      <div class="rf-lbl">Session Type</div>
+      <select class="hm-input" id="strengthType">
+        <option value="Core (Abs)">Core (Abs)</option>
+        <option value="Upper Body">Upper Body</option>
+        <option value="Lower Body (Non-Run)">Lower Body (Non-Run)</option>
+        <option value="Full Body">Full Body</option>
+        <option value="Stretching/Mobility">Stretching/Mobility</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="rf">
+      <div class="rf-lbl">Duration (min)</div>
+      <input class="hm-input" id="strengthDur" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="20">
+    </div>
+    <div class="rf" style="grid-column:1/-1;">
+      <div class="rf-lbl">Notes (optional)</div>
+      <input class="hm-input" id="strengthNotes" type="text" placeholder="3×20 crunches, 2 min plank…">
+    </div>
+    <div class="rf" style="grid-column:1/-1;">
+      <button class="btn-log-run" id="logStrengthBtn" style="margin-bottom:0;">Log Session</button>
+    </div>
+  </div>
+  <div class="xt-list" id="strengthList"></div>
+</div>
 
 <!-- ═══ HEALTH & FITNESS ═══ -->
 <div class="section">
@@ -1021,16 +1028,27 @@ select.run-edit-inp option{background:#1a1a1e;}
     </div>
   </div>
 
-  <!-- 7-Day Feel Recap -->
+  <!-- 7-Day Training Summary -->
   <div class="gm-card">
-    <div class="gm-ey" style="margin-bottom:12px;">7-Day Feel Recap</div>
-    <div class="feel-legend">
-      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#8B9FE8;"></div>Sleep Score</div>
-      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#6BE3A4;"></div>HRV (relative)</div>
-      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#F2C063;"></div>Run Effort</div>
+    <div class="gm-ey" style="margin-bottom:14px;">7-Day Training Summary</div>
+    <div class="weekly-load-grid">
+      <div class="wl-stat">
+        <div class="wl-val" id="wlMiles">—</div>
+        <div class="wl-lbl">Miles Run</div>
+      </div>
+      <div class="wl-stat">
+        <div class="wl-val" id="wlRunTime">—</div>
+        <div class="wl-lbl">Run Time</div>
+      </div>
+      <div class="wl-stat">
+        <div class="wl-val" id="wlStrTime">—</div>
+        <div class="wl-lbl">Strength</div>
+      </div>
+      <div class="wl-stat">
+        <div class="wl-val" id="wlXtTime">—</div>
+        <div class="wl-lbl">Cross Training</div>
+      </div>
     </div>
-    <svg id="feelRecapChart" width="100%" height="100"></svg>
-    <div class="feel-insight" id="feelInsight">Log sleep, HRV, and runs to see your weekly feel recap.</div>
   </div>
 
   <!-- Iron Tracker -->
@@ -1139,70 +1157,49 @@ select.run-edit-inp option{background:#1a1a1e;}
     </div>
   </div>
 
-  <!-- Daily Notes card -->
-  <div class="gm-card">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-      <div class="gm-ey" style="margin-bottom:0;">Daily Notes</div>
-      <span id="noteSavedMsg" style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--success);opacity:0;transition:opacity .2s;letter-spacing:.06em;">Saved ✓</span>
-    </div>
-    <textarea class="daily-note" id="dailyNote" placeholder="How did today feel? Soreness, observations, highlights…"></textarea>
-  </div>
-
 </div><!-- /health section -->
 
-<!-- ═══ TO DO LIST ═══ -->
-<div class="section">
-  <div class="section-title">To Do List</div>
-
-  <!-- TODAY -->
-  <div class="gm-card" id="todayCard">
-    <div class="gm-hdr">
-      <div class="gm-hdr-l">
-        <div class="gm-ey" id="todayLbl">Today</div>
-        <div class="gm-progress-row">
-          <div class="gm-pnum" id="gmPNum">0</div>
-          <div class="gm-ptot" id="gmPTot">/ 0</div>
-          <div class="gm-plbl" id="gmPLbl">no goals yet</div>
-        </div>
-      </div>
-      <div class="gm-streak" id="gmStreak">
-        <span class="si">⚡</span>
-        <span class="sn" id="gmStreakN">0</span>
-        <span class="sl">day streak</span>
-      </div>
-    </div>
-    <div class="gm-bar" id="gmBar"></div>
-    <ul class="goal-list" id="goalList"></ul>
-    <div class="empty-st" id="todayEmpty">No goals for today yet — add one below.</div>
-    <button class="push-btn" id="pushBtn" style="display:none;">Push remaining to tomorrow →</button>
-    <div class="add-row">
-      <input class="g-inp" id="goalInp" type="text" placeholder="Add a goal for today…">
-      <button class="btn-add" id="goalAdd">+ Add</button>
-      <button class="btn-pol" id="goalPol">✨ Polish</button>
-    </div>
-    <div class="pol-st" id="polSt"></div>
+<!-- Personal Records -->
+<div class="gm-card">
+  <div class="gm-ey" style="margin-bottom:14px;">Personal Records</div>
+  <div class="pr-add-form">
+    <select id="prEventSel" class="hm-input" style="min-width:130px;">
+      <option value="Mile">Mile</option>
+      <option value="3K">3K</option>
+      <option value="6K">6K</option>
+      <option value="5K">5K</option>
+      <option value="10K">10K</option>
+      <option value="Half Marathon">Half Marathon</option>
+      <option value="Marathon">Marathon</option>
+      <option value="Other">Other…</option>
+    </select>
+    <span id="prCustomWrap"><input id="prCustomInp" placeholder="Event name" style="width:120px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;padding:7px 10px;outline:none;"></span>
+    <input id="prTimeInp" placeholder="mm:ss or h:mm:ss" style="width:148px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;padding:7px 10px;outline:none;">
+    <input id="prDateInp" type="date" style="width:148px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;padding:7px 10px;outline:none;">
+    <button class="btn-add" id="prAddBtn">+ Add PR</button>
   </div>
+  <div class="pr-list" id="prList"></div>
+</div>
 
-  <!-- PLAN TOMORROW -->
-  <div class="gm-card gm-card-tomorrow" id="tomCard">
-    <div class="gm-hdr">
-      <div class="gm-hdr-l">
-        <div class="gm-ey" id="tomLbl">Plan Tomorrow</div>
-        <div class="gm-tom-sub">Write tonight, locked until 6 AM.</div>
-      </div>
-      <div class="tom-ct" id="tomCt">0 planned</div>
-    </div>
-    <ul class="goal-list" id="tomList"></ul>
-    <div class="empty-st" id="tomEmpty">Nothing planned for tomorrow yet.</div>
-    <div class="add-row">
-      <input class="g-inp" id="tomInp" type="text" placeholder="Add a goal for tomorrow…">
-      <button class="btn-add" id="tomAdd">+ Add</button>
-      <button class="btn-pol" id="tomPol">✨ Polish</button>
-    </div>
-    <div class="pol-st" id="tomSt"></div>
+<!-- Shoe Mileage Tracker -->
+<div class="gm-card">
+  <div class="gm-ey" style="margin-bottom:12px;">Shoe Mileage Tracker</div>
+  <div class="shoe-add-row">
+    <input id="shoeNameInp" placeholder="Shoe name (e.g. Nike Pegasus)" style="flex:1;min-width:140px;">
+    <input id="shoeMaxInp" type="number" min="1" placeholder="Max mi (opt)" style="width:110px;">
+    <button class="btn-add" id="shoeAddBtn">+ Add</button>
   </div>
+  <div class="shoe-list" id="shoeList"></div>
+</div>
 
-</div><!-- /todo section -->
+<!-- Daily Notes -->
+<div class="gm-card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+    <div class="gm-ey" style="margin-bottom:0;">Daily Notes</div>
+    <span id="noteSavedMsg" style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--success);opacity:0;transition:opacity .2s;letter-spacing:.06em;">Saved ✓</span>
+  </div>
+  <textarea class="daily-note" id="dailyNote" placeholder="How did today feel? Soreness, observations, highlights…"></textarea>
+</div>
 
 <!-- ═══ WEEKLY NARRATIVE ═══ -->
 <div class="section">
