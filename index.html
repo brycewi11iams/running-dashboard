@@ -1539,7 +1539,7 @@ function lerpColor(pct){
   return`rgb(${Math.round(r1+(r2-r1)*t)},${Math.round(g1+(g2-g1)*t)},${Math.round(b1+(b2-b1)*t)})`;
 }
 function fmtHour(h){
-  const ap=h<12||h>=24?'AM':'PM';const h12=Math.round(h%12)||12;
+  const ap=h<12||h>=24?'AM':'PM';const h12=Math.floor(h)%12||12;
   const min=Math.round((h%1)*60);return`${h12}:${String(min).padStart(2,'0')} ${ap}`;
 }
 function updateRing(){
