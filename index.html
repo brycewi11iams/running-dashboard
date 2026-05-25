@@ -2620,9 +2620,9 @@ function updateWeekly(){
   const todayWaterOz=hGet(activeDate()).water||0;
   document.getElementById('wkWater').textContent=`${todayWaterOz} oz`;
 
-  let tg=0,dg=0;
-  days.forEach(d=>{const gs=storeGet('goals:'+d)||[];tg+=gs.length;dg+=gs.filter(g=>g.done).length;});
-  document.getElementById('wkGoals').textContent=`${dg}/${tg}`;
+  const _todayGs=storeGet('goals:'+activeDate())||[];
+  const _dg=_todayGs.filter(g=>g.done).length,_tg=_todayGs.length;
+  document.getElementById('wkGoals').textContent=`${_dg}/${_tg}`;
 
   // Run streak in strip (synced)
   document.getElementById('wkStreak').textContent=calcRunStreak();
