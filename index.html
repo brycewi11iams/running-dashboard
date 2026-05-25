@@ -1638,26 +1638,41 @@ function calcReadinessScore(d){
     parts.push({w:20,s,key:'fatigue',label:d.fatigue>=8?'Feeling strong':d.fatigue>=5?'Moderate fatigue':'High fatigue'});
   }
 
-  // ── 5. Weekly training load (20%, inverse) — blended seed baseline ─
-  // Seed = 44.2 min/day. Each past day uses real data if any activity key
-  // exists, otherwise the seed. Seed naturally phases out as data fills in.
+  // ── 5. Training load — 3 sub-factors totalling 20% ─────────────────
+  // Shared helpers
+  const _dayMins=dd=>
+    (storeGet('runs:'+dd)||[]).filter(r=>!r.rest).reduce((s,r)=>s+durToMin(r.dur||''),0)
+   +(storeGet('strength:'+dd)||[]).reduce((s,r)=>s+(r.duration||0),0)
+   +(storeGet('xt:'+dd)||[]).reduce((s,r)=>s+(r.duration||0),0);
+  // Inverse curve: ≤90 min → 100, ≥150 min → 0, linear between
+  const _invLoad=mins=>mins<=90?100:mins>=150?0:Math.round(100*(1-(mins-90)/60));
+
+  // 5a. 28-day rolling average vs blended-seed baseline (10%)
   {
     const SEED_DAILY=44.2;
     const days28=lastNDays(28);
-    const blendedSum=days28.reduce((sum,d)=>{
-      const hasData=storeGet('runs:'+d)!==null||storeGet('strength:'+d)!==null||storeGet('xt:'+d)!==null;
-      const mins=hasData
-        ?(storeGet('runs:'+d)||[]).filter(r=>!r.rest).reduce((s,r)=>s+durToMin(r.dur||''),0)
-          +(storeGet('strength:'+d)||[]).reduce((s,r)=>s+(r.duration||0),0)
-          +(storeGet('xt:'+d)||[]).reduce((s,r)=>s+(r.duration||0),0)
-        :SEED_DAILY;
-      return sum+mins;
+    const blendedSum=days28.reduce((sum,dd)=>{
+      const hasData=storeGet('runs:'+dd)!==null||storeGet('strength:'+dd)!==null||storeGet('xt:'+dd)!==null;
+      return sum+(hasData?_dayMins(dd):SEED_DAILY);
     },0);
     const dailyBaseline=blendedSum/28;
     const thisWeekDailyAvg=calcWeeklyMins(lastNDays(7))/7;
     const ratio=thisWeekDailyAvg/Math.max(dailyBaseline,1);
     const s=ratio<=1?100:Math.max(0,Math.round(100*(2-ratio)));
-    parts.push({w:20,s,key:'load',label:s>=80?'Load well managed':s>=50?'Moderate load spike':'High load — watch for injury'});
+    parts.push({w:10,s,key:'load28',label:s>=80?'Load well managed':s>=50?'Moderate load spike':'High load — watch for injury'});
+  }
+
+  // 5b. Yesterday's total activity (6%) — heavy day lowers today's score
+  {
+    const yest=lastNDays(2)[0]; // lastNDays(2) = [yesterday, today]
+    const s=_invLoad(_dayMins(yest));
+    parts.push({w:6,s,key:'loadYest',label:s>=80?'Good recovery day':s>=50?'Moderate activity yesterday':'Heavy day yesterday'});
+  }
+
+  // 5c. Today's activity so far (4%) — no activity logged = neutral (100)
+  {
+    const s=_invLoad(_dayMins(today));
+    parts.push({w:4,s,key:'loadToday',label:s>=80?'Light day so far':s>=50?'Moderate activity today':'Heavy day today'});
   }
 
   if(!parts.length) return null;
