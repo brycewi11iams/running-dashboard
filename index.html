@@ -1638,12 +1638,12 @@ function calcReadinessScore(d){
   // Helper: total training minutes for any date
   const _dayMins=dd=>
     (storeGet('runs:'+dd)||[]).filter(r=>!r.rest).reduce((s,r)=>s+durToMin(r.dur||''),0)
-   +(storeGet('strength:'+dd)||[]).reduce((s,r)=>s+(r.duration||0),0)
-   +(storeGet('xt:'+dd)||[]).reduce((s,r)=>s+(r.duration||0),0);
+   +(storeGet('strength:'+dd)||[]).reduce((s,r)=>s+(r.duration||0)*0.5,0)
+   +(storeGet('xt:'+dd)||[]).reduce((s,r)=>s+(r.duration||0)*0.75,0);
 
   // Blended 28-day daily baseline — shared by all three sub-factors.
-  // Seed = 44.2 min/day; phases out naturally as real data fills in.
-  const _SEED=44.2;
+  // Seed = 32 min/day (running-equivalent); phases out naturally as real data fills in.
+  const _SEED=32;
   const _days28=lastNDays(28);
   const _baseline=_days28.reduce((sum,dd)=>{
     const has=storeGet('runs:'+dd)!==null||storeGet('strength:'+dd)!==null||storeGet('xt:'+dd)!==null;
