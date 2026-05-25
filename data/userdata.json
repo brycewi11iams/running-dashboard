@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-25T13:53:46.003Z",
+  "lastUpdated": "2026-05-25T13:54:14.116Z",
   "data": {
     "goals:2026-05-23": [],
     "goals:2026-05-24": [
@@ -60,6 +60,11 @@
     },
     "elyte:2026-05-21": 1,
     "elyte:2026-05-22": 1,
+    "health:2026-05-25": {
+      "rhr": 52,
+      "hrv": 86,
+      "sleep": 7.78
+    },
     "note:2026-05-23": "i felt very tired for almost all day",
     "health:2026-05-23": {
       "water": 110,
