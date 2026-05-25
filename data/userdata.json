@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-25T20:25:37.407Z",
+  "lastUpdated": "2026-05-25T20:27:06.403Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -63,7 +63,7 @@
     "health:2026-05-25": {
       "rhr": 52,
       "mood": 3,
-      "water": 64,
+      "water": 96,
       "sleep": 7.78,
       "sleepQuality": 3,
       "hrv": 86,
