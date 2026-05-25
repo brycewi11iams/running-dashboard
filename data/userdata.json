@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-25T01:53:38.698Z",
+  "lastUpdated": "2026-05-25T01:54:14.307Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -11,10 +11,6 @@
         "text": "FBD debrief (cost/tablet)",
         "done": true,
         "doneAt": 1779638921283
-      },
-      {
-        "done": false,
-        "text": "Shave"
       }
     ],
     "elyte:2026-05-24": 1,
@@ -81,6 +77,10 @@
       {
         "done": false,
         "text": "Laundry"
+      },
+      {
+        "text": "Shave",
+        "done": false
       }
     ],
     "goals:2026-05-23": []
