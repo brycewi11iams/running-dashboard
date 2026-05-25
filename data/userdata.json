@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-25T14:07:10.215Z",
+  "lastUpdated": "2026-05-25T15:25:52.439Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -65,7 +65,7 @@
         "Left Foot",
         "Right Foot"
       ],
-      "water": 16,
+      "water": 64,
       "rhr": 52,
       "mood": 3,
       "soreness": 1,
@@ -100,6 +100,10 @@
       },
       {
         "text": "Bed sheets",
+        "done": false
+      },
+      {
+        "text": "meal prep",
         "done": false
       }
     ]
