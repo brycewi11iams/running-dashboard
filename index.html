@@ -706,14 +706,12 @@ select.run-edit-inp option{background:#1a1a1e;}
     <span class="wk-pill-lbl">🔥 Run Streak</span>
   </div>
   <div class="wk-pill"><span class="wk-pill-val" id="wkMiles">0.0</span><span class="wk-pill-lbl">👟 Miles</span></div>
-  <div class="wk-pill"><span class="wk-pill-val" id="wkSleep">—</span><span class="wk-pill-lbl">🌙 Sleep</span></div>
-  <div class="wk-pill"><span class="wk-pill-val" id="wkHRV">—</span><span class="wk-pill-lbl">💓 HRV</span></div>
-  <div class="wk-pill"><span class="wk-pill-val" id="wkMood">—</span><span class="wk-pill-lbl">⚡ Energy</span></div>
-  <div class="wk-pill"><span class="wk-pill-val" id="wkWater">0/7</span><span class="wk-pill-lbl">💧 Water</span></div>
-  <div class="wk-pill"><span class="wk-pill-val" id="wkGoals">0/0</span><span class="wk-pill-lbl">✅ Goals</span></div>
   <div class="wk-pill"><span class="wk-pill-val" id="wkXT">0m</span><span class="wk-pill-lbl">🚴 XT</span></div>
   <div class="wk-pill"><span class="wk-pill-val" id="wkStrength">0m</span><span class="wk-pill-lbl">💪 Strength</span></div>
-  <div class="wk-pill"><span class="wk-pill-val" id="wkElyte">0/7</span><span class="wk-pill-lbl">💊 Liquid IV</span></div>
+  <div class="wk-pill"><span class="wk-pill-val" id="wkWater">—</span><span class="wk-pill-lbl">💧 Water</span></div>
+  <div class="wk-pill"><span class="wk-pill-val" id="wkSleep">—</span><span class="wk-pill-lbl">🌙 Sleep</span></div>
+  <div class="wk-pill"><span class="wk-pill-val" id="wkRHR">—</span><span class="wk-pill-lbl">❤️ RHR</span></div>
+  <div class="wk-pill"><span class="wk-pill-val" id="wkHRV">—</span><span class="wk-pill-lbl">💓 HRV</span></div>
 </div>
 
 <!-- ═══ WEEKLY MILE TARGET ═══ -->
@@ -2610,19 +2608,15 @@ function updateWeekly(){
   wkDays.forEach(d=>(storeGet('runs:'+d)||[]).forEach(r=>{if(!r.rest) miles+=r.dist||0;}));
   document.getElementById('wkMiles').textContent=miles.toFixed(1);
 
-  // Today-only: sleep, HRV, mood
+  // Today-only: sleep, HRV, RHR, water
   const todayH=hGet(activeDate());
   document.getElementById('wkSleep').textContent=todayH.sleep!=null?todayH.sleep+'h':'—';
   document.getElementById('wkHRV').textContent=todayH.hrv!=null?todayH.hrv:'—';
-  document.getElementById('wkMood').textContent=todayH.mood!=null?todayH.mood:'—';
+  document.getElementById('wkRHR').textContent=todayH.rhr!=null?todayH.rhr:'—';
 
   // Water — today's consumed oz (raw)
   const todayWaterOz=hGet(activeDate()).water||0;
-  document.getElementById('wkWater').textContent=`${todayWaterOz} oz`;
-
-  const _todayGs=storeGet('goals:'+activeDate())||[];
-  const _dg=_todayGs.filter(g=>g.done).length,_tg=_todayGs.length;
-  document.getElementById('wkGoals').textContent=`${_dg}/${_tg}`;
+  document.getElementById('wkWater').textContent=todayWaterOz>0?`${todayWaterOz} oz`:'—';
 
   // Run streak in strip (synced)
   document.getElementById('wkStreak').textContent=calcRunStreak();
@@ -2637,10 +2631,6 @@ function updateWeekly(){
   wkDays.forEach(d=>(storeGet('strength:'+d)||[]).forEach(s=>strMin+=s.duration||0));
   const wkStrEl=document.getElementById('wkStrength');
   if(wkStrEl) wkStrEl.textContent=strMin>0?fmtMins(strMin):'0m';
-
-  // Liquid IV — today's consumed count (raw)
-  const elyteCount=storeGet('elyte:'+activeDate())||0;
-  document.getElementById('wkElyte').textContent=String(elyteCount);
 
   updateWkMileTarget();
   renderWeeklyLoadSummary();
