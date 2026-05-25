@@ -1,7 +1,6 @@
 {
-  "lastUpdated": "2026-05-25T13:59:35.521Z",
+  "lastUpdated": "2026-05-25T13:59:50.950Z",
   "data": {
-    "goals:2026-05-23": [],
     "goals:2026-05-24": [
       {
         "doneAt": 1779643832741,
@@ -14,6 +13,7 @@
         "doneAt": 1779638921283
       }
     ],
+    "goals:2026-05-23": [],
     "elyte:2026-05-24": 1,
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "health:2026-05-21": {
