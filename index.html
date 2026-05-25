@@ -783,16 +783,27 @@ select.run-edit-inp option{background:#1a1a1e;}
 
 </div><!-- /todo section -->
 
-<!-- 7-Day Feel Recap -->
+<!-- 7-Day Training Summary -->
 <div class="gm-card">
-  <div class="gm-ey" style="margin-bottom:12px;">7-Day Feel Recap</div>
-  <div class="feel-legend">
-    <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#8B9FE8;"></div>Sleep Score</div>
-    <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#6BE3A4;"></div>HRV (relative)</div>
-    <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#F2C063;"></div>Run Effort</div>
+  <div class="gm-ey" style="margin-bottom:14px;">7-Day Training Summary</div>
+  <div class="weekly-load-grid">
+    <div class="wl-stat">
+      <div class="wl-val" id="wlMiles">—</div>
+      <div class="wl-lbl">Miles Run</div>
+    </div>
+    <div class="wl-stat">
+      <div class="wl-val" id="wlRunTime">—</div>
+      <div class="wl-lbl">Run Time</div>
+    </div>
+    <div class="wl-stat">
+      <div class="wl-val" id="wlStrTime">—</div>
+      <div class="wl-lbl">Strength</div>
+    </div>
+    <div class="wl-stat">
+      <div class="wl-val" id="wlXtTime">—</div>
+      <div class="wl-lbl">Cross Training</div>
+    </div>
   </div>
-  <svg id="feelRecapChart" width="100%" height="100"></svg>
-  <div class="feel-insight" id="feelInsight">Log sleep, HRV, and runs to see your weekly feel recap.</div>
 </div>
 
 <!-- ═══ RUNNING ═══ -->
@@ -1028,27 +1039,16 @@ select.run-edit-inp option{background:#1a1a1e;}
     </div>
   </div>
 
-  <!-- 7-Day Training Summary -->
+  <!-- 7-Day Feel Recap -->
   <div class="gm-card">
-    <div class="gm-ey" style="margin-bottom:14px;">7-Day Training Summary</div>
-    <div class="weekly-load-grid">
-      <div class="wl-stat">
-        <div class="wl-val" id="wlMiles">—</div>
-        <div class="wl-lbl">Miles Run</div>
-      </div>
-      <div class="wl-stat">
-        <div class="wl-val" id="wlRunTime">—</div>
-        <div class="wl-lbl">Run Time</div>
-      </div>
-      <div class="wl-stat">
-        <div class="wl-val" id="wlStrTime">—</div>
-        <div class="wl-lbl">Strength</div>
-      </div>
-      <div class="wl-stat">
-        <div class="wl-val" id="wlXtTime">—</div>
-        <div class="wl-lbl">Cross Training</div>
-      </div>
+    <div class="gm-ey" style="margin-bottom:12px;">7-Day Feel Recap</div>
+    <div class="feel-legend">
+      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#8B9FE8;"></div>Sleep Score</div>
+      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#6BE3A4;"></div>HRV (relative)</div>
+      <div class="feel-legend-item"><div class="tl-legend-dot" style="background:#F2C063;"></div>Run Effort</div>
     </div>
+    <svg id="feelRecapChart" width="100%" height="100"></svg>
+    <div class="feel-insight" id="feelInsight">Log sleep, HRV, and runs to see your weekly feel recap.</div>
   </div>
 
   <!-- Iron Tracker -->
