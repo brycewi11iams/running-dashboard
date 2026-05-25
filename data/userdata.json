@@ -1,22 +1,7 @@
 {
-  "lastUpdated": "2026-05-25T22:00:49.304Z",
+  "lastUpdated": "2026-05-25T22:01:04.681Z",
   "data": {
     "goals:2026-05-23": [],
-    "health:2026-05-24": {
-      "hrv": 100,
-      "soreness": 2,
-      "fatigue": 5,
-      "tiredness": 3,
-      "sleepQuality": 3,
-      "rhr": 53,
-      "sleep": 8.43,
-      "mood": 2,
-      "water": 152,
-      "soreLocs": [
-        "Left Foot",
-        "Quads"
-      ]
-    },
     "goals:2026-05-25": [
       {
         "text": "Laundry",
@@ -67,25 +52,30 @@
       "soreness": 1
     },
     "elyte:2026-05-25": 1,
-    "goals:2026-05-24": [
-      {
-        "doneAt": 1779643832741,
-        "text": "SQL",
-        "done": true
-      },
-      {
-        "text": "FBD debrief (cost/tablet)",
-        "done": true,
-        "doneAt": 1779638921283
-      }
-    ],
     "elyte:2026-05-21": 1,
     "note:2026-05-23": "i felt very tired for almost all day",
+    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
+    "elyte:2026-05-24": 1,
+    "health:2026-05-24": {
+      "hrv": 100,
+      "soreness": 2,
+      "fatigue": 5,
+      "tiredness": 3,
+      "sleepQuality": 3,
+      "rhr": 53,
+      "sleep": 8.43,
+      "mood": 2,
+      "water": 152,
+      "soreLocs": [
+        "Left Foot",
+        "Quads"
+      ]
+    },
     "health:2026-05-25": {
       "mood": 3,
       "hrv": 86,
       "sleep": 7.78,
-      "water": 96,
+      "water": 112,
       "rhr": 52,
       "sleepQuality": 3,
       "fatigue": 6,
@@ -108,8 +98,18 @@
       "soreness": 2,
       "tiredness": 2
     },
-    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
-    "elyte:2026-05-24": 1
+    "goals:2026-05-24": [
+      {
+        "doneAt": 1779643832741,
+        "text": "SQL",
+        "done": true
+      },
+      {
+        "text": "FBD debrief (cost/tablet)",
+        "done": true,
+        "doneAt": 1779638921283
+      }
+    ]
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
