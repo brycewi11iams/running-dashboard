@@ -1581,14 +1581,14 @@ function updateRing(){
 // ═══════════════════════════════════════════════
 // READINESS SCORE (0–100)
 // Readiness Score — 5 components
-// HRV 25% · Last Sleep 15% · Rolling Sleep 20% · Fatigue 20% · Training Load 20%
+// HRV 30% · Last Sleep 11% · Rolling Sleep 20% · Fatigue 14% · Training Load 25%
 // ═══════════════════════════════════════════════
 function calcReadinessScore(d){
   const today=activeDate();
   const todayCoros=storeGet('coros_daily:'+today);
   const parts=[];
 
-  // ── 1. HRV (25%) — baseline-relative if available ─────────────────
+  // ── 1. HRV (30%) — baseline-relative if available ─────────────────
   const hrvAvg=todayCoros&&todayCoros.hrv&&todayCoros.hrv.avg!=null?todayCoros.hrv.avg:d.hrv;
   const hrvBase=todayCoros&&todayCoros.hrv&&todayCoros.hrv.baseline!=null?todayCoros.hrv.baseline:null;
   if(hrvAvg!=null){
@@ -1599,17 +1599,17 @@ function calcReadinessScore(d){
     } else {
       s=hrvAvg>=70?100:hrvAvg>=55?82:hrvAvg>=40?62:hrvAvg>=25?38:15;
     }
-    parts.push({w:25,s,key:'hrv',label:s>=80?'Strong HRV':s>=55?'Normal HRV':'Suppressed HRV'});
+    parts.push({w:30,s,key:'hrv',label:s>=80?'Strong HRV':s>=55?'Normal HRV':'Suppressed HRV'});
   }
 
-  // ── 2. Last night's sleep (15%) — Coros score preferred ──────────
+  // ── 2. Last night's sleep (11%) — Coros score preferred ──────────
   const sleepScore=todayCoros&&todayCoros.sleep&&todayCoros.sleep.score!=null?todayCoros.sleep.score:null;
   const sleepHrs=todayCoros&&todayCoros.sleep&&todayCoros.sleep.hours!=null?todayCoros.sleep.hours:(d.sleep!=null?d.sleep:null);
   if(sleepScore!=null){
-    parts.push({w:15,s:sleepScore,key:'sleep',label:sleepScore>=80?'Great sleep':sleepScore>=55?'OK sleep':'Poor sleep'});
+    parts.push({w:11,s:sleepScore,key:'sleep',label:sleepScore>=80?'Great sleep':sleepScore>=55?'OK sleep':'Poor sleep'});
   } else if(sleepHrs!=null){
     const s=sleepHrs>=8&&sleepHrs<=9?100:sleepHrs>=7?85:sleepHrs>=6?62:sleepHrs>=5?35:12;
-    parts.push({w:15,s,key:'sleep',label:sleepHrs>=8?'Great sleep':sleepHrs>=6?'OK sleep':'Poor sleep'});
+    parts.push({w:11,s,key:'sleep',label:sleepHrs>=8?'Great sleep':sleepHrs>=6?'OK sleep':'Poor sleep'});
   }
 
   // ── 3. Rolling 7-night sleep average (20%) — exp. decay weights ──
@@ -1628,13 +1628,13 @@ function calcReadinessScore(d){
     parts.push({w:20,s,key:'rollingSleep',label:s>=87?'Consistent sleep':s>=70?'Adequate sleep pattern':'Sleep debt building'});
   }
 
-  // ── 4. Fatigue rating (20%) — manual 1-10, 10=perfect ────────────
+  // ── 4. Fatigue rating (14%) — manual 1-10, 10=perfect ────────────
   if(d.fatigue!=null){
     const s=Math.round((d.fatigue-1)/9*100);
-    parts.push({w:20,s,key:'fatigue',label:d.fatigue>=8?'Feeling strong':d.fatigue>=5?'Moderate fatigue':'High fatigue'});
+    parts.push({w:14,s,key:'fatigue',label:d.fatigue>=8?'Feeling strong':d.fatigue>=5?'Moderate fatigue':'High fatigue'});
   }
 
-  // ── 5. Training load — 3 sub-factors totalling 20% ─────────────────
+  // ── 5. Training load — 3 sub-factors totalling 25% ─────────────────
   // Helper: total training minutes for any date
   const _dayMins=dd=>
     (storeGet('runs:'+dd)||[]).filter(r=>!r.rest).reduce((s,r)=>s+durToMin(r.dur||''),0)
@@ -1672,17 +1672,17 @@ function calcReadinessScore(d){
     parts.push({w:10,s,key:'load28',label:s>=80?'Load well managed':s>=50?'Moderate load spike':'High load — watch for injury'});
   }
 
-  // 5b. Yesterday's total activity (6%) — relative to daily baseline
+  // 5b. Yesterday's total activity (9%) — relative to daily baseline
   {
     const yest=lastNDays(2)[0]; // lastNDays(2) = [yesterday, today]
     const s=_relLoad(_dayMins(yest),_baseline);
-    parts.push({w:6,s,key:'loadYest',label:s>=80?'Good recovery day':s>=50?'Moderate activity yesterday':'Heavy day yesterday'});
+    parts.push({w:9,s,key:'loadYest',label:s>=80?'Good recovery day':s>=50?'Moderate activity yesterday':'Heavy day yesterday'});
   }
 
-  // 5c. Today's activity so far (4%) — no activity yet = neutral (100)
+  // 5c. Today's activity so far (6%) — no activity yet = neutral (100)
   {
     const s=_relLoad(_dayMins(today),_baseline);
-    parts.push({w:4,s,key:'loadToday',label:s>=80?'Light day so far':s>=50?'Moderate activity today':'Heavy day today'});
+    parts.push({w:6,s,key:'loadToday',label:s>=80?'Light day so far':s>=50?'Moderate activity today':'Heavy day today'});
   }
 
   if(!parts.length) return null;
