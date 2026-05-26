@@ -831,15 +831,15 @@ select.run-edit-inp option{background:#1a1a1e;}
 
     <div class="gm-ey" style="margin-bottom:12px;">Log a Run</div>
     <div class="run-form">
-      <div class="rf"><div class="rf-lbl">Distance (mi)</div><input id="runDist" type="number" min="0" step="0.01" placeholder="0.00"></div>
-      <div class="rf"><div class="rf-lbl">Duration (mm:ss)</div><input id="runDur" type="text" placeholder="35:00"></div>
+      <div class="rf"><div class="rf-lbl">Distance (mi)</div><input id="runDist" type="number" min="0" step="0.01" placeholder="0.00" autocomplete="off"></div>
+      <div class="rf"><div class="rf-lbl">Duration (mm:ss)</div><input id="runDur" type="text" placeholder="35:00" autocomplete="off" autocorrect="off" autocapitalize="off"></div>
       <div class="rf"><div class="rf-lbl">Avg Pace (auto)</div><div class="pace-display" id="paceDisp">—</div></div>
-      <div class="rf"><div class="rf-lbl">Avg HR (bpm)</div><input id="runHR" type="number" min="0" max="250" placeholder="145"></div>
-      <div class="rf"><div class="rf-lbl">Perceived Effort (1–10)</div><input id="runEffort" type="number" min="1" max="10" placeholder="7"></div>
+      <div class="rf"><div class="rf-lbl">Avg HR (bpm)</div><input id="runHR" type="number" min="0" max="250" placeholder="145" autocomplete="off"></div>
+      <div class="rf"><div class="rf-lbl">Perceived Effort (1–10)</div><input id="runEffort" type="number" min="1" max="10" placeholder="7" autocomplete="off"></div>
       <div class="rf"><div class="rf-lbl">Shoe</div><select class="hm-input" id="runShoe"><option value="">— none —</option></select></div>
-      <div class="rf"><div class="rf-lbl">Temp (°F)</div><input id="runTemp" type="number" min="-40" max="150" placeholder="72"></div>
-      <div class="rf"><div class="rf-lbl">Humidity (%)</div><input id="runHumidity" type="number" min="0" max="100" placeholder="65"></div>
-      <div class="rf" style="grid-column:1/-1;"><div class="rf-lbl">Notes</div><textarea id="runNotes" placeholder="Legs felt heavy…"></textarea></div>
+      <div class="rf"><div class="rf-lbl">Temp (°F)</div><input id="runTemp" type="number" min="-40" max="150" placeholder="72" autocomplete="off"></div>
+      <div class="rf"><div class="rf-lbl">Humidity (%)</div><input id="runHumidity" type="number" min="0" max="100" placeholder="65" autocomplete="off"></div>
+      <div class="rf" style="grid-column:1/-1;"><div class="rf-lbl">Notes</div><textarea id="runNotes" placeholder="Legs felt heavy…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea></div>
     </div>
     <label class="rest-toggle"><input type="checkbox" id="runRest"> Planned rest day</label>
     <div class="sweat-rate-row" style="margin-bottom:10px;">
@@ -907,7 +907,7 @@ select.run-edit-inp option{background:#1a1a1e;}
     </div>
     <div class="rf">
       <div class="rf-lbl">Duration (min)</div>
-      <input class="hm-input" id="xtDur" type="number" min="1" max="480" placeholder="45">
+      <input class="hm-input" id="xtDur" type="number" min="1" max="480" placeholder="45" autocomplete="off">
     </div>
     <div class="rf">
       <div class="rf-lbl">Avg HR (bpm)</div>
@@ -945,11 +945,11 @@ select.run-edit-inp option{background:#1a1a1e;}
     </div>
     <div class="rf">
       <div class="rf-lbl">Duration (min)</div>
-      <input class="hm-input" id="strengthDur" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="20">
+      <input class="hm-input" id="strengthDur" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="20" autocomplete="off" autocorrect="off" autocapitalize="off">
     </div>
     <div class="rf" style="grid-column:1/-1;">
       <div class="rf-lbl">Notes (optional)</div>
-      <input class="hm-input" id="strengthNotes" type="text" placeholder="3×20 crunches, 2 min plank…">
+      <input class="hm-input" id="strengthNotes" type="text" placeholder="3×20 crunches, 2 min plank…" autocomplete="off" autocorrect="off" autocapitalize="off">
     </div>
     <div class="rf" style="grid-column:1/-1;">
       <button class="btn-log-run" id="logStrengthBtn" style="margin-bottom:0;">Log Session</button>
