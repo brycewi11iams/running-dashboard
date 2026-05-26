@@ -3355,6 +3355,30 @@ function _reRenderAll(){
   renderHeatAdjCallout();
   loadNarrative();
   const sr=storeGet('sweat_rate');const ri=document.getElementById('sweatRateInp');if(sr&&ri) ri.value=sr;
+  // Re-apply Coros fill after any sync overwrites health:today nulls
+  _applyCorosFill();
+}
+
+// ═══════════════════════════════════════════════
+// COROS FILL — applies cached coros_daily:today into health:today
+// for any fields still null. Called on init and after every sync
+// so GitHub/Firestore overwrites can't race ahead of Coros data.
+// ═══════════════════════════════════════════════
+function _applyCorosFill(){
+  const today=activeDate();
+  const data=storeGet('coros_daily:'+today);
+  if(!data) return;
+  const h=hGet(today);let changed=false;
+  if(data.sleep&&data.sleep.hours!=null&&h.sleep==null){
+    h.sleep=Math.round(data.sleep.hours*10)/10;changed=true;
+  }
+  if(data.hrv&&data.hrv.avg!=null&&h.hrv==null){
+    h.hrv=data.hrv.avg;changed=true;
+  }
+  if(data.rhr!=null&&h.rhr==null){
+    h.rhr=data.rhr;changed=true;
+  }
+  if(changed){hSet(today,h);loadHealth();updateWeekly();}
 }
 
 // ═══════════════════════════════════════════════
@@ -3373,20 +3397,7 @@ async function loadCorosData(){
     storeSet('coros_daily:'+data.date,data);
 
     // Auto-fill health fields that haven't been set manually today
-    const today=activeDate();
-    if(data.date===today){
-      const h=hGet(today);let changed=false;
-      if(data.sleep&&data.sleep.hours!=null&&h.sleep==null){
-        h.sleep=Math.round(data.sleep.hours*10)/10;changed=true;
-      }
-      if(data.hrv&&data.hrv.avg!=null&&h.hrv==null){
-        h.hrv=data.hrv.avg;changed=true;
-      }
-      if(data.rhr!=null&&h.rhr==null){
-        h.rhr=data.rhr;changed=true;
-      }
-      if(changed){hSet(today,h);loadHealth();updateWeekly();}
-    }
+    if(data.date===activeDate()) _applyCorosFill();
 
     renderRecoveryTrend();
     renderTrainingLoadPanel();
