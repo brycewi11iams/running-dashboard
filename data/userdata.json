@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-26T01:03:08.196Z",
+  "lastUpdated": "2026-05-26T01:23:14.398Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -36,8 +36,9 @@
         "doneAt": 1779740704966
       },
       {
-        "done": false,
-        "text": "Shave"
+        "done": true,
+        "text": "Shave",
+        "doneAt": 1779758103146
       },
       {
         "text": "Bed sheets",
@@ -64,6 +65,12 @@
       "mood": 2
     },
     "elyte:2026-05-25": 1,
+    "goals:2026-05-26": [
+      {
+        "text": "Face wash + bagels",
+        "done": false
+      }
+    ],
     "elyte:2026-05-21": 1,
     "note:2026-05-23": "i felt very tired for almost all day",
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
