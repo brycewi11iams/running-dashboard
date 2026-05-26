@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-26T00:59:30.224Z",
+  "lastUpdated": "2026-05-26T01:00:41.638Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -90,7 +90,7 @@
       "fatigue": 6,
       "sleep": 7.78,
       "sleepQuality": 3,
-      "water": 128,
+      "water": 136,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
