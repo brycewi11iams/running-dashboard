@@ -1,7 +1,37 @@
 {
-  "lastUpdated": "2026-05-25T22:01:04.681Z",
+  "lastUpdated": "2026-05-26T00:16:08.351Z",
   "data": {
     "goals:2026-05-23": [],
+    "health:2026-05-24": {
+      "hrv": 100,
+      "soreness": 2,
+      "fatigue": 5,
+      "tiredness": 3,
+      "sleepQuality": 3,
+      "rhr": 53,
+      "sleep": 8.43,
+      "mood": 2,
+      "water": 152,
+      "soreLocs": [
+        "Left Foot",
+        "Quads"
+      ]
+    },
+    "health:2026-05-21": {
+      "sleep": 5.5,
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot"
+      ],
+      "hr": 51,
+      "tiredness": 2,
+      "soreness": 2,
+      "hrv": 121,
+      "sleepQuality": 2,
+      "mood": 4,
+      "water": 128
+    },
+    "elyte:2026-05-22": 1,
     "goals:2026-05-25": [
       {
         "text": "Laundry",
@@ -23,21 +53,6 @@
         "text": "meal prep"
       }
     ],
-    "elyte:2026-05-22": 1,
-    "health:2026-05-21": {
-      "sleep": 5.5,
-      "soreLocs": [
-        "Left Foot",
-        "Right Foot"
-      ],
-      "hr": 51,
-      "tiredness": 2,
-      "soreness": 2,
-      "hrv": 121,
-      "sleepQuality": 2,
-      "mood": 4,
-      "water": 128
-    },
     "elyte:2026-05-23": 1,
     "health:2026-05-23": {
       "mood": 2,
@@ -54,31 +69,14 @@
     "elyte:2026-05-25": 1,
     "elyte:2026-05-21": 1,
     "note:2026-05-23": "i felt very tired for almost all day",
-    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
-    "elyte:2026-05-24": 1,
-    "health:2026-05-24": {
-      "hrv": 100,
-      "soreness": 2,
-      "fatigue": 5,
-      "tiredness": 3,
-      "sleepQuality": 3,
-      "rhr": 53,
-      "sleep": 8.43,
-      "mood": 2,
-      "water": 152,
-      "soreLocs": [
-        "Left Foot",
-        "Quads"
-      ]
-    },
     "health:2026-05-25": {
-      "mood": 3,
       "hrv": 86,
-      "sleep": 7.78,
-      "water": 112,
+      "mood": 3,
       "rhr": 52,
-      "sleepQuality": 3,
       "fatigue": 6,
+      "sleep": 7.78,
+      "sleepQuality": 3,
+      "water": 112,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
@@ -98,6 +96,8 @@
       "soreness": 2,
       "tiredness": 2
     },
+    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
+    "elyte:2026-05-24": 1,
     "goals:2026-05-24": [
       {
         "doneAt": 1779643832741,
