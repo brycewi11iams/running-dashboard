@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-26T11:21:13.930Z",
+  "lastUpdated": "2026-05-26T11:22:06.916Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -21,7 +21,10 @@
       ],
       "soreness": 2,
       "water": 16,
-      "fatigue": 6
+      "fatigue": 6,
+      "sleep": 6,
+      "hrv": 125,
+      "rhr": 48
     },
     "health:2026-05-21": {
       "soreLocs": [
