@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-26T11:15:39.963Z",
+  "lastUpdated": "2026-05-26T11:15:44.481Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -17,70 +17,70 @@
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "health:2026-05-26": {
       "soreness": 2,
+      "fatigue": 6,
       "water": 16,
       "soreLocs": [
         "Left Foot"
-      ],
-      "fatigue": 6
+      ]
     },
     "goals:2026-05-23": [],
     "health:2026-05-21": {
       "tiredness": 2,
       "soreness": 2,
+      "mood": 4,
       "hr": 51,
+      "sleepQuality": 2,
       "hrv": 121,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
       "sleep": 5.5,
-      "mood": 4,
-      "sleepQuality": 2,
       "water": 128
     },
     "health:2026-05-24": {
-      "rhr": 53,
+      "tiredness": 3,
       "fatigue": 5,
-      "sleep": 8.43,
       "mood": 2,
-      "sleepQuality": 3,
-      "water": 152,
+      "soreness": 2,
       "hrv": 100,
       "soreLocs": [
         "Left Foot",
         "Quads"
       ],
-      "tiredness": 3,
-      "soreness": 2
+      "sleepQuality": 3,
+      "sleep": 8.43,
+      "rhr": 53,
+      "water": 152
     },
     "health:2026-05-22": {
-      "tiredness": 2,
       "mood": 3,
-      "sleepQuality": 2,
-      "water": 124,
       "soreness": 2,
-      "sleep": 5,
+      "tiredness": 2,
+      "water": 124,
+      "sleepQuality": 2,
+      "hrv": 96,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "hrv": 96
+      "sleep": 5
     },
     "elyte:2026-05-21": 1,
     "elyte:2026-05-22": 1,
     "health:2026-05-25": {
-      "soreness": 1,
-      "hrv": 86,
+      "fatigue": 6,
+      "water": 136,
+      "rhr": 52,
+      "sleepQuality": 3,
+      "sleep": 7.78,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "sleep": 7.78,
-      "sleepQuality": 3,
+      "hrv": 86,
       "mood": 3,
-      "water": 136,
-      "rhr": 52,
-      "fatigue": 6
+      "soreness": 1
     },
     "note:2026-05-23": "i felt very tired for almost all day",
     "goals:2026-05-26": [
@@ -90,16 +90,16 @@
       }
     ],
     "health:2026-05-23": {
-      "tiredness": 1,
-      "mood": 2,
+      "rhr": 53,
       "water": 110,
-      "soreness": 1,
       "sleep": 5,
       "soreLocs": [
         "Quads"
       ],
-      "rhr": 53,
-      "hrv": 83
+      "hrv": 83,
+      "mood": 2,
+      "soreness": 1,
+      "tiredness": 1
     },
     "elyte:2026-05-25": 1,
     "elyte:2026-05-26": 1,
