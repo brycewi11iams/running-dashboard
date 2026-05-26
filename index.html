@@ -3182,6 +3182,10 @@ loadCorosData();
 // Pull cross-device health data from GitHub (reads data/userdata.json from the public repo)
 loadGhUserdata();
 
+// Apply any already-cached Coros data immediately (covers the case where neither async
+// function triggers _reRenderAll because nothing changed vs stored data)
+_applyCorosFill();
+
 // If this device has a password hash + PAT, push to GitHub so other devices can find it.
 // Runs once 2s after load — ensures the hash is always in userdata.json without waiting
 // for health data to change.
@@ -3396,8 +3400,9 @@ async function loadCorosData(){
     // Cache today's record — older records accumulate for sparklines
     storeSet('coros_daily:'+data.date,data);
 
-    // Auto-fill health fields that haven't been set manually today
-    if(data.date===activeDate()) _applyCorosFill();
+    // Auto-fill health fields that haven't been set manually today.
+    // Always call regardless of daily.json date — _applyCorosFill reads coros_daily:today independently.
+    _applyCorosFill();
 
     renderRecoveryTrend();
     renderTrainingLoadPanel();
