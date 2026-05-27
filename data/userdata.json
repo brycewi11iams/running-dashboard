@@ -1,18 +1,18 @@
 {
-  "lastUpdated": "2026-05-27T19:10:12.620Z",
+  "lastUpdated": "2026-05-27T22:50:29.822Z",
   "data": {
     "health:2026-05-26": {
+      "rhr": 48,
+      "sleepQuality": 2,
+      "mood": 3,
+      "soreness": 2,
+      "fatigue": 6,
       "soreLocs": [
         "Left Foot"
       ],
-      "sleepQuality": 2,
-      "mood": 3,
-      "fatigue": 6,
       "sleep": 6,
-      "water": 144,
-      "soreness": 2,
       "hrv": 125,
-      "rhr": 48
+      "water": 144
     },
     "goals:2026-05-23": [],
     "goals:2026-05-25": [
@@ -37,33 +37,33 @@
         "doneAt": 1779740706495
       }
     ],
-    "elyte:2026-05-22": 1,
     "health:2026-05-21": {
-      "soreness": 2,
-      "water": 128,
-      "hrv": 121,
-      "hr": 51,
-      "sleep": 5.5,
-      "mood": 4,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
+      "sleep": 5.5,
+      "water": 128,
+      "hrv": 121,
+      "sleepQuality": 2,
+      "soreness": 2,
+      "mood": 4,
       "tiredness": 2,
-      "sleepQuality": 2
+      "hr": 51
     },
+    "elyte:2026-05-22": 1,
     "elyte:2026-05-23": 1,
     "health:2026-05-23": {
+      "mood": 2,
       "sleep": 5,
+      "soreness": 1,
+      "rhr": 53,
       "soreLocs": [
         "Quads"
       ],
-      "tiredness": 1,
-      "soreness": 1,
       "water": 110,
-      "rhr": 53,
-      "mood": 2,
-      "hrv": 83
+      "hrv": 83,
+      "tiredness": 1
     },
     "elyte:2026-05-25": 1,
     "goals:2026-05-26": [
@@ -78,59 +78,59 @@
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "elyte:2026-05-24": 1,
     "health:2026-05-24": {
-      "hrv": 100,
-      "rhr": 53,
-      "water": 152,
-      "soreness": 2,
       "sleep": 8.43,
-      "mood": 2,
-      "fatigue": 5,
-      "sleepQuality": 3,
-      "tiredness": 3,
       "soreLocs": [
         "Left Foot",
         "Quads"
-      ]
+      ],
+      "hrv": 100,
+      "water": 152,
+      "soreness": 2,
+      "fatigue": 5,
+      "mood": 2,
+      "sleepQuality": 3,
+      "rhr": 53,
+      "tiredness": 3
     },
     "elyte:2026-05-27": 1,
     "health:2026-05-27": {
       "sleep": 7.18,
-      "water": 80,
-      "soreness": 2,
-      "hrv": 103,
-      "rhr": 51,
       "soreLocs": [
         "Left Foot"
       ],
-      "sleepQuality": 4,
+      "hrv": 103,
+      "water": 80,
       "mood": 3,
-      "fatigue": 6
+      "fatigue": 6,
+      "soreness": 2,
+      "sleepQuality": 4,
+      "rhr": 51
     },
     "health:2026-05-25": {
-      "fatigue": 6,
-      "mood": 3,
+      "water": 136,
+      "hrv": 86,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "sleepQuality": 3,
+      "sleep": 7.78,
       "rhr": 52,
-      "hrv": 86,
-      "soreness": 1,
-      "water": 136,
-      "sleep": 7.78
+      "sleepQuality": 3,
+      "mood": 3,
+      "fatigue": 6,
+      "soreness": 1
     },
     "health:2026-05-22": {
       "tiredness": 2,
+      "water": 124,
+      "hrv": 96,
+      "sleepQuality": 2,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "sleepQuality": 2,
       "sleep": 5,
-      "hrv": 96,
       "mood": 3,
-      "water": 124,
       "soreness": 2
     },
     "elyte:2026-05-26": 1,
