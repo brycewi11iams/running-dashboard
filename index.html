@@ -398,7 +398,8 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
 .xt-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .xt-list{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
 .xt-item{display:flex;align-items:center;gap:10px;padding:8px 12px;
-  background:rgba(255,255,255,.03);border-radius:8px;font-size:12px;color:var(--text-secondary);}
+  background:rgba(255,255,255,.03);border-radius:8px;font-size:12px;color:var(--text-secondary);
+  flex-wrap:wrap;}
 .xt-type{font-weight:600;color:var(--text-primary);min-width:68px;}
 .xt-dur{font-family:var(--font-mono);white-space:nowrap;}
 .xt-effort-badge{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
@@ -1379,7 +1380,7 @@ const GITHUB_REPO   = 'brycewi11iams/running-dashboard';
 const GITHUB_BRANCH = 'main';
 const USERDATA_PATH = 'data/userdata.json';
 // Keys whose prefixes are synced to GitHub (health data, not UI prefs)
-const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:'];
+const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:','xt:','strength:'];
 
 // Weekday: 4:30 AM–8:30 PM  |  Weekend: 6:00 AM–10:00 PM
 function getDayBounds(){
@@ -1459,6 +1460,11 @@ function tomorrowDate(){
 function fmtDate(ymd){
   const[y,m,d]=ymd.split('-').map(Number);
   return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+function fmtDateYear(ymd){
+  if(!ymd) return '';
+  const[y,m,d]=ymd.split('-').map(Number);
+  return new Date(y,m-1,d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 }
 function lastNDays(n){
   // Build from the active local date — parse YMD into local midnight to avoid any UTC shift
@@ -2574,7 +2580,7 @@ function loadPRs(){
     const wrap=document.createElement('div');
 
     const row=document.createElement('div');row.className='pr-card';
-    row.innerHTML=`<div class="pr-event">${escHtml(ev)}</div><div class="pr-time">${escHtml(pr.time)}</div><div class="pr-date">${pr.date?fmtDate(pr.date):''}</div>`;
+    row.innerHTML=`<div class="pr-event">${escHtml(ev)}</div><div class="pr-time">${escHtml(pr.time)}</div><div class="pr-date">${fmtDateYear(pr.date)}</div>`;
 
     const edit=document.createElement('div');edit.className='pr-edit';
     edit.innerHTML=`
@@ -3676,42 +3682,61 @@ function renderConditionsChart(){
 function drawConditionsChart(runs){
   const svg=document.getElementById('condChart');if(!svg) return;
   svg.innerHTML='';
-  const W=svgW(svg),H=100,PT=8,PB=20,PL=38,PR=8;
+  const labeled=runs.length<10;
+  const W=svgW(svg),H=labeled?120:100,PT=8,PB=20,PL=38,PR=labeled?60:8;
+  svg.setAttribute('height',H);
   const chartW=W-PL-PR,chartH=H-PT-PB;
   const pacesSec=runs.map(r=>paceToSec(r.pace)).filter(v=>v!=null);
   const temps=runs.map(r=>r.temp);
   if(!pacesSec.length) return;
   const tMin=Math.min(...temps),tMax=Math.max(...temps,tMin+1);
   const pMin=Math.min(...pacesSec),pMax=Math.max(...pacesSec,pMin+1);
-  // X=temp, Y=pace (faster=bottom, slower=top — consistent with pace trend chart)
+  // X=temp, Y=pace (faster=bottom, slower=top)
   const pX=t=>PL+(t-tMin)/(tMax-tMin)*chartW;
-  const pY=p=>PT+chartH*(1-(p-pMin)/(pMax-pMin)); // faster (lower sec) → bottom
+  const pY=p=>PT+chartH*(1-(p-pMin)/(pMax-pMin));
   // Mid grid line
   const gl=document.createElementNS('http://www.w3.org/2000/svg','line');
   gl.setAttribute('x1',PL);gl.setAttribute('y1',PT+chartH/2);gl.setAttribute('x2',W-PR);gl.setAttribute('y2',PT+chartH/2);
   gl.setAttribute('stroke','rgba(255,255,255,0.05)');gl.setAttribute('stroke-width','1');svg.appendChild(gl);
-  // Y labels (pace — slow at top, fast at bottom)
+  // Y labels
   [[fmtPaceSec(pMax),PT+7],['⚡ '+fmtPaceSec(pMin),PT+chartH]].forEach(([txt,y])=>{
     const t=document.createElementNS('http://www.w3.org/2000/svg','text');
     t.setAttribute('x',PL-3);t.setAttribute('y',y);t.setAttribute('text-anchor','end');
     t.setAttribute('fill','rgba(255,255,255,0.25)');t.setAttribute('font-size','7');
     t.setAttribute('font-family','ui-monospace,monospace');t.textContent=txt;svg.appendChild(t);
   });
-  // X labels (temp)
+  // X labels
   [[tMin,PL],[tMax,W-PR]].forEach(([val,x])=>{
     const t=document.createElementNS('http://www.w3.org/2000/svg','text');
     t.setAttribute('x',x);t.setAttribute('y',H-PB+13);t.setAttribute('text-anchor','middle');
     t.setAttribute('fill','rgba(255,255,255,0.25)');t.setAttribute('font-size','7');
     t.setAttribute('font-family','ui-monospace,monospace');t.textContent=Math.round(val)+'°';svg.appendChild(t);
   });
-  // Dots colored by temperature range
+  // Dots + tooltips + labels when sparse
   runs.forEach(r=>{
     const ps=paceToSec(r.pace);if(!ps) return;
+    const cx=pX(r.temp),cy=pY(ps);
     const color=r.temp<55?'#5BC4E8':r.temp<70?'#6BE3A4':r.temp<85?'#F2C063':'#FF6B6B';
     const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    dot.setAttribute('cx',pX(r.temp));dot.setAttribute('cy',pY(ps));
-    dot.setAttribute('r','3.5');dot.setAttribute('fill',color);dot.setAttribute('opacity','0.75');
+    dot.setAttribute('cx',cx);dot.setAttribute('cy',cy);
+    dot.setAttribute('r',labeled?'4':'3.5');dot.setAttribute('fill',color);dot.setAttribute('opacity','0.85');
+    // Native SVG tooltip (hover)
+    const title=document.createElementNS('http://www.w3.org/2000/svg','title');
+    const dateStr=r._runDate?fmtDate(r._runDate):(r.date?fmtDate(r.date):'');
+    title.textContent=`${dateStr} — ${r.pace} @ ${Math.round(r.temp)}°F`;
+    dot.appendChild(title);
     svg.appendChild(dot);
+    // Date label next to dot when < 10 points
+    if(labeled&&r._runDate){
+      const[,m,d]=r._runDate.split('-').map(Number);
+      const lbl=new Date(Number(r._runDate.split('-')[0]),m-1,d)
+        .toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',cx+6);t.setAttribute('y',cy+3);t.setAttribute('text-anchor','start');
+      t.setAttribute('fill',color);t.setAttribute('font-size','7');t.setAttribute('opacity','0.8');
+      t.setAttribute('font-family','ui-monospace,monospace');t.textContent=lbl;
+      svg.appendChild(t);
+    }
   });
 }
 
