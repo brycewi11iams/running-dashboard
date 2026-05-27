@@ -875,7 +875,7 @@ select.run-edit-inp option{background:#1a1a1e;}
 
     <div class="gm-ey" style="margin-bottom:8px;">Recent Runs</div>
     <table class="run-table">
-      <thead><tr><th>Date</th><th>Dist</th><th>Pace</th><th>HR</th><th>Effort</th><th></th></tr></thead>
+      <thead><tr><th>Date</th><th>Dist</th><th>Pace</th><th>HR</th><th></th></tr></thead>
       <tbody id="runBody"></tbody>
     </table>
 
@@ -2220,7 +2220,7 @@ function loadRunLog(){
       const delBtn=`<button class="xt-del" title="Delete this run" style="font-size:14px;padding:2px 6px;">×</button>`;
 
       if(r.rest){
-        tr.innerHTML=`<td>${fmtDate(r.date)}</td><td class="td-rest" colspan="4">Rest Day 🛌</td><td>${delBtn}</td>`;
+        tr.innerHTML=`<td>${fmtDate(r.date)}</td><td class="td-rest" colspan="3">Rest Day 🛌</td><td>${delBtn}</td>`;
         tr.querySelector('.xt-del').addEventListener('click',()=>{
           const dayRuns=storeGet('runs:'+r._runDate)||[];
           dayRuns.splice(r._runIdx,1);
@@ -2235,7 +2235,7 @@ function loadRunLog(){
       // Main data row
       const _typeLabels={easy:'Easy',mlr:'MLR',long:'Long',workout:'Workout'};
       const _typeBadge=r.runType?`<br><span class="run-type-badge ${r.runType}">${_typeLabels[r.runType]||r.runType}</span>`:'';
-      tr.innerHTML=`<td>${fmtDate(r.date)}${_typeBadge}</td><td>${r.dist?r.dist.toFixed(2)+' mi':'—'}</td><td>${r.pace||'—'}</td><td>${r.hr?r.hr+' bpm':'—'}</td><td class="run-effort-cell">${r.effort!=null?r.effort:'—'}</td><td>${delBtn}</td>`;
+      tr.innerHTML=`<td>${fmtDate(r.date)}${_typeBadge}</td><td>${r.dist?r.dist.toFixed(2)+' mi':'—'}</td><td>${r.pace||'—'}</td><td>${r.hr?r.hr+' bpm':'—'}</td><td>${delBtn}</td>`;
       tr.querySelector('.xt-del').addEventListener('click',()=>{
         const dayRuns=storeGet('runs:'+r._runDate)||[];
         dayRuns.splice(r._runIdx,1);
@@ -2283,7 +2283,6 @@ function loadRunLog(){
       if(r.humidity!=null) humInp.value=r.humidity;
 
       // Save all fields to localStorage immediately on input
-      const effortCell=tr.querySelector('.run-effort-cell');
       function _saveEdit(){
         const dayRuns=storeGet('runs:'+r._runDate)||[];
         if(!dayRuns[r._runIdx]) return;
@@ -2296,8 +2295,6 @@ function loadRunLog(){
         const hv=parseFloat(humInp.value);
         dayRuns[r._runIdx].humidity=isNaN(hv)?null:hv;
         storeSet('runs:'+r._runDate,dayRuns);
-        // Keep effort cell in main row in sync without a full reload
-        if(effortCell) effortCell.textContent=dayRuns[r._runIdx].effort??'—';
         // Update weather:date key so heat callout stays current
         if(dayRuns[r._runIdx].temp!=null&&dayRuns[r._runIdx].humidity!=null){
           storeSet('weather:'+r._runDate,{temp:dayRuns[r._runIdx].temp,humidity:dayRuns[r._runIdx].humidity});
