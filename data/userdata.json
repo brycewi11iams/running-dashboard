@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-27T23:14:55.828Z",
+  "lastUpdated": "2026-05-27T23:16:22.652Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -87,6 +87,12 @@
     ],
     "elyte:2026-05-21": 1,
     "note:2026-05-23": "i felt very tired for almost all day",
+    "goals:2026-05-28": [
+      {
+        "text": "HEB list",
+        "done": false
+      }
+    ],
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "elyte:2026-05-24": 1,
     "health:2026-05-24": {
