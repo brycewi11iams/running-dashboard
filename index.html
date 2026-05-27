@@ -408,6 +408,13 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
 .xt-effort-badge.hard{background:rgba(255,107,107,.15);color:#FF6B6B;}
 .xt-del{background:none;border:none;color:var(--text-tertiary);font-size:14px;cursor:pointer;margin-left:auto;transition:color .15s;padding:2px 4px;}
 .xt-del:hover{color:var(--danger);}
+/* ── RUN TYPE BADGE ── */
+.run-type-badge{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 6px;border-radius:99px;white-space:nowrap;display:inline-block;margin-top:3px;}
+.run-type-badge.easy{background:rgba(107,227,164,.15);color:#6BE3A4;}
+.run-type-badge.mlr{background:rgba(91,196,232,.15);color:#5BC4E8;}
+.run-type-badge.long{background:rgba(224,118,88,.18);color:#E07658;}
+.run-type-badge.workout{background:rgba(255,107,107,.15);color:#FF6B6B;}
 
 /* ── READINESS SCORE CARD ── */
 .readiness-score-wrap{display:flex;align-items:center;gap:20px;margin-bottom:16px;}
@@ -837,6 +844,15 @@ select.run-edit-inp option{background:#1a1a1e;}
       <div class="rf"><div class="rf-lbl">Avg HR (bpm)</div><input id="runHR" type="number" min="0" max="250" placeholder="145" autocomplete="off"></div>
       <div class="rf"><div class="rf-lbl">Perceived Effort (1–10)</div><input id="runEffort" type="number" min="1" max="10" placeholder="7" autocomplete="off"></div>
       <div class="rf"><div class="rf-lbl">Shoe</div><select class="hm-input" id="runShoe"><option value="">— none —</option></select></div>
+      <div class="rf"><div class="rf-lbl">Run Type</div>
+        <select class="hm-input" id="runType">
+          <option value="">— type —</option>
+          <option value="easy">Easy</option>
+          <option value="mlr">MLR</option>
+          <option value="long">Long Run</option>
+          <option value="workout">Workout</option>
+        </select>
+      </div>
       <div class="rf"><div class="rf-lbl">Temp (°F)</div><input id="runTemp" type="number" min="-40" max="150" placeholder="72" autocomplete="off"></div>
       <div class="rf"><div class="rf-lbl">Humidity (%)</div><input id="runHumidity" type="number" min="0" max="100" placeholder="65" autocomplete="off"></div>
       <div class="rf" style="grid-column:1/-1;"><div class="rf-lbl">Notes</div><textarea id="runNotes" placeholder="Legs felt heavy…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea></div>
@@ -2217,7 +2233,9 @@ function loadRunLog(){
       }
 
       // Main data row
-      tr.innerHTML=`<td>${fmtDate(r.date)}</td><td>${r.dist?r.dist.toFixed(2)+' mi':'—'}</td><td>${r.pace||'—'}</td><td>${r.hr?r.hr+' bpm':'—'}</td><td class="run-effort-cell">${r.effort!=null?r.effort:'—'}</td><td>${delBtn}</td>`;
+      const _typeLabels={easy:'Easy',mlr:'MLR',long:'Long',workout:'Workout'};
+      const _typeBadge=r.runType?`<br><span class="run-type-badge ${r.runType}">${_typeLabels[r.runType]||r.runType}</span>`:'';
+      tr.innerHTML=`<td>${fmtDate(r.date)}${_typeBadge}</td><td>${r.dist?r.dist.toFixed(2)+' mi':'—'}</td><td>${r.pace||'—'}</td><td>${r.hr?r.hr+' bpm':'—'}</td><td class="run-effort-cell">${r.effort!=null?r.effort:'—'}</td><td>${delBtn}</td>`;
       tr.querySelector('.xt-del').addEventListener('click',()=>{
         const dayRuns=storeGet('runs:'+r._runDate)||[];
         dayRuns.splice(r._runIdx,1);
@@ -2330,6 +2348,7 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
   const notes=document.getElementById('runNotes').value.trim();
   const pace=calcPace(dist,dur);
   const shoeId=document.getElementById('runShoe').value||null;
+  const runType=document.getElementById('runType').value||null;
   // Temp/humidity: use run-form values, fall back to saved morning conditions
   let temp=parseFloat(document.getElementById('runTemp').value)||null;
   let humidity=parseFloat(document.getElementById('runHumidity').value)||null;
@@ -2340,9 +2359,10 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
   const runs=storeGet('runs:'+today)||[];
   runs.unshift({date:today,dist:rest?0:dist,dur:rest?'':dur,pace:rest?'':(pace||''),
     hr:rest?null:hr,effort:rest?null:effort,notes,rest,shoeId:rest?null:shoeId,
-    temp:rest?null:temp,humidity:rest?null:humidity});
+    temp:rest?null:temp,humidity:rest?null:humidity,runType:rest?null:runType});
   storeSet('runs:'+today,runs);
   ['runDist','runDur','runHR','runEffort','runNotes','runTemp','runHumidity'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('runType').value='';
   document.getElementById('runRest').checked=false;
   document.getElementById('paceDisp').textContent='—';
   loadRunLog();updateWeekly();
