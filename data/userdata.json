@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-27T19:05:25.460Z",
+  "lastUpdated": "2026-05-27T19:09:44.679Z",
   "data": {
     "health:2026-05-26": {
       "mood": 3,
@@ -104,7 +104,7 @@
       "sleepQuality": 4,
       "rhr": 51,
       "fatigue": 6,
-      "water": 16
+      "water": 80
     },
     "health:2026-05-25": {
       "rhr": 52,
