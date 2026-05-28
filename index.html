@@ -3326,6 +3326,8 @@ async function loadGhUserdata(){
     }
     let changed=false;
     Object.entries(payload.data).forEach(([k,v])=>{
+      // coros_daily: is always fetched fresh from daily.json — never apply a stale synced copy
+      if(k.startsWith('coros_daily:')) return;
       const nv=JSON.stringify(v);
       if(localStorage.getItem(k)!==nv){localStorage.setItem(k,nv);changed=true;}
     });
