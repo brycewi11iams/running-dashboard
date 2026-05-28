@@ -515,6 +515,8 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
   .pr-add-form select,.pr-add-form input{font-size:12px;padding:6px 8px;}
   .rsb-count{font-size:22px;}
   .xt-form{grid-template-columns:1fr;}
+  .xt-del{margin-left:6px;}
+  .xt-item{max-width:100%;}
   .readiness-items{grid-template-columns:1fr;}
   .readiness-items .hm-full{grid-column:1;}
   .shoe-add-row input[placeholder="Max mi (opt)"]{width:90px;}
@@ -1115,7 +1117,7 @@ select.run-edit-inp option{background:#1a1a1e;}
         <div class="hm-lbl">Sleep</div>
         <div class="hm-val-row"><span class="hm-val" id="sleepVal">—</span><span class="hm-unit">hrs</span></div>
         <div class="star-row" id="sleepStars"></div>
-        <input class="hm-input" id="sleepInp" type="number" min="0" max="24" step="0.5" placeholder="Hours slept">
+        <input class="hm-input" id="sleepInp" type="number" min="0" max="24" step="0.5" placeholder="Hours slept" autocomplete="off" inputmode="decimal">
         <div class="spark-wrap"><svg id="sleepSpark" width="100%" height="60"></svg></div>
       </div>
 
@@ -1123,7 +1125,7 @@ select.run-edit-inp option{background:#1a1a1e;}
       <div class="hm-item">
         <div class="hm-lbl">HRV</div>
         <div class="hm-val-row"><span class="hm-val" id="hrvVal">—</span><span class="hm-unit">ms</span></div>
-        <input class="hm-input" id="hrvInp" type="number" min="0" max="300" placeholder="ms">
+        <input class="hm-input" id="hrvInp" type="number" min="0" max="300" placeholder="ms" autocomplete="off" inputmode="numeric">
         <div class="spark-wrap"><svg id="hrvSpark" width="100%" height="60"></svg></div>
       </div>
 
@@ -1131,7 +1133,7 @@ select.run-edit-inp option{background:#1a1a1e;}
       <div class="hm-item">
         <div class="hm-lbl">Resting HR</div>
         <div class="hm-val-row"><span class="hm-val" id="rhrVal">—</span><span class="hm-unit">bpm</span></div>
-        <input class="hm-input" id="rhrInp" type="number" min="30" max="120" placeholder="bpm">
+        <input class="hm-input" id="rhrInp" type="number" min="30" max="120" placeholder="bpm" autocomplete="off" inputmode="numeric">
         <div class="spark-wrap"><svg id="rhrSpark" width="100%" height="60"></svg></div>
       </div>
 
@@ -1155,7 +1157,7 @@ select.run-edit-inp option{background:#1a1a1e;}
           <span class="water-txt" id="waterTxt">0 / 128 oz (0%)</span>
         </div>
         <div class="water-custom-row">
-          <input class="hm-input" id="waterCustInp" type="number" min="1" max="256" placeholder="Custom oz">
+          <input class="hm-input" id="waterCustInp" type="number" min="1" max="256" placeholder="Custom oz" autocomplete="off" inputmode="numeric">
           <button class="water-tap" id="waterCustBtn">Add</button>
         </div>
         <div class="spark-wrap" style="margin-top:8px;"><svg id="waterSpark" width="100%" height="60"></svg></div>
@@ -2261,11 +2263,12 @@ function loadRunLog(){
       const effortInp=document.createElement('input');
       effortInp.type='number';effortInp.min='1';effortInp.max='10';
       effortInp.className='run-edit-inp';effortInp.placeholder='1–10';
+      effortInp.autocomplete='off';effortInp.setAttribute('inputmode','numeric');
       if(r.effort!=null) effortInp.value=r.effort;
 
       // Shoe select
       const shoeSel=document.createElement('select');
-      shoeSel.className='run-edit-inp';
+      shoeSel.className='run-edit-inp';shoeSel.autocomplete='off';
       let opts='<option value="">— none —</option>';
       shoes.forEach(s=>opts+=`<option value="${escHtml(s.id)}"${r.shoeId===s.id?' selected':''}>${escHtml(s.name)}</option>`);
       shoeSel.innerHTML=opts;
@@ -2273,19 +2276,23 @@ function loadRunLog(){
       // Notes input
       const notesInp=document.createElement('input');
       notesInp.type='text';notesInp.className='run-edit-inp notes-inp';
-      notesInp.placeholder='Notes…';
+      notesInp.placeholder='Notes…';notesInp.autocomplete='off';
+      notesInp.setAttribute('autocorrect','off');notesInp.setAttribute('autocapitalize','off');
+      notesInp.setAttribute('spellcheck','false');
       notesInp.value=r.notes||'';
 
       // Temp input (°F)
       const tempInp=document.createElement('input');
       tempInp.type='number';tempInp.className='run-edit-inp';
       tempInp.placeholder='°F';tempInp.min='-40';tempInp.max='150';
+      tempInp.autocomplete='off';tempInp.setAttribute('inputmode','numeric');
       if(r.temp!=null) tempInp.value=r.temp;
 
       // Humidity input (%)
       const humInp=document.createElement('input');
       humInp.type='number';humInp.className='run-edit-inp';
       humInp.placeholder='%';humInp.min='0';humInp.max='100';
+      humInp.autocomplete='off';humInp.setAttribute('inputmode','numeric');
       if(r.humidity!=null) humInp.value=r.humidity;
 
       // Save all fields to localStorage immediately on input
