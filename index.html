@@ -1610,12 +1610,11 @@ function updateRing(){
 // ═══════════════════════════════════════════════
 function calcReadinessScore(d){
   const today=activeDate();
-  const todayCoros=storeGet('coros_daily:'+today);
   const parts=[];
 
-  // ── 1. HRV (30%) — baseline-relative if available ─────────────────
-  const hrvAvg=todayCoros&&todayCoros.hrv&&todayCoros.hrv.avg!=null?todayCoros.hrv.avg:d.hrv;
-  const hrvBase=todayCoros&&todayCoros.hrv&&todayCoros.hrv.baseline!=null?todayCoros.hrv.baseline:null;
+  // ── 1. HRV (30%) — use synced health: data; baseline also stored there by _applyCorosFill
+  const hrvAvg=d.hrv;
+  const hrvBase=d.hrvBaseline!=null?d.hrvBaseline:null;
   if(hrvAvg!=null){
     let s;
     if(hrvBase){
@@ -1627,9 +1626,9 @@ function calcReadinessScore(d){
     parts.push({w:30,s,key:'hrv',label:s>=80?'Strong HRV':s>=55?'Normal HRV':'Suppressed HRV'});
   }
 
-  // ── 2. Last night's sleep (11%) — Coros score preferred ──────────
-  const sleepScore=todayCoros&&todayCoros.sleep&&todayCoros.sleep.score!=null?todayCoros.sleep.score:null;
-  const sleepHrs=todayCoros&&todayCoros.sleep&&todayCoros.sleep.hours!=null?todayCoros.sleep.hours:(d.sleep!=null?d.sleep:null);
+  // ── 2. Last night's sleep (11%) — Coros sleep score stored in health: by _applyCorosFill
+  const sleepScore=d.sleepScore!=null?d.sleepScore:null;
+  const sleepHrs=d.sleep!=null?d.sleep:null;
   if(sleepScore!=null){
     parts.push({w:11,s:sleepScore,key:'sleep',label:sleepScore>=80?'Great sleep':sleepScore>=55?'OK sleep':'Poor sleep'});
   } else if(sleepHrs!=null){
@@ -1644,8 +1643,8 @@ function calcReadinessScore(d){
   let rollingNum=0,rollingDen=0;
   [...days7].reverse().forEach((day,i)=>{
     const w=SLEEP_W[i]||0;
-    const cd=storeGet('coros_daily:'+day);
-    const hrs=cd&&cd.sleep&&cd.sleep.hours!=null?cd.sleep.hours:hGet(day).sleep;
+    // Use synced health: data only for consistency across devices
+    const hrs=hGet(day).sleep;
     if(hrs!=null){rollingNum+=w*Math.min(hrs/8,1)*100;rollingDen+=w;}
   });
   if(rollingDen>0){
@@ -3422,8 +3421,16 @@ function _applyCorosFill(){
   if(data.sleep&&data.sleep.hours!=null&&h.sleep==null){
     h.sleep=Math.round(data.sleep.hours*10)/10;changed=true;
   }
+  // Store Coros sleep quality score in health: so it syncs cross-device
+  if(data.sleep&&data.sleep.score!=null&&h.sleepScore==null){
+    h.sleepScore=data.sleep.score;changed=true;
+  }
   if(data.hrv&&data.hrv.avg!=null&&h.hrv==null){
     h.hrv=data.hrv.avg;changed=true;
+  }
+  // Store HRV baseline in health: so it syncs cross-device
+  if(data.hrv&&data.hrv.baseline!=null&&h.hrvBaseline==null){
+    h.hrvBaseline=data.hrv.baseline;changed=true;
   }
   if(data.rhr!=null&&h.rhr==null){
     h.rhr=data.rhr;changed=true;
