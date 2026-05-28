@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-28T23:57:40.853Z",
+  "lastUpdated": "2026-05-28T23:59:00.824Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -325,8 +325,9 @@
     "elyte:2026-05-23": 1,
     "goals:2026-05-28": [
       {
-        "done": false,
-        "text": "HEB list"
+        "done": true,
+        "text": "HEB list",
+        "doneAt": 1780012710357
       },
       {
         "text": "Foot therapy",
