@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-28T00:11:11.722Z",
+  "lastUpdated": "2026-05-28T00:23:55.935Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -13,20 +13,207 @@
         "doneAt": 1779638921283
       }
     ],
+    "elyte:2026-05-24": 1,
+    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "health:2026-05-26": {
-      "water": 144,
+      "soreness": 2,
+      "rhr": 48,
+      "soreLocs": [
+        "Left Foot"
+      ],
       "sleep": 6,
-      "sleepQuality": 2,
       "mood": 3,
       "hrv": 125,
-      "rhr": 48,
+      "fatigue": 6,
+      "water": 144,
+      "sleepQuality": 2
+    },
+    "xt:2026-05-21": [],
+    "health:2026-05-21": {
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot"
+      ],
+      "sleep": 5.5,
+      "soreness": 2,
+      "water": 128,
+      "sleepQuality": 2,
+      "tiredness": 2,
+      "mood": 4,
+      "hr": 51,
+      "hrv": 121
+    },
+    "health:2026-05-24": {
+      "water": 152,
+      "sleepQuality": 3,
+      "mood": 2,
+      "tiredness": 3,
+      "hrv": 100,
+      "fatigue": 5,
+      "soreLocs": [
+        "Left Foot",
+        "Quads"
+      ],
+      "sleep": 8.43,
+      "soreness": 2,
+      "rhr": 53
+    },
+    "xt:2026-05-18": [
+      {
+        "type": "Bike",
+        "duration": 30,
+        "effort": "easy"
+      }
+    ],
+    "strength:2026-05-23": [
+      {
+        "type": "Core (Abs)",
+        "notes": "2X normal routine + plank",
+        "duration": 7
+      }
+    ],
+    "strength:2026-05-22": [
+      {
+        "type": "Core (Abs)",
+        "notes": "2X normal routine + plank",
+        "duration": 7
+      }
+    ],
+    "health:2026-05-22": {
+      "mood": 3,
+      "tiredness": 2,
+      "hrv": 96,
+      "soreness": 2,
+      "water": 124,
+      "sleep": 5,
+      "sleepQuality": 2,
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot"
+      ]
+    },
+    "elyte:2026-05-21": 1,
+    "health:2026-05-27": {
+      "fatigue": 6,
+      "mood": 3,
+      "hrv": 103,
+      "water": 128,
+      "sleepQuality": 4,
+      "rhr": 51,
       "soreness": 2,
       "soreLocs": [
         "Left Foot"
       ],
-      "fatigue": 6
+      "sleep": 7.18
     },
-    "goals:2026-05-23": [],
+    "xt:2026-05-19": [
+      {
+        "type": "Bike",
+        "duration": 60,
+        "effort": "easy"
+      }
+    ],
+    "elyte:2026-05-22": 1,
+    "xt:2026-05-24": [
+      {
+        "type": "Bike",
+        "effort": "easy",
+        "hr": 143,
+        "duration": 30
+      },
+      {
+        "effort": "easy",
+        "type": "Other",
+        "duration": 30
+      }
+    ],
+    "health:2026-05-25": {
+      "soreness": 1,
+      "rhr": 52,
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot"
+      ],
+      "sleep": 7.78,
+      "hrv": 86,
+      "mood": 3,
+      "fatigue": 6,
+      "sleepQuality": 3,
+      "water": 136
+    },
+    "note:2026-05-23": "i felt very tired for almost all day",
+    "strength:2026-05-21": [
+      {
+        "type": "Core",
+        "notes": "7 min core session",
+        "duration": 7
+      }
+    ],
+    "xt:2026-05-27": [
+      {
+        "type": "Bike",
+        "duration": 60,
+        "effort": "easy",
+        "hr": 135
+      }
+    ],
+    "strength:2026-05-25": [
+      {
+        "type": "Core (Abs)",
+        "notes": "2X normal routine + plank",
+        "duration": 7
+      }
+    ],
+    "goals:2026-05-26": [
+      {
+        "text": "heb",
+        "doneAt": 1779835882255,
+        "done": true
+      }
+    ],
+    "strength:2026-05-20": [
+      {
+        "type": "Core",
+        "notes": "7 min core session",
+        "duration": 7
+      }
+    ],
+    "health:2026-05-23": {
+      "rhr": 53,
+      "soreness": 1,
+      "hrv": 83,
+      "mood": 2,
+      "tiredness": 1,
+      "sleep": 5,
+      "soreLocs": [
+        "Quads"
+      ],
+      "water": 110
+    },
+    "elyte:2026-05-27": 1,
+    "elyte:2026-05-25": 1,
+    "xt:2026-05-20": [
+      {
+        "duration": 60,
+        "effort": "easy",
+        "type": "Bike"
+      }
+    ],
+    "elyte:2026-05-26": 1,
+    "strength:2026-05-26": [
+      {
+        "type": "Core (Abs)",
+        "duration": 7,
+        "notes": "2x normal routine, 1 minute plank"
+      }
+    ],
+    "elyte:2026-05-23": 1,
+    "goals:2026-05-28": [
+      {
+        "done": false,
+        "text": "HEB list"
+      }
+    ],
     "goals:2026-05-25": [
       {
         "doneAt": 1779740704966,
@@ -49,109 +236,7 @@
         "doneAt": 1779740706495
       }
     ],
-    "health:2026-05-21": {
-      "hrv": 121,
-      "mood": 4,
-      "soreness": 2,
-      "tiredness": 2,
-      "soreLocs": [
-        "Left Foot",
-        "Right Foot"
-      ],
-      "water": 128,
-      "hr": 51,
-      "sleepQuality": 2,
-      "sleep": 5.5
-    },
-    "elyte:2026-05-22": 1,
-    "elyte:2026-05-23": 1,
-    "health:2026-05-23": {
-      "tiredness": 1,
-      "soreLocs": [
-        "Quads"
-      ],
-      "soreness": 1,
-      "rhr": 53,
-      "hrv": 83,
-      "mood": 2,
-      "water": 110,
-      "sleep": 5
-    },
-    "elyte:2026-05-25": 1,
-    "goals:2026-05-26": [
-      {
-        "text": "heb",
-        "doneAt": 1779835882255,
-        "done": true
-      }
-    ],
-    "elyte:2026-05-21": 1,
-    "note:2026-05-23": "i felt very tired for almost all day",
-    "goals:2026-05-28": [
-      {
-        "text": "HEB list",
-        "done": false
-      }
-    ],
-    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
-    "elyte:2026-05-24": 1,
-    "health:2026-05-24": {
-      "water": 152,
-      "sleep": 8.43,
-      "sleepQuality": 3,
-      "soreness": 2,
-      "soreLocs": [
-        "Left Foot",
-        "Quads"
-      ],
-      "tiredness": 3,
-      "mood": 2,
-      "hrv": 100,
-      "rhr": 53,
-      "fatigue": 5
-    },
-    "elyte:2026-05-27": 1,
-    "health:2026-05-27": {
-      "fatigue": 6,
-      "rhr": 51,
-      "hrv": 103,
-      "mood": 3,
-      "soreLocs": [
-        "Left Foot"
-      ],
-      "soreness": 2,
-      "sleep": 7.18,
-      "sleepQuality": 4,
-      "water": 112
-    },
-    "health:2026-05-25": {
-      "fatigue": 6,
-      "mood": 3,
-      "hrv": 86,
-      "rhr": 52,
-      "soreness": 1,
-      "soreLocs": [
-        "Left Foot",
-        "Right Foot"
-      ],
-      "sleepQuality": 3,
-      "sleep": 7.78,
-      "water": 136
-    },
-    "health:2026-05-22": {
-      "sleepQuality": 2,
-      "sleep": 5,
-      "water": 124,
-      "hrv": 96,
-      "mood": 3,
-      "tiredness": 2,
-      "soreLocs": [
-        "Left Foot",
-        "Right Foot"
-      ],
-      "soreness": 2
-    },
-    "elyte:2026-05-26": 1
+    "goals:2026-05-23": []
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
