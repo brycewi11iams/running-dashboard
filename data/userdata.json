@@ -1,17 +1,17 @@
 {
-  "lastUpdated": "2026-05-28T00:24:21.880Z",
+  "lastUpdated": "2026-05-28T00:24:42.183Z",
   "data": {
     "xt:2026-05-24": [
       {
-        "effort": "easy",
-        "duration": 30,
         "hr": 143,
-        "type": "Bike"
+        "effort": "easy",
+        "type": "Bike",
+        "duration": 30
       },
       {
-        "duration": 30,
         "type": "Other",
-        "effort": "easy"
+        "effort": "easy",
+        "duration": 30
       }
     ],
     "goals:2026-05-24": [
@@ -27,17 +27,17 @@
       }
     ],
     "health:2026-05-26": {
-      "sleep": 6,
-      "sleepQuality": 2,
-      "water": 144,
-      "rhr": 48,
-      "soreness": 2,
-      "fatigue": 6,
       "hrv": 125,
-      "mood": 3,
+      "sleepQuality": 2,
+      "fatigue": 6,
       "soreLocs": [
         "Left Foot"
-      ]
+      ],
+      "soreness": 2,
+      "water": 144,
+      "sleep": 6,
+      "rhr": 48,
+      "mood": 3
     },
     "goals:2026-05-23": [],
     "goals:2026-05-25": [
@@ -63,46 +63,46 @@
       }
     ],
     "health:2026-05-21": {
-      "tiredness": 2,
-      "hrv": 121,
+      "soreness": 2,
+      "water": 128,
+      "sleep": 5.5,
       "hr": 51,
       "mood": 4,
+      "hrv": 121,
+      "sleepQuality": 2,
+      "tiredness": 2,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
-      ],
-      "sleep": 5.5,
-      "sleepQuality": 2,
-      "soreness": 2,
-      "water": 128
+      ]
     },
     "elyte:2026-05-22": 1,
     "strength:2026-05-25": [
       {
-        "type": "Core (Abs)",
+        "notes": "2X normal routine + plank",
         "duration": 7,
-        "notes": "2X normal routine + plank"
+        "type": "Core (Abs)"
       }
     ],
     "strength:2026-05-23": [
       {
-        "duration": 7,
         "type": "Core (Abs)",
-        "notes": "2X normal routine + plank"
+        "notes": "2X normal routine + plank",
+        "duration": 7
       }
     ],
     "elyte:2026-05-23": 1,
     "health:2026-05-23": {
-      "hrv": 83,
-      "mood": 2,
-      "rhr": 53,
       "soreness": 1,
+      "hrv": 83,
+      "water": 110,
+      "sleep": 5,
+      "tiredness": 1,
+      "rhr": 53,
+      "mood": 2,
       "soreLocs": [
         "Quads"
-      ],
-      "water": 110,
-      "tiredness": 1,
-      "sleep": 5
+      ]
     },
     "elyte:2026-05-25": 1,
     "goals:2026-05-26": [
@@ -116,9 +116,9 @@
     "xt:2026-05-21": [],
     "strength:2026-05-22": [
       {
-        "notes": "2X normal routine + plank",
         "type": "Core (Abs)",
-        "duration": 7
+        "duration": 7,
+        "notes": "2X normal routine + plank"
       }
     ],
     "note:2026-05-23": "i felt very tired for almost all day",
@@ -153,33 +153,33 @@
       }
     ],
     "health:2026-05-24": {
-      "sleep": 8.43,
-      "sleepQuality": 3,
-      "soreness": 2,
-      "water": 152,
       "rhr": 53,
-      "tiredness": 3,
-      "fatigue": 5,
-      "hrv": 100,
       "mood": 2,
+      "water": 152,
+      "sleep": 8.43,
+      "soreness": 2,
+      "fatigue": 5,
       "soreLocs": [
         "Left Foot",
         "Quads"
-      ]
+      ],
+      "tiredness": 3,
+      "hrv": 100,
+      "sleepQuality": 3
     },
     "elyte:2026-05-27": 1,
     "health:2026-05-27": {
-      "water": 128,
+      "mood": 3,
       "rhr": 51,
-      "soreness": 2,
-      "sleepQuality": 4,
       "sleep": 7.18,
+      "water": 128,
+      "soreness": 2,
       "soreLocs": [
         "Left Foot"
       ],
-      "mood": 3,
-      "hrv": 103,
-      "fatigue": 6
+      "fatigue": 6,
+      "sleepQuality": 4,
+      "hrv": 103
     },
     "strength:2026-05-26": [
       {
@@ -189,45 +189,45 @@
       }
     ],
     "health:2026-05-25": {
+      "water": 136,
+      "sleep": 7.78,
+      "soreness": 1,
+      "rhr": 52,
+      "mood": 3,
+      "hrv": 86,
+      "sleepQuality": 3,
+      "fatigue": 6,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
-      ],
-      "mood": 3,
-      "hrv": 86,
-      "fatigue": 6,
-      "rhr": 52,
-      "water": 136,
-      "soreness": 1,
-      "sleepQuality": 3,
-      "sleep": 7.78
+      ]
     },
     "health:2026-05-22": {
       "tiredness": 2,
-      "sleep": 5,
       "mood": 3,
-      "water": 124,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
+      "sleepQuality": 2,
       "soreness": 2,
       "hrv": 96,
-      "sleepQuality": 2
+      "sleep": 5,
+      "water": 124
     },
     "strength:2026-05-21": [
       {
+        "type": "Core",
         "notes": "7 min core session",
-        "duration": 7,
-        "type": "Core"
+        "duration": 7
       }
     ],
     "elyte:2026-05-26": 1,
     "strength:2026-05-20": [
       {
-        "type": "Core",
+        "notes": "7 min core session",
         "duration": 7,
-        "notes": "7 min core session"
+        "type": "Core"
       }
     ],
     "xt:2026-05-18": [
