@@ -1023,6 +1023,7 @@ select.run-edit-inp option{background:#1a1a1e;}
       <span class="readiness-sleep-rec-icon">🌙</span>
       <span class="readiness-sleep-rec-text" id="readinessSleepRecText">Aim for 8–9 hrs tonight</span>
     </div>
+    <div id="readinessBreakdown" style="display:none;margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10px;font-family:var(--font-mono);color:var(--text-tertiary);"></div>
 
     <!-- Coros Recovery Trend — shown when data/daily.json is available -->
     <div class="recovery-trend-row" id="recoveryTrendRow" style="display:none;">
@@ -1260,6 +1261,8 @@ select.run-edit-inp option{background:#1a1a1e;}
              color:var(--text-tertiary);font-family:var(--font-mono);font-size:11px;padding:7px 10px;cursor:pointer;">Clear</button>
   </div>
   <div id="ghTokenStatus" style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);margin-top:8px;min-height:14px;"></div>
+  <button id="forceSyncBtn" style="margin-top:10px;background:rgba(107,227,164,.12);border:1px solid rgba(107,227,164,.25);border-radius:8px;color:#6BE3A4;font-family:var(--font-mono);font-size:11px;padding:7px 16px;cursor:pointer;width:100%;">↑↓ Sync Now</button>
+  <div id="forceSyncStatus" style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);margin-top:6px;min-height:14px;text-align:center;"></div>
 
   <div style="border-top:1px solid rgba(255,255,255,.06);margin-top:16px;padding-top:16px;">
     <div style="font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:10px;">Change Password</div>
@@ -1724,7 +1727,7 @@ function calcReadinessScore(d){
   else summary='Mixed signals across metrics.';
 
   const sleepRec=score>=80?'7.5–8 hrs':score>=60?'8–9 hrs':'9+ hrs';
-  return{score,cls,labelText,summary,sleepRec};
+  return{score,cls,labelText,summary,sleepRec,parts};
 }
 
 function updateReadiness(){
@@ -1762,6 +1765,17 @@ function updateReadiness(){
     barEl.style.width=res.score+'%';barEl.className='readiness-score-bar-fill '+res.cls;
     summaryEl.textContent=res.summary;
     if(sleepRecWrap){sleepRecWrap.style.display='';sleepRecEl.textContent=`Tonight's target: ${res.sleepRec}`;}
+    // Breakdown grid
+    const bd=document.getElementById('readinessBreakdown');
+    if(bd&&res.parts){
+      const keyLbls={hrv:'HRV',sleep:'Sleep',rollingSleep:'7-day Sleep',fatigue:'Fatigue',load28:'Wk Load',loadYest:'Yesterday',loadToday:'Today'};
+      bd.innerHTML='';bd.style.display='grid';
+      res.parts.forEach(p=>{
+        const bar=Math.round(p.s);
+        const col=p.s>=75?'#6BE3A4':p.s>=50?'#F2C063':'#FF6B6B';
+        bd.innerHTML+=`<span style="color:var(--text-tertiary)">${keyLbls[p.key]||p.key}</span><span style="color:${col}">${bar}/100 <span style="color:var(--text-tertiary);font-size:9px;">(${p.w}%)</span></span>`;
+      });
+    }
   }
 }
 
@@ -3906,6 +3920,20 @@ if(_db){
     localStorage.removeItem('gh_token');
     inp.value='';
     _updateTokenStatus();
+  });
+
+  document.getElementById('forceSyncBtn').addEventListener('click',async()=>{
+    const syncSt=document.getElementById('forceSyncStatus');
+    if(!getGhToken()){syncSt.textContent='No token — sync is read-only on this device.';syncSt.style.color='#F2C063';return;}
+    syncSt.textContent='Pushing…';syncSt.style.color='var(--text-tertiary)';
+    try{
+      await _ghPush();
+      syncSt.textContent='Push done — pulling…';
+      await loadGhUserdata();
+      syncSt.textContent='✓ Synced';syncSt.style.color='#6BE3A4';
+    }catch(e){
+      syncSt.textContent='Error: '+e.message;syncSt.style.color='#FF6B6B';
+    }
   });
 }
 
