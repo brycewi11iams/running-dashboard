@@ -1614,7 +1614,11 @@ function calcReadinessScore(d){
 
   // ── 1. HRV (30%) — use synced health: data; baseline also stored there by _applyCorosFill
   const hrvAvg=d.hrv;
-  const hrvBase=d.hrvBaseline!=null?d.hrvBaseline:null;
+  const hrvBase=d.hrvBaseline!=null?d.hrvBaseline:(()=>{
+    // No Coros baseline — compute rolling 28-day personal average as fallback
+    const vals=lastNDays(28).map(dd=>hGet(dd).hrv).filter(v=>v!=null);
+    return vals.length>=3?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+  })();
   if(hrvAvg!=null){
     let s;
     if(hrvBase){
@@ -1652,10 +1656,11 @@ function calcReadinessScore(d){
     parts.push({w:20,s,key:'rollingSleep',label:s>=87?'Consistent sleep':s>=70?'Adequate sleep pattern':'Sleep debt building'});
   }
 
-  // ── 4. Fatigue rating (14%) — manual 1-10, 10=perfect ────────────
-  if(d.fatigue!=null){
-    const s=Math.round((d.fatigue-1)/9*100);
-    parts.push({w:14,s,key:'fatigue',label:d.fatigue>=8?'Feeling strong':d.fatigue>=5?'Moderate fatigue':'High fatigue'});
+  // ── 4. Fatigue rating (14%) — manual 1-10, 10=perfect; default 50 (neutral) if not entered ────
+  {
+    const s=d.fatigue!=null?Math.round((d.fatigue-1)/9*100):50;
+    const lbl=d.fatigue!=null?(d.fatigue>=8?'Feeling strong':d.fatigue>=5?'Moderate fatigue':'High fatigue'):'Fatigue not logged';
+    parts.push({w:14,s,key:'fatigue',label:lbl});
   }
 
   // ── 5. Training load — 3 sub-factors totalling 25% ─────────────────
@@ -1688,11 +1693,10 @@ function calcReadinessScore(d){
     return 0;
   };
 
-  // 5a. This-week daily avg vs 28-day baseline (10%)
+  // 5a. This-week daily avg vs 28-day baseline (10%) — same piecewise curve as 5b/5c
   {
     const thisWeekDailyAvg=calcWeeklyMins(lastNDays(7))/7;
-    const ratio=thisWeekDailyAvg/Math.max(_baseline,1);
-    const s=ratio<=1?100:Math.max(0,Math.round(100*(2-ratio)));
+    const s=_relLoad(thisWeekDailyAvg,_baseline);
     parts.push({w:10,s,key:'load28',label:s>=80?'Load well managed':s>=50?'Moderate load spike':'High load — watch for injury'});
   }
 
@@ -1703,10 +1707,11 @@ function calcReadinessScore(d){
     parts.push({w:9,s,key:'loadYest',label:s>=80?'Good recovery day':s>=50?'Moderate activity yesterday':'Heavy day yesterday'});
   }
 
-  // 5c. Today's activity so far (6%) — no activity yet = neutral (100)
+  // 5c. Today's activity (6%) — only counted after 6 PM; before then score is neutral (100)
   {
-    const s=_relLoad(_dayMins(today),_baseline);
-    parts.push({w:6,s,key:'loadToday',label:s>=80?'Light day so far':s>=50?'Moderate activity today':'Heavy day today'});
+    const afterSix=new Date().getHours()>=18;
+    const s=afterSix?_relLoad(_dayMins(today),_baseline):100;
+    parts.push({w:6,s,key:'loadToday',label:afterSix?(s>=80?'Light day so far':s>=50?'Moderate activity today':'Heavy day today'):'Day not yet complete'});
   }
 
   if(!parts.length) return null;
