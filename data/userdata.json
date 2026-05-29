@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-29T10:54:54.132Z",
+  "lastUpdated": "2026-05-29T10:55:50.851Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -20,7 +20,12 @@
         "pace": "7:59 /mi",
         "hr": 149,
         "rest": false,
-        "date": "2026-05-29"
+        "date": "2026-05-29",
+        "effort": 7,
+        "shoeId": "shoe_1779503449191",
+        "notes": "humid + hilly",
+        "temp": 72,
+        "humidity": 92
       }
     ],
     "elyte:2026-05-24": 1,
