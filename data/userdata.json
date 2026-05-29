@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-29T00:46:38.708Z",
+  "lastUpdated": "2026-05-29T00:47:17.477Z",
   "data": {
     "goals:2026-05-24": [
       {
@@ -68,6 +68,10 @@
       {
         "done": false,
         "text": "Pack"
+      },
+      {
+        "text": "make list to pack",
+        "done": false
       }
     ],
     "health:2026-05-21": {
@@ -335,8 +339,9 @@
         "done": true
       },
       {
-        "done": false,
-        "text": "Laundry"
+        "done": true,
+        "text": "Laundry",
+        "doneAt": 1780015606645
       }
     ],
     "goals:2026-05-25": [
