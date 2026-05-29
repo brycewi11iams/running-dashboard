@@ -3876,6 +3876,37 @@ function drawStressChart(runs){
       svg.appendChild(t);
     }
   });
+
+  // Recommended effort ceiling — weighted readiness: today 40%, D-1 25%, D-2 20%, D-3 15%
+  if(pts.length>=2){
+    const _rDays=lastNDays(4).reverse(); // [today, yesterday, D-2, D-3]
+    const _rW=[0.40,0.25,0.20,0.15];
+    let _rNum=0,_rDen=0;
+    _rDays.forEach((day,i)=>{
+      const res=calcReadinessScore(hGet(day));
+      if(res){_rNum+=_rW[i]*res.score;_rDen+=_rW[i];}
+    });
+    if(_rDen>0){
+      const wR=_rNum/_rDen;
+      const baseline=pts.slice(-5).reduce((s,p)=>s+p.score,0)/Math.min(pts.length,5);
+      const ceiling=baseline*(wR/100)*1.2;
+      const ceilRatio=ceiling/maxScore;
+      const ceilY=PT+chartH*(1-Math.min(ceilRatio,1));
+      const lineColor=wR>=80?'#6BE3A4':wR>=65?'#5BC4E8':wR>=50?'#F2C063':'#FF6B6B';
+      const lineLabel=wR>=80?'Go hard':wR>=65?'Moderate':wR>=50?'Easy':'Recovery';
+      const dl=document.createElementNS('http://www.w3.org/2000/svg','line');
+      dl.setAttribute('x1',PL);dl.setAttribute('y1',ceilY);dl.setAttribute('x2',W-PR);dl.setAttribute('y2',ceilY);
+      dl.setAttribute('stroke',lineColor);dl.setAttribute('stroke-width','1.5');
+      dl.setAttribute('stroke-dasharray','4,3');dl.setAttribute('opacity','0.75');
+      svg.appendChild(dl);
+      const lt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      lt.setAttribute('x',W-PR);lt.setAttribute('y',ceilY-3);lt.setAttribute('text-anchor','end');
+      lt.setAttribute('fill',lineColor);lt.setAttribute('font-size','7');
+      lt.setAttribute('font-family','ui-monospace,monospace');lt.setAttribute('opacity','0.9');
+      lt.textContent=`${lineLabel} ≤${Math.round(ceiling)}`;
+      svg.appendChild(lt);
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════
