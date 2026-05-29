@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -903,6 +903,18 @@ select.run-edit-inp option{background:#1a1a1e;}
         <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#6BE3A4;">●</span> 55–70°F</span>
         <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#F2C063;">●</span> 70–85°F</span>
         <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#FF6B6B;">●</span> &gt;85°F</span>
+      </div>
+    </div>
+
+    <!-- Training Stress bar chart (shown when runs have HR data) -->
+    <div class="chart-section" id="stressChartWrap" style="display:none;">
+      <div class="chart-lbl">Training Stress <span class="chart-hint">(HR-based effort score per run)</span></div>
+      <svg id="stressChart" width="100%" height="110"></svg>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:5px;flex-wrap:wrap;">
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#6BE3A4;">●</span> Easy</span>
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#5BC4E8;">●</span> MLR</span>
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#F2C063;">●</span> Long Run</span>
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#FF6B6B;">●</span> Workout</span>
       </div>
     </div>
   </div>
@@ -2399,6 +2411,7 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
   renderShoes();
   renderFeelRecap();
   renderConditionsChart();
+  renderStressChart();
 });
 
 // ── Pace trend chart  (#7)
@@ -3168,6 +3181,7 @@ function onNewDay(){
   loadNarrative(); // update week label when date rolls over
   renderFeelRecap();
   renderConditionsChart();
+  renderStressChart();
   renderRecoveryTrend();
   renderTrainingLoadPanel();
   renderHeatAdjCallout();
@@ -3221,6 +3235,7 @@ updateReadiness();
 // New panels — render from localStorage immediately, then Coros async
 renderFeelRecap();
 renderConditionsChart();
+renderStressChart();
 renderHeatAdjCallout();
 loadNarrative();
 
@@ -3255,7 +3270,7 @@ window.addEventListener('resize',()=>{
   loadHealth();
   requestAnimationFrame(()=>{
     drawPaceChart();drawMileage();
-    renderFeelRecap();renderConditionsChart();
+    renderFeelRecap();renderConditionsChart();renderStressChart();
     renderTrainingLoadPanel();
   });
 });
@@ -3404,7 +3419,7 @@ function _reRenderAll(){
   loadXT(); loadStrength(); loadMorningReadiness();
   updateSweatCalc(); updateWkMileTarget();
   renderElyte(); renderIron(); renderVitamin(); updateReadiness();
-  renderFeelRecap(); renderConditionsChart();
+  renderFeelRecap(); renderConditionsChart(); renderStressChart();
   renderRecoveryTrend(); renderTrainingLoadPanel();
   renderHeatAdjCallout();
   loadNarrative();
@@ -3776,6 +3791,94 @@ function drawConditionsChart(runs){
 }
 
 // ═══════════════════════════════════════════════
+// TRAINING STRESS CHART (HR-based effort score)
+// ═══════════════════════════════════════════════
+function _hrIntensityMult(hr){
+  if(hr<140) return 0.7;
+  if(hr<152) return 1.0;
+  if(hr<162) return 1.2;
+  if(hr<170) return 1.4;
+  if(hr<178) return 1.6;
+  return 2.0;
+}
+function _runTypeColor(type){
+  if(!type) return '#9B9590';
+  const t=(type||'').toLowerCase();
+  if(t==='easy') return '#6BE3A4';
+  if(t==='mlr') return '#5BC4E8';
+  if(t==='long') return '#F2C063';
+  if(t==='workout') return '#FF6B6B';
+  return '#9B9590';
+}
+function renderStressChart(){
+  const runs=getAllRuns().filter(r=>!r.rest&&r.hr&&r.dur).reverse();
+  const wrap=document.getElementById('stressChartWrap');
+  if(!wrap) return;
+  if(!runs.length){wrap.style.display='none';return;}
+  wrap.style.display='';
+  requestAnimationFrame(()=>drawStressChart(runs));
+}
+function drawStressChart(runs){
+  const svg=document.getElementById('stressChart');if(!svg) return;
+  svg.innerHTML='';
+  const W=svgW(svg),H=110,PT=8,PB=24,PL=36,PR=6;
+  svg.setAttribute('height',H);
+  const chartW=W-PL-PR,chartH=H-PT-PB;
+  const pts=runs.map(r=>{
+    const dMin=durToMin(r.dur||'');
+    const hr=Number(r.hr);
+    if(!dMin||!hr) return null;
+    const score=(hr/200)*dMin*_hrIntensityMult(hr);
+    return{date:r._runDate,score,type:r.type||''};
+  }).filter(Boolean);
+  if(!pts.length){document.getElementById('stressChartWrap').style.display='none';return;}
+  const maxScore=Math.max(...pts.map(p=>p.score),1);
+  const colW=chartW/pts.length;
+  // Grid lines + Y labels
+  [0.25,0.5,0.75,1.0].forEach(frac=>{
+    const y=PT+chartH*(1-frac);
+    const gl=document.createElementNS('http://www.w3.org/2000/svg','line');
+    gl.setAttribute('x1',PL);gl.setAttribute('y1',y);gl.setAttribute('x2',W-PR);gl.setAttribute('y2',y);
+    gl.setAttribute('stroke','rgba(255,255,255,0.05)');gl.setAttribute('stroke-width','1');svg.appendChild(gl);
+    if(frac===0.25||frac===1.0){
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',PL-3);t.setAttribute('y',y+3);t.setAttribute('text-anchor','end');
+      t.setAttribute('fill','rgba(255,255,255,0.25)');t.setAttribute('font-size','7');
+      t.setAttribute('font-family','ui-monospace,monospace');
+      t.textContent=Math.round(maxScore*frac);
+      svg.appendChild(t);
+    }
+  });
+  pts.forEach((p,i)=>{
+    const barW=Math.max(colW-4,2);
+    const x=PL+i*colW+(colW-barW)/2;
+    const barH=Math.max((p.score/maxScore)*chartH,1);
+    const y=PT+chartH-barH;
+    const color=_runTypeColor(p.type);
+    const bar=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    bar.setAttribute('x',x);bar.setAttribute('y',y);
+    bar.setAttribute('width',barW);bar.setAttribute('height',barH);
+    bar.setAttribute('fill',color);bar.setAttribute('rx',2);bar.setAttribute('opacity','0.85');
+    const title=document.createElementNS('http://www.w3.org/2000/svg','title');
+    const[,mo,dy]=p.date.split('-').map(Number);
+    const yr=Number(p.date.split('-')[0]);
+    const dateLabel=new Date(yr,mo-1,dy).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    title.textContent=`${dateLabel} — Effort: ${p.score.toFixed(1)}${p.type?' ('+p.type+')':''}`;
+    bar.appendChild(title);
+    svg.appendChild(bar);
+    if(colW>=18){
+      const lbl=`${mo}/${dy}`;
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',x+barW/2);t.setAttribute('y',H-PB+13);
+      t.setAttribute('text-anchor','middle');
+      t.setAttribute('fill','rgba(255,255,255,0.25)');t.setAttribute('font-size','7');
+      t.setAttribute('font-family','ui-monospace,monospace');t.textContent=lbl;
+      svg.appendChild(t);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
 // WEEKLY NARRATIVE
 // ═══════════════════════════════════════════════
 function _narrativeKey(){return'narrative:'+currentWeekDays()[0];}
@@ -3973,3 +4076,4 @@ if(_db){
 </script>
 </body>
 </html>
+
