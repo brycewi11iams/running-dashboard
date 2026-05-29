@@ -1642,14 +1642,16 @@ function calcReadinessScore(d){
     parts.push({w:30,s,key:'hrv',label:s>=80?'Strong HRV':s>=55?'Normal HRV':'Suppressed HRV'});
   }
 
-  // ── 2. Last night's sleep (11%) — Coros sleep score stored in health: by _applyCorosFill
+  // ── 2. Last night's sleep (11%) — 50% Coros score + 50% hours-based score (blended when both available)
   const sleepScore=d.sleepScore!=null?d.sleepScore:null;
   const sleepHrs=d.sleep!=null?d.sleep:null;
-  if(sleepScore!=null){
-    parts.push({w:11,s:sleepScore,key:'sleep',label:sleepScore>=80?'Great sleep':sleepScore>=55?'OK sleep':'Poor sleep'});
-  } else if(sleepHrs!=null){
-    const s=sleepHrs>=8&&sleepHrs<=9?100:sleepHrs>=7?85:sleepHrs>=6?62:sleepHrs>=5?35:12;
-    parts.push({w:11,s,key:'sleep',label:sleepHrs>=8?'Great sleep':sleepHrs>=6?'OK sleep':'Poor sleep'});
+  if(sleepScore!=null||sleepHrs!=null){
+    const durScore=sleepHrs!=null?(sleepHrs>=8&&sleepHrs<=9?100:sleepHrs>=7?85:sleepHrs>=6?62:sleepHrs>=5?35:12):null;
+    let s;
+    if(sleepScore!=null&&durScore!=null) s=Math.round(sleepScore*0.5+durScore*0.5);
+    else if(sleepScore!=null) s=sleepScore;
+    else s=durScore;
+    parts.push({w:11,s,key:'sleep',label:s>=80?'Great sleep':s>=55?'OK sleep':'Poor sleep'});
   }
 
   // ── 3. Rolling 7-night sleep average (20%) — exp. decay weights ──
@@ -1719,11 +1721,14 @@ function calcReadinessScore(d){
     parts.push({w:9,s,key:'loadYest',label:s>=80?'Good recovery day':s>=50?'Moderate activity yesterday':'Heavy day yesterday'});
   }
 
-  // 5c. Today's activity (6%) — only counted after 6 PM; before then score is neutral (100)
+  // 5c. Today's activity (6%) — real load once any activity is logged; neutral (100) before 6 PM otherwise
   {
+    const todayMins=_dayMins(today);
+    const hasActivity=todayMins>0;
     const afterSix=new Date().getHours()>=18;
-    const s=afterSix?_relLoad(_dayMins(today),_baseline):100;
-    parts.push({w:6,s,key:'loadToday',label:afterSix?(s>=80?'Light day so far':s>=50?'Moderate activity today':'Heavy day today'):'Day not yet complete'});
+    const s=(hasActivity||afterSix)?_relLoad(todayMins,_baseline):100;
+    const lbl=!hasActivity&&!afterSix?'Day not yet complete':s>=80?'Light day so far':s>=50?'Moderate activity today':'Heavy day today';
+    parts.push({w:6,s,key:'loadToday',label:lbl});
   }
 
   if(!parts.length) return null;
@@ -2289,6 +2294,11 @@ function loadRunLog(){
       const editTd=document.createElement('td');
       editTd.colSpan=6;
 
+      // Run type select
+      const typeSel=document.createElement('select');
+      typeSel.className='run-edit-inp';typeSel.autocomplete='off';
+      typeSel.innerHTML=`<option value="">— type —</option><option value="easy"${r.runType==='easy'?' selected':''}>Easy</option><option value="mlr"${r.runType==='mlr'?' selected':''}>MLR</option><option value="long"${r.runType==='long'?' selected':''}>Long Run</option><option value="workout"${r.runType==='workout'?' selected':''}>Workout</option>`;
+
       // Effort input
       const effortInp=document.createElement('input');
       effortInp.type='number';effortInp.min='1';effortInp.max='10';
@@ -2329,6 +2339,7 @@ function loadRunLog(){
       function _saveEdit(){
         const dayRuns=storeGet('runs:'+r._runDate)||[];
         if(!dayRuns[r._runIdx]) return;
+        dayRuns[r._runIdx].runType=typeSel.value||null;
         const ev=parseInt(effortInp.value);
         dayRuns[r._runIdx].effort=(ev>=1&&ev<=10)?ev:null;
         dayRuns[r._runIdx].shoeId=shoeSel.value||null;
@@ -2344,6 +2355,19 @@ function loadRunLog(){
           if(r._runDate===activeDate()) renderHeatAdjCallout();
         }
       }
+      // Type change: save + live-update badge in main row + refresh stress chart
+      typeSel.addEventListener('change',()=>{
+        _saveEdit();
+        const _tl={easy:'Easy',mlr:'MLR',long:'Long Run',workout:'Workout'};
+        const existing=tr.querySelector('.run-type-badge');
+        if(typeSel.value){
+          if(existing){existing.className=`run-type-badge ${typeSel.value}`;existing.textContent=_tl[typeSel.value]||typeSel.value;}
+          else{const td=tr.cells[0];const br=document.createElement('br');const sp=document.createElement('span');sp.className=`run-type-badge ${typeSel.value}`;sp.textContent=_tl[typeSel.value]||typeSel.value;td.appendChild(br);td.appendChild(sp);}
+        }else if(existing){
+          const prev=existing.previousSibling;if(prev&&prev.nodeName==='BR') prev.remove();existing.remove();
+        }
+        renderStressChart();
+      });
       effortInp.addEventListener('input',_saveEdit);
       shoeSel.addEventListener('change',_saveEdit);
       notesInp.addEventListener('input',_saveEdit);
@@ -2352,6 +2376,9 @@ function loadRunLog(){
 
       // Layout
       const wrap=document.createElement('div');wrap.className='run-edit-fields';
+      const tpf=document.createElement('div');tpf.className='run-edit-field';
+      tpf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Type'}));
+      tpf.appendChild(typeSel);
       const ef=document.createElement('div');ef.className='run-edit-field';
       ef.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Effort'}));
       ef.appendChild(effortInp);
@@ -2367,7 +2394,7 @@ function loadRunLog(){
       const hf=document.createElement('div');hf.className='run-edit-field';
       hf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Humidity %'}));
       hf.appendChild(humInp);
-      wrap.appendChild(ef);wrap.appendChild(sf);wrap.appendChild(nf);wrap.appendChild(tf);wrap.appendChild(hf);
+      wrap.appendChild(tpf);wrap.appendChild(ef);wrap.appendChild(sf);wrap.appendChild(nf);wrap.appendChild(tf);wrap.appendChild(hf);
       editTd.appendChild(wrap);
       editTr.appendChild(editTd);
       tbody.appendChild(editTr);
@@ -2553,10 +2580,11 @@ function drawMileage(){
     const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',isLast?'3.5':'2');
     c.setAttribute('fill','rgba(107,227,164,0.9)');c.setAttribute('opacity',isLast?'1':'0.6');svg.appendChild(c);
-    // Miles label above dot (skip 0-mile weeks)
+    // Miles label above dot (skip 0-mile weeks; anchor last point to 'end' to prevent overflow)
     if(p.v>0){
       const mt=document.createElementNS('http://www.w3.org/2000/svg','text');
-      mt.setAttribute('x',p.x);mt.setAttribute('y',p.y-6);mt.setAttribute('text-anchor','middle');
+      mt.setAttribute('x',isLast?p.x-3:p.x);mt.setAttribute('y',p.y-6);
+      mt.setAttribute('text-anchor',isLast?'end':'middle');
       mt.setAttribute('fill','rgba(107,227,164,0.9)');mt.setAttribute('font-size','7.5');
       mt.setAttribute('font-family','ui-monospace,monospace');mt.setAttribute('font-weight','600');
       mt.textContent=p.v.toFixed(1);svg.appendChild(mt);
@@ -3842,7 +3870,7 @@ function drawStressChart(runs){
     const hr=Number(r.hr);
     if(!dMin||!hr) return null;
     const score=(hr/200)*dMin*_hrIntensityMult(hr);
-    return{date:r._runDate,score,type:r.type||''};
+    return{date:r._runDate,score,type:r.runType||''};
   }).filter(Boolean);
   if(!pts.length){document.getElementById('stressChartWrap').style.display='none';return;}
   const maxScore=Math.max(...pts.map(p=>p.score),1);
