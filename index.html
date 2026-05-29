@@ -3620,11 +3620,22 @@ function renderFeelRecap(){
   });
   // HRV: raw values, normalized within their own 7-day range in the chart
   const hrvVals=days.map(d=>hGet(d).hrv??null);
-  // Run effort: average effort for real runs that day
+  // Run effort: manual 1-10 if logged, else infer from HR zone, else 5 if any run exists
   const effortVals=days.map(d=>{
-    const runs=(storeGet('runs:'+d)||[]).filter(r=>!r.rest&&r.effort!=null);
+    const runs=(storeGet('runs:'+d)||[]).filter(r=>!r.rest);
     if(!runs.length) return null;
-    return runs.reduce((s,r)=>s+r.effort,0)/runs.length;
+    const scores=runs.map(r=>{
+      if(r.effort!=null) return r.effort;
+      const hr=Number(r.hr||0);
+      if(hr>=178) return 9.5;
+      if(hr>=170) return 8.0;
+      if(hr>=162) return 7.0;
+      if(hr>=152) return 6.0;
+      if(hr>=140) return 5.0;
+      if(hr>0)    return 3.5;
+      return 5;
+    });
+    return scores.reduce((s,v)=>s+v,0)/scores.length;
   });
   requestAnimationFrame(()=>drawFeelRecapChart(sleepScores,hrvVals,effortVals));
   document.getElementById('feelInsight').textContent=generateFeelInsight(sleepScores,hrvVals,effortVals);
@@ -3901,7 +3912,7 @@ function drawStressChart(runs){
       svg.appendChild(dl);
       const lt=document.createElementNS('http://www.w3.org/2000/svg','text');
       lt.setAttribute('x',W-PR);lt.setAttribute('y',ceilY-3);lt.setAttribute('text-anchor','end');
-      lt.setAttribute('fill',lineColor);lt.setAttribute('font-size','7');
+      lt.setAttribute('fill',lineColor);lt.setAttribute('font-size','9');
       lt.setAttribute('font-family','ui-monospace,monospace');lt.setAttribute('opacity','0.9');
       lt.textContent=`${lineLabel} ≤${Math.round(ceiling)}`;
       svg.appendChild(lt);
@@ -4107,4 +4118,5 @@ if(_db){
 </script>
 </body>
 </html>
+
 
