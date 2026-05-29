@@ -3679,25 +3679,27 @@ function drawFeelRecapChart(sleepScores,hrvVals,effortVals){
 function _drawFeelLine(svg,pts,color){
   const valid=pts.filter(p=>p.y!=null);
   if(!valid.length) return;
-  if(valid.length===1){
-    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx',valid[0].x);c.setAttribute('cy',valid[0].y);c.setAttribute('r','2.5');
-    c.setAttribute('fill',color);svg.appendChild(c);return;
-  }
+  // Build path — null days break the line into separate segments
   let d='';let prev=false;
   pts.forEach(p=>{
     if(p.y==null){prev=false;return;}
     d+=prev?`L${p.x} ${p.y}`:`M${p.x} ${p.y}`;prev=true;
   });
-  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d',d);path.setAttribute('fill','none');
-  path.setAttribute('stroke',color);path.setAttribute('stroke-width','1.5');
-  path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
-  path.setAttribute('stroke-opacity','0.85');svg.appendChild(path);
-  const last=valid[valid.length-1];
-  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  c.setAttribute('cx',last.x);c.setAttribute('cy',last.y);c.setAttribute('r','2.5');
-  c.setAttribute('fill',color);svg.appendChild(c);
+  if(valid.length>1){
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',d);path.setAttribute('fill','none');
+    path.setAttribute('stroke',color);path.setAttribute('stroke-width','1.5');
+    path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
+    path.setAttribute('stroke-opacity','0.85');svg.appendChild(path);
+  }
+  // Dot at every non-null point so isolated days (gap after rest/XT) are clearly visible
+  valid.forEach((p,i)=>{
+    const isLast=i===valid.length-1;
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);
+    c.setAttribute('r',isLast?'2.8':'1.8');
+    c.setAttribute('fill',color);svg.appendChild(c);
+  });
 }
 
 function generateFeelInsight(sleepScores,hrvVals,effortVals){
