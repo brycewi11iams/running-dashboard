@@ -1661,9 +1661,12 @@ function calcReadinessScore(d){
   let rollingNum=0,rollingDen=0;
   [...days7].reverse().forEach((day,i)=>{
     const w=SLEEP_W[i]||0;
-    // Use synced health: data only for consistency across devices
-    const hrs=hGet(day).sleep;
-    if(hrs!=null){rollingNum+=w*Math.min(hrs/8,1)*100;rollingDen+=w;}
+    const dayH=hGet(day);
+    const hrs=dayH.sleep;
+    const sc=dayH.sleepScore;
+    const durS=hrs!=null?Math.min(hrs/8,1)*100:null;
+    const blended=sc!=null&&durS!=null?sc*0.5+durS*0.5:sc!=null?sc:durS;
+    if(blended!=null){rollingNum+=w*blended;rollingDen+=w;}
   });
   if(rollingDen>0){
     const s=Math.round(rollingNum/rollingDen);
