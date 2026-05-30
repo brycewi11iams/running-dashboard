@@ -1,19 +1,6 @@
 {
-  "lastUpdated": "2026-05-30T17:27:34.914Z",
+  "lastUpdated": "2026-05-30T18:24:54.766Z",
   "data": {
-    "goals:2026-05-23": [],
-    "goals:2026-05-24": [
-      {
-        "text": "SQL",
-        "doneAt": 1779643832741,
-        "done": true
-      },
-      {
-        "text": "FBD debrief (cost/tablet)",
-        "doneAt": 1779638921283,
-        "done": true
-      }
-    ],
     "runs:2026-05-29": [
       {
         "date": "2026-05-29",
@@ -31,7 +18,22 @@
       }
     ],
     "elyte:2026-05-24": 1,
-    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
+    "health:2026-05-28": {
+      "fatigue": 7,
+      "soreness": 2,
+      "sleepQuality": 4,
+      "sleep": 7.47,
+      "soreLocs": [
+        "Left Foot",
+        "Left Knee"
+      ],
+      "mood": 3,
+      "sleepScore": 88,
+      "hrv": 110,
+      "water": 112,
+      "rhr": 50,
+      "hrvBaseline": 99
+    },
     "health:2026-05-26": {
       "fatigue": 6,
       "sleepQuality": 2,
@@ -58,7 +60,7 @@
         "date": "2026-05-22"
       }
     ],
-    "xt:2026-05-21": [],
+    "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "strength:2026-05-28": [
       {
         "duration": 7,
@@ -66,22 +68,7 @@
         "type": "Core (Abs)"
       }
     ],
-    "health:2026-05-28": {
-      "fatigue": 7,
-      "soreness": 2,
-      "sleepQuality": 4,
-      "sleep": 7.47,
-      "soreLocs": [
-        "Left Foot",
-        "Left Knee"
-      ],
-      "mood": 3,
-      "sleepScore": 88,
-      "hrv": 110,
-      "water": 112,
-      "rhr": 50,
-      "hrvBaseline": 99
-    },
+    "xt:2026-05-21": [],
     "runs:2026-05-30": [
       {
         "hr": 142,
@@ -96,23 +83,6 @@
         "date": "2026-05-30",
         "humidity": 90,
         "temp": 72
-      }
-    ],
-    "goals:2026-05-29": [
-      {
-        "done": true,
-        "text": "Pack",
-        "doneAt": 1780108952274
-      },
-      {
-        "done": true,
-        "text": "make list to pack",
-        "doneAt": 1780108952745
-      },
-      {
-        "done": true,
-        "text": "foot therapy",
-        "doneAt": 1780108954767
       }
     ],
     "health:2026-05-21": {
@@ -144,6 +114,7 @@
         "Quads"
       ]
     },
+    "elyte:2026-05-30": 1,
     "health:2026-05-30": {
       "soreLocs": [
         "Left Knee"
@@ -173,14 +144,7 @@
         "type": "Core (Abs)"
       }
     ],
-    "elyte:2026-05-30": 1,
-    "strength:2026-05-22": [
-      {
-        "duration": 7,
-        "notes": "2X normal routine + plank",
-        "type": "Core (Abs)"
-      }
-    ],
+    "elyte:2026-05-28": 1,
     "runs:2026-05-26": [
       {
         "dist": 6,
@@ -197,7 +161,13 @@
         "humidity": 91
       }
     ],
-    "elyte:2026-05-28": 1,
+    "strength:2026-05-22": [
+      {
+        "duration": 7,
+        "notes": "2X normal routine + plank",
+        "type": "Core (Abs)"
+      }
+    ],
     "health:2026-05-22": {
       "mood": 3,
       "soreness": 2,
@@ -311,13 +281,6 @@
         "duration": 7
       }
     ],
-    "goals:2026-05-26": [
-      {
-        "text": "heb",
-        "doneAt": 1779835882255,
-        "done": true
-      }
-    ],
     "strength:2026-05-20": [
       {
         "type": "Core",
@@ -396,23 +359,6 @@
         "hr": 143
       }
     ],
-    "goals:2026-05-28": [
-      {
-        "text": "HEB list",
-        "doneAt": 1780012710357,
-        "done": true
-      },
-      {
-        "text": "Foot therapy",
-        "doneAt": 1780011426553,
-        "done": true
-      },
-      {
-        "doneAt": 1780015606645,
-        "text": "Laundry",
-        "done": true
-      }
-    ],
     "runs:2026-05-28": [
       {
         "shoeId": "shoe_1779503431806",
@@ -427,28 +373,6 @@
         "notes": "easy, felt foot a bit",
         "rest": false,
         "dur": "47:51"
-      }
-    ],
-    "goals:2026-05-25": [
-      {
-        "done": true,
-        "doneAt": 1779740704966,
-        "text": "Laundry"
-      },
-      {
-        "doneAt": 1779758103146,
-        "text": "Shave",
-        "done": true
-      },
-      {
-        "text": "Bed sheets",
-        "doneAt": 1779740705911,
-        "done": true
-      },
-      {
-        "doneAt": 1779740706495,
-        "text": "meal prep",
-        "done": true
       }
     ],
     "health:2026-05-29": {
