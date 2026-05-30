@@ -2580,19 +2580,22 @@ function drawMileage(){
     const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',isLast?'3.5':'2');
     c.setAttribute('fill','rgba(107,227,164,0.9)');c.setAttribute('opacity',isLast?'1':'0.6');svg.appendChild(c);
-    // Miles label above dot (skip 0-mile weeks; anchor last point to 'end' to prevent overflow)
+    // Miles label — flip below dot if near top edge; right-anchor last point to stay in bounds
     if(p.v>0){
+      const nearTop=p.y-6<PT+6;
       const mt=document.createElementNS('http://www.w3.org/2000/svg','text');
-      mt.setAttribute('x',isLast?p.x-3:p.x);mt.setAttribute('y',p.y-6);
+      mt.setAttribute('x',isLast?p.x-3:p.x);
+      mt.setAttribute('y',nearTop?p.y+14:p.y-6);
       mt.setAttribute('text-anchor',isLast?'end':'middle');
       mt.setAttribute('fill','rgba(107,227,164,0.9)');mt.setAttribute('font-size','9.5');
       mt.setAttribute('font-family','ui-monospace,monospace');mt.setAttribute('font-weight','600');
       mt.textContent=p.v.toFixed(1);svg.appendChild(mt);
     }
-    // Week label at bottom (M/D of the Sunday)
+    // Week date label — right-anchor last point so it doesn't bleed off right edge
     const[,mm,dd]=p.wk.split('-');
     const wt=document.createElementNS('http://www.w3.org/2000/svg','text');
-    wt.setAttribute('x',p.x);wt.setAttribute('y',H-4);wt.setAttribute('text-anchor','middle');
+    wt.setAttribute('x',isLast?p.x-3:p.x);wt.setAttribute('y',H-4);
+    wt.setAttribute('text-anchor',isLast?'end':'middle');
     wt.setAttribute('fill','rgba(255,255,255,0.3)');wt.setAttribute('font-size','7.5');
     wt.setAttribute('font-family','ui-monospace,monospace');
     wt.textContent=`${parseInt(mm)}/${parseInt(dd)}`;svg.appendChild(wt);
