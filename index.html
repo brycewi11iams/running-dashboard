@@ -2585,7 +2585,7 @@ function drawMileage(){
       const mt=document.createElementNS('http://www.w3.org/2000/svg','text');
       mt.setAttribute('x',isLast?p.x-3:p.x);mt.setAttribute('y',p.y-6);
       mt.setAttribute('text-anchor',isLast?'end':'middle');
-      mt.setAttribute('fill','rgba(107,227,164,0.9)');mt.setAttribute('font-size','7.5');
+      mt.setAttribute('fill','rgba(107,227,164,0.9)');mt.setAttribute('font-size','9.5');
       mt.setAttribute('font-family','ui-monospace,monospace');mt.setAttribute('font-weight','600');
       mt.textContent=p.v.toFixed(1);svg.appendChild(mt);
     }
@@ -3941,7 +3941,8 @@ function drawStressChart(runs){
       dl.setAttribute('stroke-dasharray','4,3');dl.setAttribute('opacity','0.75');
       svg.appendChild(dl);
       const lt=document.createElementNS('http://www.w3.org/2000/svg','text');
-      lt.setAttribute('x',W-PR);lt.setAttribute('y',ceilY-3);lt.setAttribute('text-anchor','end');
+      const _ltY=ceilY>PT+14?ceilY-4:ceilY+13;// flip below line when near top edge
+      lt.setAttribute('x',W-PR);lt.setAttribute('y',_ltY);lt.setAttribute('text-anchor','end');
       lt.setAttribute('fill',lineColor);lt.setAttribute('font-size','9');
       lt.setAttribute('font-family','ui-monospace,monospace');lt.setAttribute('opacity','0.9');
       lt.textContent=`${lineLabel} ≤${Math.round(ceiling)}`;
@@ -4148,5 +4149,6 @@ if(_db){
 </script>
 </body>
 </html>
+
 
 
