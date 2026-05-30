@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-29T23:20:13.749Z",
+  "lastUpdated": "2026-05-30T02:42:10.242Z",
   "data": {
     "xt:2026-05-24": [
       {
@@ -12,18 +12,6 @@
         "effort": "easy",
         "type": "Other",
         "duration": 30
-      }
-    ],
-    "goals:2026-05-24": [
-      {
-        "text": "SQL",
-        "doneAt": 1779643832741,
-        "done": true
-      },
-      {
-        "text": "FBD debrief (cost/tablet)",
-        "doneAt": 1779638921283,
-        "done": true
       }
     ],
     "health:2026-05-26": {
@@ -39,29 +27,6 @@
       ],
       "water": 144
     },
-    "goals:2026-05-23": [],
-    "goals:2026-05-25": [
-      {
-        "done": true,
-        "doneAt": 1779740704966,
-        "text": "Laundry"
-      },
-      {
-        "doneAt": 1779758103146,
-        "text": "Shave",
-        "done": true
-      },
-      {
-        "text": "Bed sheets",
-        "doneAt": 1779740705911,
-        "done": true
-      },
-      {
-        "doneAt": 1779740706495,
-        "text": "meal prep",
-        "done": true
-      }
-    ],
     "health:2026-05-21": {
       "water": 128,
       "tiredness": 2,
@@ -150,13 +115,6 @@
       }
     ],
     "elyte:2026-05-25": 1,
-    "goals:2026-05-26": [
-      {
-        "text": "heb",
-        "doneAt": 1779835882255,
-        "done": true
-      }
-    ],
     "runs:2026-05-29": [
       {
         "temp": 72,
@@ -204,23 +162,6 @@
       }
     ],
     "note:2026-05-23": "i felt very tired for almost all day",
-    "goals:2026-05-28": [
-      {
-        "text": "HEB list",
-        "doneAt": 1780012710357,
-        "done": true
-      },
-      {
-        "text": "Foot therapy",
-        "doneAt": 1780011426553,
-        "done": true
-      },
-      {
-        "doneAt": 1780015606645,
-        "text": "Laundry",
-        "done": true
-      }
-    ],
     "xt:2026-05-20": [
       {
         "duration": 60,
