@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-31T16:33:38.295Z",
+  "lastUpdated": "2026-05-31T16:34:06.292Z",
   "data": {
     "goals:2026-05-23": [],
     "goals:2026-05-24": [
@@ -416,6 +416,14 @@
     ],
     "elyte:2026-05-23": 1,
     "elyte:2026-05-29": 1,
+    "xt:2026-05-29": [
+      {
+        "type": "Bike",
+        "duration": 30,
+        "effort": "easy",
+        "hr": 143
+      }
+    ],
     "goals:2026-05-28": [
       {
         "text": "HEB list",
@@ -433,12 +441,20 @@
         "text": "Laundry"
       }
     ],
-    "xt:2026-05-29": [
+    "runs:2026-05-28": [
       {
-        "type": "Bike",
-        "duration": 30,
-        "effort": "easy",
-        "hr": 143
+        "dur": "47:51",
+        "date": "2026-05-28",
+        "notes": "easy, felt foot a bit",
+        "dist": 6,
+        "hr": 141,
+        "effort": 3,
+        "rest": false,
+        "runType": "easy",
+        "humidity": 91,
+        "pace": "7:58 /mi",
+        "shoeId": "shoe_1779503431806",
+        "temp": 62
       }
     ],
     "goals:2026-05-25": [
@@ -461,22 +477,6 @@
         "text": "meal prep",
         "doneAt": 1779740706495,
         "done": true
-      }
-    ],
-    "runs:2026-05-28": [
-      {
-        "dur": "47:51",
-        "date": "2026-05-28",
-        "notes": "easy, felt foot a bit",
-        "dist": 6,
-        "hr": 141,
-        "effort": 3,
-        "rest": false,
-        "runType": "easy",
-        "humidity": 91,
-        "pace": "7:58 /mi",
-        "shoeId": "shoe_1779503431806",
-        "temp": 62
       }
     ],
     "health:2026-05-29": {
