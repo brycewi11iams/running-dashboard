@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-31T23:29:54.524Z",
+  "lastUpdated": "2026-05-31T23:31:02.691Z",
   "data": {
     "xt:2026-05-24": [
       {
@@ -453,7 +453,7 @@
     "health:2026-05-31": {
       "hrvBaseline": 101,
       "mood": 3,
-      "water": 96,
+      "water": 128,
       "soreness": 1,
       "rhr": 50,
       "sleepScore": 96,
