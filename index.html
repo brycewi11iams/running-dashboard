@@ -858,7 +858,6 @@ select.run-edit-inp option{background:#1a1a1e;}
       </div>
       <div class="rf"><div class="rf-lbl">Temp (°F)</div><input id="runTemp" type="number" min="-40" max="150" placeholder="72" autocomplete="off"></div>
       <div class="rf"><div class="rf-lbl">Humidity (%)</div><input id="runHumidity" type="number" min="0" max="100" placeholder="65" autocomplete="off"></div>
-      <div class="rf"><div class="rf-lbl">Elev Gain (ft)</div><input id="runElev" type="number" min="0" placeholder="250" autocomplete="off"></div>
       <div class="rf" style="grid-column:1/-1;"><div class="rf-lbl">Notes</div><textarea id="runNotes" placeholder="Legs felt heavy…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea></div>
     </div>
     <label class="rest-toggle"><input type="checkbox" id="runRest"> Planned rest day</label>
@@ -2340,13 +2339,6 @@ function loadRunLog(){
       humInp.autocomplete='off';humInp.setAttribute('inputmode','numeric');
       if(r.humidity!=null) humInp.value=r.humidity;
 
-      // Elevation gain input (ft)
-      const elevInp=document.createElement('input');
-      elevInp.type='number';elevInp.className='run-edit-inp';
-      elevInp.placeholder='ft';elevInp.min='0';
-      elevInp.autocomplete='off';elevInp.setAttribute('inputmode','numeric');
-      if(r.elev!=null) elevInp.value=r.elev;
-
       // Save all fields to localStorage immediately on input
       function _saveEdit(){
         const dayRuns=storeGet('runs:'+r._runDate)||[];
@@ -2360,11 +2352,7 @@ function loadRunLog(){
         dayRuns[r._runIdx].temp=isNaN(tv)?null:tv;
         const hv=parseFloat(humInp.value);
         dayRuns[r._runIdx].humidity=isNaN(hv)?null:hv;
-        const ev2=parseInt(elevInp.value);
-        dayRuns[r._runIdx].elev=isNaN(ev2)||ev2<=0?null:ev2;
         storeSet('runs:'+r._runDate,dayRuns);
-        // Live-update elev cell in main row
-        tr.cells[4].textContent=dayRuns[r._runIdx].elev?dayRuns[r._runIdx].elev+'ft':'—';
         // Update weather:date key so heat callout stays current
         if(dayRuns[r._runIdx].temp!=null&&dayRuns[r._runIdx].humidity!=null){
           storeSet('weather:'+r._runDate,{temp:dayRuns[r._runIdx].temp,humidity:dayRuns[r._runIdx].humidity});
@@ -2389,8 +2377,6 @@ function loadRunLog(){
       notesInp.addEventListener('input',_saveEdit);
       tempInp.addEventListener('change',_saveEdit);
       humInp.addEventListener('change',_saveEdit);
-      elevInp.addEventListener('change',_saveEdit);
-
       // Layout
       const wrap=document.createElement('div');wrap.className='run-edit-fields';
       const tpf=document.createElement('div');tpf.className='run-edit-field';
@@ -2411,10 +2397,7 @@ function loadRunLog(){
       const hf=document.createElement('div');hf.className='run-edit-field';
       hf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Humidity %'}));
       hf.appendChild(humInp);
-      const elevf=document.createElement('div');elevf.className='run-edit-field';
-      elevf.appendChild(Object.assign(document.createElement('span'),{className:'run-edit-lbl',textContent:'Elev Gain (ft)'}));
-      elevf.appendChild(elevInp);
-      wrap.appendChild(tpf);wrap.appendChild(ef);wrap.appendChild(sf);wrap.appendChild(nf);wrap.appendChild(tf);wrap.appendChild(hf);wrap.appendChild(elevf);
+      wrap.appendChild(tpf);wrap.appendChild(ef);wrap.appendChild(sf);wrap.appendChild(nf);wrap.appendChild(tf);wrap.appendChild(hf);
       editTd.appendChild(wrap);
       editTr.appendChild(editTd);
       tbody.appendChild(editTr);
@@ -2439,7 +2422,7 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
   // Temp/humidity: use run-form values, fall back to saved morning conditions
   let temp=parseFloat(document.getElementById('runTemp').value)||null;
   let humidity=parseFloat(document.getElementById('runHumidity').value)||null;
-  const elev=parseInt(document.getElementById('runElev').value)||null;
+  const elev=null;
   if(temp==null||humidity==null){
     const wth=storeGet('weather:'+today);
     if(wth){if(temp==null&&wth.temp!=null) temp=wth.temp;if(humidity==null&&wth.humidity!=null) humidity=wth.humidity;}
@@ -2449,7 +2432,7 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
     hr:rest?null:hr,effort:rest?null:effort,notes,rest,shoeId:rest?null:shoeId,
     temp:rest?null:temp,humidity:rest?null:humidity,runType:rest?null:runType,elev:rest?null:elev});
   storeSet('runs:'+today,runs);
-  ['runDist','runDur','runHR','runEffort','runNotes','runTemp','runHumidity','runElev'].forEach(id=>document.getElementById(id).value='');
+  ['runDist','runDur','runHR','runEffort','runNotes','runTemp','runHumidity'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('runType').value='';
   document.getElementById('runRest').checked=false;
   document.getElementById('paceDisp').textContent='—';
