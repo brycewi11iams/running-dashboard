@@ -14,7 +14,8 @@
         "hr": 149,
         "runType": "easy",
         "date": "2026-05-29",
-        "pace": "7:59 /mi"
+        "pace": "7:59 /mi",
+        "elev": 367
       }
     ],
     "elyte:2026-05-24": 1,
@@ -57,7 +58,8 @@
         "dist": 5.05,
         "rest": false,
         "effort": 7,
-        "dur": "41:01"
+        "dur": "41:01",
+        "elev": 223
       }
     ],
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
@@ -75,7 +77,8 @@
         "humidity": 90,
         "dur": "39:37",
         "dist": 5,
-        "rest": false
+        "rest": false,
+        "elev": 102
       }
     ],
     "elyte:2026-06-01": 1,
@@ -126,7 +129,8 @@
         "shoeId": null,
         "pace": "8:02 /mi",
         "date": "2026-05-21",
-        "hr": 152
+        "hr": 152,
+        "elev": 207
       }
     ],
     "runs:2026-05-23": [
@@ -139,7 +143,8 @@
         "notes": "Felt really good, hr was a bit high at the end bc of hills and stuff i think",
         "hr": 148,
         "pace": "8:55 /mi",
-        "date": "2026-05-23"
+        "date": "2026-05-23",
+        "elev": 230
       }
     ],
     "health:2026-05-25": {
@@ -208,7 +213,8 @@
         "rest": false,
         "humidity": 90,
         "effort": 4,
-        "dur": "47:50"
+        "dur": "47:50",
+        "elev": 220
       }
     ],
     "strength:2026-05-26": [
@@ -320,7 +326,8 @@
         "humidity": 91,
         "dur": "47:13",
         "rest": false,
-        "dist": 6
+        "dist": 6,
+        "elev": 262
       }
     ],
     "runs:2026-06-01": [
@@ -424,7 +431,8 @@
         "humidity": 85,
         "dur": "1:19:13",
         "rest": false,
-        "dist": 11
+        "dist": 11,
+        "elev": 194
       }
     ],
     "runs:2026-05-24": [
@@ -439,7 +447,8 @@
         "hr": 156,
         "notes": "Rigged the second half of the run",
         "temp": 69,
-        "shoeId": "shoe_1779503449191"
+        "shoeId": "shoe_1779503449191",
+        "elev": 223
       }
     ],
     "elyte:2026-05-23": 1,
@@ -456,7 +465,8 @@
         "rest": false,
         "dur": "47:51",
         "effort": 3,
-        "humidity": 91
+        "humidity": 91,
+        "elev": 262
       }
     ],
     "health:2026-06-01": {
