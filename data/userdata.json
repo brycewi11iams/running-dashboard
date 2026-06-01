@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-01T19:00:25.917Z",
+  "lastUpdated": "2026-06-01T19:01:31.215Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -452,7 +452,16 @@
       "sleep": 8.1,
       "hrvBaseline": 102,
       "hrv": 83,
-      "sleepScore": 68
+      "sleepScore": 68,
+      "soreness": 1,
+      "fatigue": 6,
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot"
+      ],
+      "sleepQuality": 3,
+      "mood": 3,
+      "water": 88
     },
     "health:2026-05-29": {
       "sleep": 6.27,
