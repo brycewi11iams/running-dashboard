@@ -3399,6 +3399,22 @@ async function loadGhUserdata(){
     Object.entries(payload.data).forEach(([k,v])=>{
       // coros_daily: is always fetched fresh from daily.json — never apply a stale synced copy
       if(k.startsWith('coros_daily:')) return;
+      // For runs: merge at the field level so a stale CDN response can't wipe fields
+      // (e.g. elev) that are already set in localStorage.
+      if(k.startsWith('runs:')&&Array.isArray(v)){
+        const local=storeGet(k);
+        if(Array.isArray(local)&&local.length===v.length){
+          const merged=v.map((remRun,i)=>{
+            const locRun=local[i]||{};
+            const out={...remRun};
+            Object.keys(locRun).forEach(f=>{if(out[f]==null&&locRun[f]!=null)out[f]=locRun[f];});
+            return out;
+          });
+          const nv=JSON.stringify(merged);
+          if(localStorage.getItem(k)!==nv){localStorage.setItem(k,nv);changed=true;}
+          return;
+        }
+      }
       const nv=JSON.stringify(v);
       if(localStorage.getItem(k)!==nv){localStorage.setItem(k,nv);changed=true;}
     });
