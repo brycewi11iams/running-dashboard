@@ -1,42 +1,51 @@
 {
-  "date": "2026-05-23",
-  "fetched_at": "2026-05-23T11:00:00Z",
+  "date": "2026-06-01",
+  "fetched_at": "2026-06-01T15:30:00Z",
   "sleep": {
-    "score": 34,
-    "hours": 5.03,
-    "deep_ratio": 12,
-    "light_ratio": 50,
-    "rem_ratio": 21,
-    "awake_minutes": 62
+    "score": 68,
+    "hours": 8.1,
+    "deep_ratio": 13,
+    "light_ratio": 55,
+    "rem_ratio": 24,
+    "awake_minutes": 42
   },
   "hrv": {
     "avg": 83,
-    "baseline": 97,
-    "normal_low": 78,
-    "normal_high": 116,
-    "evaluation": "Normal"
+    "baseline": 102,
+    "normal_low": 85,
+    "normal_high": 119,
+    "evaluation": "Below normal"
   },
-  "rhr": null,
+  "rhr": 53,
   "recovery": {
-    "percentage": 100,
+    "percentage": 94,
     "level": "Heavy training allowed"
   },
   "training_load": {
-    "date": "2026-05-23",
-    "stl": 53,
-    "ltl": 85,
-    "ratio": 0.62,
-    "comment": "Resuming"
+    "date": "2026-06-01",
+    "stl": 92,
+    "ltl": 91,
+    "ratio": 1.01,
+    "comment": "Optimized"
   },
   "history": {
     "training_load": [
-      {"date": "2026-05-17", "stl": 0,   "ltl": 0,  "ratio": 0.0,  "comment": ""},
-      {"date": "2026-05-18", "stl": 0,   "ltl": 0,  "ratio": 0.0,  "comment": ""},
-      {"date": "2026-05-19", "stl": 0,   "ltl": 0,  "ratio": 0.0,  "comment": ""},
-      {"date": "2026-05-20", "stl": 100, "ltl": 0,  "ratio": 0.0,  "comment": ""},
-      {"date": "2026-05-21", "stl": 68,  "ltl": 79, "ratio": 0.86, "comment": "Optimal"},
-      {"date": "2026-05-22", "stl": 57,  "ltl": 83, "ratio": 0.69, "comment": "Undertraining"},
-      {"date": "2026-05-23", "stl": 53,  "ltl": 85, "ratio": 0.62, "comment": "Resuming"}
+      {"date": "2026-05-26", "stl": 71,  "ltl": 87, "ratio": 0.81, "comment": "Maintaining"},
+      {"date": "2026-05-27", "stl": 70,  "ltl": 86, "ratio": 0.81, "comment": "Maintaining"},
+      {"date": "2026-05-28", "stl": 69,  "ltl": 86, "ratio": 0.80, "comment": "Maintaining"},
+      {"date": "2026-05-29", "stl": 79,  "ltl": 88, "ratio": 0.89, "comment": "Maintaining"},
+      {"date": "2026-05-30", "stl": 75,  "ltl": 87, "ratio": 0.86, "comment": "Maintaining"},
+      {"date": "2026-05-31", "stl": 93,  "ltl": 91, "ratio": 1.02, "comment": "Optimized"},
+      {"date": "2026-06-01", "stl": 92,  "ltl": 91, "ratio": 1.01, "comment": "Optimized"}
     ]
-  }
+  },
+  "runs": [
+    {
+      "date": "2026-06-01",
+      "dur": "38:55",
+      "dist_km": 8.05,
+      "elev_m": 123,
+      "elev_ft": 404
+    }
+  ]
 }

@@ -3529,6 +3529,31 @@ async function loadCorosData(){
     // Always call regardless of daily.json date — _applyCorosFill reads coros_daily:today independently.
     _applyCorosFill();
 
+    // Auto-fill elevation gain on runs from Coros activity data.
+    // daily.json may include a "runs" array; each entry has {date, elev_ft}.
+    // Only fills elev if it's still null — never overwrites a manually entered value.
+    if(data.runs&&Array.isArray(data.runs)){
+      data.runs.forEach(cr=>{
+        if(!cr.date||cr.elev_ft==null) return;
+        const dayRuns=storeGet('runs:'+cr.date)||[];
+        let changed=false;
+        // Match by duration string if multiple runs, otherwise fill the only non-rest run
+        const nonRest=dayRuns.filter(r=>!r.rest);
+        if(nonRest.length===1&&nonRest[0].elev==null){
+          nonRest[0].elev=cr.elev_ft;changed=true;
+        } else if(nonRest.length>1&&cr.dur){
+          // Match by duration (within 60s)
+          const crSec=cr.dur.split(':').reduce((a,v,i,arr)=>a+(i===arr.length-1?parseFloat(v):parseInt(v)*60**(arr.length-1-i)),0);
+          nonRest.forEach(r=>{
+            if(r.elev!=null) return;
+            const rSec=r.dur?r.dur.split(':').reduce((a,v,i,arr)=>a+(i===arr.length-1?parseFloat(v):parseInt(v)*60**(arr.length-1-i)),0):null;
+            if(rSec!=null&&Math.abs(rSec-crSec)<=60){r.elev=cr.elev_ft;changed=true;}
+          });
+        }
+        if(changed){storeSet('runs:'+cr.date,dayRuns);loadRunLog();}
+      });
+    }
+
     renderRecoveryTrend();
     renderTrainingLoadPanel();
     renderFeelRecap();
