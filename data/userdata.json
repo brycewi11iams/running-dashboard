@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-01T14:29:46.969Z",
+  "lastUpdated": "2026-06-01T15:30:00.000Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -14,7 +14,8 @@
         "humidity": 92,
         "shoeId": "shoe_1779503449191",
         "rest": false,
-        "date": "2026-05-29"
+        "date": "2026-05-29",
+        "elev": 368
       }
     ],
     "elyte:2026-05-24": 1,
@@ -57,7 +58,8 @@
         "dur": "41:01",
         "dist": 5.05,
         "notes": "First run back so I felt tired and chest was kinda tight",
-        "effort": 7
+        "effort": 7,
+        "elev": 223
       }
     ],
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
@@ -75,7 +77,8 @@
         "temp": 72,
         "effort": 4,
         "runType": "easy",
-        "notes": "humid + had to poop"
+        "notes": "humid + had to poop",
+        "elev": 102
       }
     ],
     "elyte:2026-06-01": 1,
@@ -126,7 +129,8 @@
         "hr": 152,
         "shoeId": null,
         "rest": false,
-        "date": "2026-05-21"
+        "date": "2026-05-21",
+        "elev": 207
       }
     ],
     "runs:2026-05-23": [
@@ -139,7 +143,8 @@
         "pace": "8:55 /mi",
         "date": "2026-05-23",
         "effort": 4,
-        "notes": "Felt really good, hr was a bit high at the end bc of hills and stuff i think"
+        "notes": "Felt really good, hr was a bit high at the end bc of hills and stuff i think",
+        "elev": 230
       }
     ],
     "health:2026-05-25": {
@@ -208,7 +213,8 @@
         "pace": "7:58 /mi",
         "hr": 148,
         "dur": "47:50",
-        "date": "2026-05-25"
+        "date": "2026-05-25",
+        "elev": 220
       }
     ],
     "strength:2026-05-26": [
@@ -320,7 +326,8 @@
         "notes": "very easy + strides",
         "runType": "easy",
         "effort": 3,
-        "temp": 65
+        "temp": 65,
+        "elev": 263
       }
     ],
     "runs:2026-06-01": [
@@ -336,7 +343,8 @@
         "shoeId": "shoe_1779503431806",
         "notes": "hilly",
         "temp": 74,
-        "humidity": 92
+        "humidity": 92,
+        "elev": 404
       }
     ],
     "health:2026-05-27": {
@@ -423,7 +431,8 @@
         "dur": "1:19:13",
         "humidity": 85,
         "dist": 11,
-        "date": "2026-05-31"
+        "date": "2026-05-31",
+        "elev": 194
       }
     ],
     "runs:2026-05-24": [
@@ -438,7 +447,8 @@
         "hr": 156,
         "dur": "47:04",
         "pace": "7:50 /mi",
-        "date": "2026-05-24"
+        "date": "2026-05-24",
+        "elev": 223
       }
     ],
     "elyte:2026-05-23": 1,
@@ -455,7 +465,8 @@
         "pace": "7:58 /mi",
         "dur": "47:51",
         "shoeId": "shoe_1779503431806",
-        "rest": false
+        "rest": false,
+        "elev": 263
       }
     ],
     "health:2026-06-01": {
