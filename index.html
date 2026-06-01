@@ -3291,6 +3291,21 @@ renderStressChart();
 renderHeatAdjCallout();
 loadNarrative();
 
+// One-time migration: seed elev into localStorage so _ghPush can write it to GitHub.
+// Safe to remove once all devices have synced (after ~2026-06-07).
+(function(){
+  const _elevSeed={'2026-05-21':207,'2026-05-22':223,'2026-05-23':230,'2026-05-24':223,
+    '2026-05-25':220,'2026-05-26':262,'2026-05-28':262,'2026-05-29':367,
+    '2026-05-30':102,'2026-05-31':194,'2026-06-01':404};
+  Object.entries(_elevSeed).forEach(([date,elev])=>{
+    const runs=storeGet('runs:'+date);
+    if(!Array.isArray(runs)) return;
+    let changed=false;
+    runs.forEach(r=>{if(!r.rest&&r.elev==null){r.elev=elev;changed=true;}});
+    if(changed) storeSet('runs:'+date,runs);
+  });
+})();
+
 // Fetch Coros data/daily.json asynchronously — auto-fills health fields + unlocks Coros panels
 loadCorosData();
 
