@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-01T14:27:19.962Z",
+  "lastUpdated": "2026-06-01T14:29:46.969Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -78,6 +78,7 @@
         "notes": "humid + had to poop"
       }
     ],
+    "elyte:2026-06-01": 1,
     "elyte:2026-05-30": 1,
     "health:2026-05-30": {
       "fatigue": 7,
@@ -226,45 +227,6 @@
         "hr": 143
       }
     ],
-    "goals:2026-05-28": [
-      {
-        "text": "HEB list",
-        "doneAt": 1780012710357,
-        "done": true
-      },
-      {
-        "text": "Foot therapy",
-        "doneAt": 1780011426553,
-        "done": true
-      },
-      {
-        "doneAt": 1780015606645,
-        "text": "Laundry",
-        "done": true
-      }
-    ],
-    "goals:2026-05-25": [
-      {
-        "done": true,
-        "doneAt": 1779740704966,
-        "text": "Laundry"
-      },
-      {
-        "doneAt": 1779758103146,
-        "text": "Shave",
-        "done": true
-      },
-      {
-        "text": "Bed sheets",
-        "doneAt": 1779740705911,
-        "done": true
-      },
-      {
-        "doneAt": 1779740706495,
-        "text": "meal prep",
-        "done": true
-      }
-    ],
     "health:2026-05-29": {
       "hrv": 127,
       "soreness": 2,
@@ -287,47 +249,11 @@
         "type": "Core (Abs)"
       }
     ],
-    "goals:2026-05-23": [],
-    "goals:2026-05-24": [
-      {
-        "text": "SQL",
-        "doneAt": 1779643832741,
-        "done": true
-      },
-      {
-        "text": "FBD debrief (cost/tablet)",
-        "doneAt": 1779638921283,
-        "done": true
-      }
-    ],
     "strength:2026-05-28": [
       {
         "notes": "2xnormal + 1 min plank",
         "duration": 7,
         "type": "Core (Abs)"
-      }
-    ],
-    "goals:2026-05-29": [
-      {
-        "done": true,
-        "text": "Pack",
-        "doneAt": 1780108952274
-      },
-      {
-        "done": true,
-        "text": "make list to pack",
-        "doneAt": 1780108952745
-      },
-      {
-        "done": true,
-        "text": "foot therapy",
-        "doneAt": 1780108954767
-      }
-    ],
-    "goals:2026-05-31": [
-      {
-        "done": false,
-        "text": "foot pt"
       }
     ],
     "health:2026-05-21": {
@@ -344,6 +270,13 @@
       "hrv": 121,
       "tiredness": 2
     },
+    "strength:2026-06-01": [
+      {
+        "type": "Core (Abs)",
+        "duration": 7,
+        "notes": "2 X normal + plank"
+      }
+    ],
     "health:2026-05-24": {
       "soreLocs": [
         "Left Foot",
@@ -397,7 +330,13 @@
         "pace": "7:47 /mi",
         "hr": 146,
         "rest": false,
-        "date": "2026-06-01"
+        "date": "2026-06-01",
+        "runType": "easy",
+        "effort": 6,
+        "shoeId": "shoe_1779503431806",
+        "notes": "hilly",
+        "temp": 74,
+        "humidity": 92
       }
     ],
     "health:2026-05-27": {
@@ -451,13 +390,6 @@
         "duration": 7
       }
     ],
-    "goals:2026-05-26": [
-      {
-        "text": "heb",
-        "doneAt": 1779835882255,
-        "done": true
-      }
-    ],
     "strength:2026-05-20": [
       {
         "notes": "7 min core session",
@@ -478,12 +410,6 @@
       "tiredness": 1
     },
     "elyte:2026-05-27": 1,
-    "goals:2026-05-30": [
-      {
-        "text": "foot pt",
-        "done": false
-      }
-    ],
     "runs:2026-05-31": [
       {
         "notes": "rig fest",
@@ -537,7 +463,16 @@
       "rhr": 53,
       "hrvBaseline": 102,
       "sleepScore": 69,
-      "sleep": 8.1
+      "sleep": 8.1,
+      "soreness": 1,
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot"
+      ],
+      "fatigue": 6,
+      "sleepQuality": 3,
+      "mood": 3,
+      "water": 56
     }
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
