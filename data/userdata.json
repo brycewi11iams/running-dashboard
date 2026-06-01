@@ -14,7 +14,8 @@
         "notes": "humid + hilly",
         "temp": 72,
         "pace": "7:59 /mi",
-        "effort": 7
+        "effort": 7,
+        "elev": 367
       }
     ],
     "elyte:2026-05-24": 1,
@@ -57,7 +58,8 @@
         "shoeId": null,
         "dur": "41:01",
         "effort": 7,
-        "pace": "8:07 /mi"
+        "pace": "8:07 /mi",
+        "elev": 223
       }
     ],
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
@@ -75,7 +77,8 @@
         "dur": "39:37",
         "shoeId": "shoe_1779503431806",
         "effort": 4,
-        "pace": "7:55 /mi"
+        "pace": "7:55 /mi",
+        "elev": 102
       }
     ],
     "elyte:2026-06-01": 1,
@@ -126,7 +129,8 @@
         "rest": false,
         "dist": 5,
         "date": "2026-05-21",
-        "hr": 152
+        "hr": 152,
+        "elev": 207
       }
     ],
     "runs:2026-05-23": [
@@ -139,7 +143,8 @@
         "dur": "44:42",
         "shoeId": "shoe_1779503431806",
         "effort": 4,
-        "pace": "8:55 /mi"
+        "pace": "8:55 /mi",
+        "elev": 230
       }
     ],
     "health:2026-05-25": {
@@ -208,7 +213,8 @@
         "date": "2026-05-25",
         "humidity": 90,
         "hr": 148,
-        "runType": "easy"
+        "runType": "easy",
+        "elev": 220
       }
     ],
     "strength:2026-05-26": [
@@ -320,7 +326,8 @@
         "dur": "47:13",
         "rest": false,
         "temp": 65,
-        "notes": "very easy + strides"
+        "notes": "very easy + strides",
+        "elev": 262
       }
     ],
     "runs:2026-06-01": [
@@ -424,7 +431,8 @@
         "dur": "1:19:13",
         "shoeId": "shoe_1779503449191",
         "effort": 8,
-        "pace": "7:12 /mi"
+        "pace": "7:12 /mi",
+        "elev": 194
       }
     ],
     "runs:2026-05-24": [
@@ -439,7 +447,8 @@
         "temp": 69,
         "rest": false,
         "dur": "47:04",
-        "shoeId": "shoe_1779503449191"
+        "shoeId": "shoe_1779503449191",
+        "elev": 223
       }
     ],
     "elyte:2026-05-23": 1,
@@ -456,7 +465,8 @@
         "humidity": 91,
         "date": "2026-05-28",
         "dist": 6,
-        "runType": "easy"
+        "runType": "easy",
+        "elev": 262
       }
     ],
     "health:2026-06-01": {
