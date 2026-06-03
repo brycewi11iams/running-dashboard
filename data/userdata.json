@@ -1,6 +1,23 @@
 {
-  "lastUpdated": "2026-06-03T15:37:32.472Z",
+  "lastUpdated": "2026-06-03T15:38:42.712Z",
   "data": {
+    "runs:2026-06-03": [
+      {
+        "date": "2026-06-03",
+        "dist": 0,
+        "dur": "",
+        "pace": "",
+        "hr": null,
+        "effort": null,
+        "notes": "",
+        "rest": true,
+        "shoeId": null,
+        "temp": null,
+        "humidity": null,
+        "runType": null,
+        "elev": null
+      }
+    ],
     "runs:2026-05-29": [
       {
         "humidity": 92,
@@ -491,7 +508,9 @@
       "sleep": 7.08,
       "hrv": 78,
       "hrvBaseline": 100,
-      "rhr": 54
+      "rhr": 54,
+      "fatigue": 6,
+      "sleepQuality": 2
     },
     "runs:2026-05-24": [
       {
