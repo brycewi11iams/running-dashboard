@@ -766,6 +766,7 @@ select.run-edit-inp option{background:#1a1a1e;}
       <input class="g-inp" id="goalInp" type="text" placeholder="Add a goal for today…">
       <button class="btn-add" id="goalAdd">+ Add</button>
       <button class="btn-pol" id="goalPol">✨ Polish</button>
+      <button class="btn-pol" id="goalDaily" title="Add as a daily recurring goal — shows up every day automatically">📌 Daily</button>
     </div>
     <div class="pol-st" id="polSt"></div>
   </div>
@@ -1397,7 +1398,7 @@ const GITHUB_REPO   = 'brycewi11iams/running-dashboard';
 const GITHUB_BRANCH = 'main';
 const USERDATA_PATH = 'data/userdata.json';
 // Keys whose prefixes are synced to GitHub (health data, not UI prefs)
-const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:','xt:','strength:','runs:'];
+const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:','xt:','strength:','runs:','daytype:','recurring_goals'];
 
 // Weekday: 4:30 AM–8:30 PM  |  Weekend: 6:00 AM–10:00 PM
 function getDayBounds(){
@@ -1930,6 +1931,7 @@ function buildGoalRow(g,idx,key,readOnly){
   const sp=document.createElement('span');sp.className='g-txt';sp.textContent=g.text;
   if(!readOnly) wireInlineEdit(sp,idx,key);
   li.appendChild(sp);
+  if(g.recurring){const rp=document.createElement('span');rp.textContent='📌';rp.title='Daily recurring goal';rp.style.cssText='font-size:11px;opacity:0.6;margin-left:4px;cursor:default;flex-shrink:0;';li.appendChild(rp);}
   const qb=document.createElement('button');qb.className='g-q'+(g.queued?' on':'');qb.textContent='⚡';
   if(readOnly) qb.disabled=true;
   else qb.addEventListener('click',()=>{
@@ -1943,6 +1945,13 @@ function buildGoalRow(g,idx,key,readOnly){
   return li;
 }
 function reloadList(key){if(key==='goals:'+activeDate()) loadToday(); else loadTomorrow();}
+function _injectRecurringGoals(){
+  const recurring=storeGet('recurring_goals')||[];if(!recurring.length) return;
+  const today=activeDate();const gs=storeGet('goals:'+today)||[];
+  const seen=new Set(gs.map(g=>g.text));let changed=false;
+  recurring.forEach(txt=>{if(!seen.has(txt)){gs.push({text:txt,done:false,recurring:true});changed=true;}});
+  if(changed){storeSet('goals:'+today,gs);loadToday();}
+}
 function wireInlineEdit(el,idx,key){
   let orig='';
   el.addEventListener('click',()=>{
@@ -3220,6 +3229,7 @@ function onNewDay(){
   renderRecoveryTrend();
   renderTrainingLoadPanel();
   renderHeatAdjCallout();
+  _injectRecurringGoals();
   // Reset day type selector to moderate for the new day
   const dtSel=document.getElementById('dayTypeSel');
   if(dtSel){dtSel.value='moderate';storeSet('daytype:'+activeDate(),'moderate');}
@@ -3312,6 +3322,15 @@ setTimeout(()=>{
 makeAddHandlers(()=>'goals:'+activeDate(),
   document.getElementById('goalInp'),document.getElementById('goalAdd'),
   document.getElementById('goalPol'),document.getElementById('polSt'),loadToday);
+document.getElementById('goalDaily').addEventListener('click',()=>{
+  const txt=document.getElementById('goalInp').value.trim();if(!txt) return;
+  const recurring=storeGet('recurring_goals')||[];
+  if(!recurring.includes(txt)){recurring.push(txt);storeSet('recurring_goals',recurring);}
+  const gs=storeGet('goals:'+activeDate())||[];
+  if(!gs.some(g=>g.text===txt)){gs.push({text:txt,done:false,recurring:true});storeSet('goals:'+activeDate(),gs);}
+  document.getElementById('goalInp').value='';loadToday();
+});
+_injectRecurringGoals();
 makeAddHandlers(()=>'goals:'+tomorrowDate(),
   document.getElementById('tomInp'),document.getElementById('tomAdd'),
   document.getElementById('tomPol'),document.getElementById('tomSt'),loadTomorrow);
@@ -3492,6 +3511,7 @@ function _reRenderAll(){
   const sr=storeGet('sweat_rate');const ri=document.getElementById('sweatRateInp');if(sr&&ri) ri.value=sr;
   // Re-apply Coros fill after any sync overwrites health:today nulls
   _applyCorosFill();
+  _injectRecurringGoals();
 }
 
 // ═══════════════════════════════════════════════
@@ -3770,13 +3790,10 @@ function drawFeelRecapChart(sleepScores,hrvVals,effortVals){
 function _drawFeelLine(svg,pts,color){
   const valid=pts.filter(p=>p.y!=null);
   if(!valid.length) return;
-  // Build path — null days break the line into separate segments
-  let d='';let prev=false;
-  pts.forEach(p=>{
-    if(p.y==null){prev=false;return;}
-    d+=prev?`L${p.x} ${p.y}`:`M${p.x} ${p.y}`;prev=true;
-  });
+  // Connect all valid points, skipping null days (line continues across rest days)
   if(valid.length>1){
+    let d=`M${valid[0].x} ${valid[0].y}`;
+    for(let i=1;i<valid.length;i++) d+=`L${valid[i].x} ${valid[i].y}`;
     const path=document.createElementNS('http://www.w3.org/2000/svg','path');
     path.setAttribute('d',d);path.setAttribute('fill','none');
     path.setAttribute('stroke',color);path.setAttribute('stroke-width','1.5');
