@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-04T10:52:08.928Z",
+  "lastUpdated": "2026-06-04T10:53:03.312Z",
   "data": {
     "elyte:2026-06-01": 1,
     "health:2026-05-26": {
@@ -244,6 +244,22 @@
       {
         "done": false,
         "text": "foot pt"
+      },
+      {
+        "text": "HEB",
+        "done": false
+      },
+      {
+        "text": "birthday list",
+        "done": false
+      },
+      {
+        "text": "Inhaler",
+        "done": false
+      },
+      {
+        "text": "Dishwasher",
+        "done": false
       }
     ],
     "elyte:2026-05-24": 1,
