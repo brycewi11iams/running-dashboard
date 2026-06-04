@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-04T09:19:25.214Z",
+  "lastUpdated": "2026-06-04T09:21:43.630Z",
   "data": {
     "elyte:2026-06-01": 1,
     "health:2026-05-26": {
@@ -259,6 +259,14 @@
       {
         "done": false,
         "text": "Birthday"
+      },
+      {
+        "text": "Inhaler",
+        "done": false
+      },
+      {
+        "text": "Foot PT",
+        "done": false
       }
     ],
     "elyte:2026-05-24": 1,
