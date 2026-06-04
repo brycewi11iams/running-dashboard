@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-04T22:58:27.938Z",
+  "lastUpdated": "2026-06-04T23:01:56.294Z",
   "data": {
     "elyte:2026-06-01": 1,
     "elyte:2026-06-04": 1,
@@ -239,7 +239,8 @@
       },
       {
         "text": "birthday list",
-        "done": false
+        "done": true,
+        "doneAt": 1780613908345
       },
       {
         "text": "Inhaler",
@@ -252,11 +253,13 @@
       },
       {
         "text": "Shave",
-        "done": false
+        "done": true,
+        "doneAt": 1780613911478
       },
       {
         "text": "Toenails",
-        "done": false
+        "done": true,
+        "doneAt": 1780613916480
       }
     ],
     "elyte:2026-05-24": 1,
