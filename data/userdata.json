@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-04T17:57:13.035Z",
+  "lastUpdated": "2026-06-04T17:57:46.693Z",
   "data": {
     "elyte:2026-06-01": 1,
     "elyte:2026-06-04": 1,
@@ -436,7 +436,7 @@
       "fatigue": 3,
       "mood": 2,
       "soreness": 1,
-      "water": 48,
+      "water": 96,
       "hrvBaseline": 100,
       "hrv": 89,
       "soreLocs": [
