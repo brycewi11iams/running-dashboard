@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-05T11:20:41.418Z",
+  "lastUpdated": "2026-06-05T11:21:56.764Z",
   "data": {
     "runs:2026-06-03": [
       {
@@ -213,7 +213,13 @@
         "hr": 148,
         "elev": 413,
         "rest": false,
-        "date": "2026-06-05"
+        "date": "2026-06-05",
+        "runType": "easy",
+        "effort": 6,
+        "shoeId": "shoe_1779503449191",
+        "notes": "more rain + poop break",
+        "temp": 73,
+        "humidity": 94
       }
     ],
     "health:2026-05-31": {
