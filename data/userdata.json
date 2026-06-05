@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-05T10:53:17.029Z",
+  "lastUpdated": "2026-06-05T10:54:31.026Z",
   "data": {
     "runs:2026-06-03": [
       {
@@ -205,6 +205,17 @@
       }
     ],
     "daytype:2026-05-31": "hard",
+    "runs:2026-06-05": [
+      {
+        "dist": 9,
+        "dur": "1:12:07",
+        "pace": "8:01 /mi",
+        "hr": 148,
+        "elev": 413,
+        "rest": false,
+        "date": "2026-06-05"
+      }
+    ],
     "health:2026-05-31": {
       "sleepScore": 96,
       "soreness": 1,
@@ -220,6 +231,13 @@
       "fatigue": 5,
       "mood": 3,
       "sleepQuality": 3
+    },
+    "health:2026-06-05": {
+      "rhr": 50,
+      "hrv": 92,
+      "sleep": 7.17,
+      "sleepScore": 90,
+      "hrvBaseline": 100
     },
     "elyte:2026-05-25": 1,
     "runs:2026-06-02": [
