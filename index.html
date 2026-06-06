@@ -916,6 +916,7 @@ select.run-edit-inp option{background:#1a1a1e;}
         <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#5BC4E8;">●</span> MLR</span>
         <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#F2C063;">●</span> Long Run</span>
         <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#FF6B6B;">●</span> Workout</span>
+        <span style="font-size:9px;color:var(--text-tertiary);"><span style="color:#F472B6;">●</span> XT</span>
       </div>
     </div>
   </div>
@@ -3957,28 +3958,28 @@ function drawStressChart(runs,xtSessions){
   const W=svgW(svg),H=110,PT=8,PB=24,PL=36,PR=6;
   svg.setAttribute('height',H);
   const chartW=W-PL-PR,chartH=H-PT-PB;
-  // Score every individual session, then group by date
+  // Score every session, group by date keeping run and XT scores separate for stacking
   const byDate={};
   runs.forEach(r=>{
     const dMin=durToMin(r.dur||'');const hr=Number(r.hr);
     if(!dMin||!hr) return;
     const score=(hr/200)*dMin*_hrIntensityMult(hr);
-    if(!byDate[r._runDate]) byDate[r._runDate]={score:0,labels:[],runType:r.runType||''};
-    byDate[r._runDate].score+=score;
+    if(!byDate[r._runDate]) byDate[r._runDate]={runScore:0,xtScore:0,runType:r.runType||'',labels:[]};
+    byDate[r._runDate].runScore+=score;
     byDate[r._runDate].labels.push((r.runType||'run')+` ${score.toFixed(0)}`);
   });
   (xtSessions||[]).forEach(x=>{
     const hr=Number(x.hr);const dMin=Number(x.duration);
     if(!hr||!dMin) return;
     const score=(hr/200)*(dMin*0.75)*_hrIntensityMult(hr);
-    if(!byDate[x._xtDate]) byDate[x._xtDate]={score:0,labels:[],runType:''};
-    byDate[x._xtDate].score+=score;
+    if(!byDate[x._xtDate]) byDate[x._xtDate]={runScore:0,xtScore:0,runType:'',labels:[]};
+    byDate[x._xtDate].xtScore+=score;
     byDate[x._xtDate].labels.push(`XT:${x.type||'?'} ${score.toFixed(0)}`);
   });
   const pts=Object.entries(byDate).sort(([a],[b])=>a.localeCompare(b))
-    .map(([date,d])=>({date,score:d.score,labels:d.labels,runType:d.runType}));
+    .map(([date,d])=>({date,runScore:d.runScore,xtScore:d.xtScore,total:d.runScore+d.xtScore,runType:d.runType,labels:d.labels}));
   if(!pts.length){document.getElementById('stressChartWrap').style.display='none';return;}
-  const maxScore=Math.max(...pts.map(p=>p.score),1);
+  const maxScore=Math.max(...pts.map(p=>p.total),1);
   const colW=chartW/pts.length;
   // Grid lines + Y labels
   [0.25,0.5,0.75,1.0].forEach(frac=>{
@@ -3995,23 +3996,31 @@ function drawStressChart(runs,xtSessions){
       svg.appendChild(t);
     }
   });
+  const[,mo2,dy2]=pts.length?['','','']:[];
+  const NS='http://www.w3.org/2000/svg';
+  function _bar(x,y,w,h,color,tip){
+    if(h<1) return;
+    const r=document.createElementNS(NS,'rect');
+    r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);
+    r.setAttribute('fill',color);r.setAttribute('rx',2);r.setAttribute('opacity','0.85');
+    const tt=document.createElementNS(NS,'title');tt.textContent=tip;r.appendChild(tt);
+    svg.appendChild(r);
+  }
   pts.forEach((p,i)=>{
     const barW=Math.max(colW-4,2);
     const x=PL+i*colW+(colW-barW)/2;
-    const barH=Math.max((p.score/maxScore)*chartH,1);
-    const y=PT+chartH-barH;
-    const color=_runTypeColor(p.runType);
-    const bar=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    bar.setAttribute('x',x);bar.setAttribute('y',y);
-    bar.setAttribute('width',barW);bar.setAttribute('height',barH);
-    bar.setAttribute('fill',color);bar.setAttribute('rx',2);bar.setAttribute('opacity','0.85');
-    const title=document.createElementNS('http://www.w3.org/2000/svg','title');
     const[,mo,dy]=p.date.split('-').map(Number);
     const yr=Number(p.date.split('-')[0]);
     const dateLabel=new Date(yr,mo-1,dy).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    title.textContent=`${dateLabel} — Total stress: ${p.score.toFixed(1)}\n${p.labels.join(', ')}`;
-    bar.appendChild(title);
-    svg.appendChild(bar);
+    const tip=`${dateLabel} — Total: ${p.total.toFixed(1)}\n${p.labels.join(', ')}`;
+    // Run segment (bottom)
+    const runH=(p.runScore/maxScore)*chartH;
+    const xtH=(p.xtScore/maxScore)*chartH;
+    const totalH=Math.max(runH+xtH,1);
+    const baseY=PT+chartH-totalH;
+    if(p.runScore>0) _bar(x,baseY+xtH,barW,Math.max(runH,1),_runTypeColor(p.runType),tip);
+    // XT segment (top, pink)
+    if(p.xtScore>0) _bar(x,baseY,barW,Math.max(xtH,1),'#F472B6',tip);
     if(colW>=18){
       const lbl=`${mo}/${dy}`;
       const t=document.createElementNS('http://www.w3.org/2000/svg','text');
