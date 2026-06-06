@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T23:22:53.930Z",
+  "lastUpdated": "2026-06-06T23:22:57.733Z",
   "data": {
     "elyte:2026-06-01": 1,
     "health:2026-05-26": {
@@ -542,6 +542,9 @@
         "notes": "Tired from poor sleep, chest was a bit tight + stuffy nose"
       }
     ],
+    "health:2026-06-06": {
+      "water": 32
+    },
     "health:2026-06-04": {
       "hrvBaseline": 100,
       "soreLocs": [
