@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T16:22:17.443Z",
+  "lastUpdated": "2026-06-06T16:22:30.301Z",
   "data": {
     "elyte:2026-06-01": 1,
     "health:2026-05-26": {
@@ -49,7 +49,9 @@
       "tiredness": 1,
       "hrv": 83
     },
+    "vitamin:2026-06-04": "took",
     "elyte:2026-05-25": 1,
+    "iron:2026-05-28": "skip",
     "runs:2026-05-29": [
       {
         "dur": "55:56",
@@ -67,6 +69,7 @@
         "elev": 367
       }
     ],
+    "iron:2026-05-25": "took",
     "health:2026-05-30": {
       "mood": 3,
       "hrv": 86,
@@ -99,6 +102,8 @@
         "hr": 143
       }
     ],
+    "vitamin:2026-05-27": "took",
+    "vitamin:2026-05-22": "took",
     "health:2026-06-03": {
       "fatigue": 6,
       "sleepScore": 60,
@@ -123,7 +128,9 @@
         "type": "Bike"
       }
     ],
+    "vitamin:2026-05-26": "took",
     "daytype:2026-06-02": "moderate",
+    "vitamin:2026-05-28": "took",
     "elyte:2026-05-24": 1,
     "xt:2026-05-27": [
       {
@@ -133,6 +140,7 @@
         "hr": 135
       }
     ],
+    "vitamin:2026-05-29": "took",
     "runs:2026-06-03": [
       {
         "dur": "",
@@ -182,6 +190,7 @@
       "mood": 3
     },
     "elyte:2026-06-02": 1,
+    "iron:2026-05-23": "took",
     "strength:2026-06-04": [
       {
         "type": "Core (Abs)",
@@ -190,6 +199,7 @@
       }
     ],
     "daytype:2026-06-05": "hard",
+    "vitamin:2026-05-25": "took",
     "daytype:2026-05-28": "easy",
     "health:2026-05-25": {
       "rhr": 52,
@@ -212,6 +222,7 @@
         "notes": "2 X normal + plank"
       }
     ],
+    "iron:2026-05-24": "skip",
     "strength:2026-05-30": [
       {
         "type": "Core (Abs)",
@@ -286,6 +297,7 @@
     },
     "daytype:2026-05-25": "easy",
     "daytype:2026-05-26": "easy",
+    "vitamin:2026-05-23": "took",
     "daytype:2026-05-24": "moderate",
     "health:2026-05-21": {
       "mood": 4,
@@ -301,7 +313,9 @@
       ],
       "hr": 51
     },
+    "iron:2026-06-02": "skip",
     "elyte:2026-05-23": 1,
+    "iron:2026-05-27": "took",
     "strength:2026-05-23": [
       {
         "type": "Core (Abs)",
@@ -342,6 +356,7 @@
         "effort": 7
       }
     ],
+    "vitamin:2026-05-21": "took",
     "xt:2026-05-29": [
       {
         "type": "Bike",
@@ -359,7 +374,9 @@
     ],
     "elyte:2026-05-21": 1,
     "xt:2026-05-21": [],
+    "iron:2026-06-04": "skip",
     "elyte:2026-06-05": 3,
+    "vitamin:2026-05-24": "took",
     "runs:2026-06-05": [
       {
         "temp": 73,
@@ -396,6 +413,7 @@
       "mood": 2
     },
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
+    "iron:2026-05-30": "skip",
     "strength:2026-06-02": [
       {
         "type": "Core (Abs)",
@@ -483,6 +501,7 @@
       "sleepQuality": 3,
       "water": 152
     },
+    "iron:2026-05-29": "took",
     "elyte:2026-05-27": 1,
     "runs:2026-06-04": [
       {
@@ -538,7 +557,9 @@
       "hrv": 89,
       "mood": 2
     },
+    "iron:2026-06-01": "took",
     "daytype:2026-05-27": "easy",
+    "vitamin:2026-06-01": "took",
     "runs:2026-05-22": [
       {
         "dur": "41:01",
@@ -554,6 +575,7 @@
       }
     ],
     "daytype:2026-06-01": "easy",
+    "iron:2026-05-22": "skip",
     "daytype:2026-06-06": "moderate",
     "daytype:2026-05-31": "hard",
     "health:2026-05-22": {
@@ -586,6 +608,7 @@
         "notes": "easy, just had to poop"
       }
     ],
+    "iron:2026-05-26": "skip",
     "health:2026-05-31": {
       "sleepQuality": 3,
       "water": 160,
@@ -657,7 +680,8 @@
         "dur": "38:55",
         "pace": "7:47 /mi"
       }
-    ]
+    ],
+    "iron:2026-05-21": "took"
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
