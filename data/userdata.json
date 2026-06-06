@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T16:55:08.850Z",
+  "lastUpdated": "2026-06-06T16:56:28.081Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -113,7 +113,13 @@
         "hr": 158,
         "elev": 89,
         "rest": false,
-        "date": "2026-06-06"
+        "date": "2026-06-06",
+        "runType": "easy",
+        "effort": 7,
+        "shoeId": "shoe_1779503431806",
+        "notes": "with reagan guys, rigged",
+        "temp": 73,
+        "humidity": 92
       }
     ],
     "daytype:2026-05-22": "easy",
@@ -158,7 +164,7 @@
       "fatigue": 5,
       "sleep": 7.17
     },
-    "daytype:2026-06-06": "easy",
+    "daytype:2026-06-06": "moderate",
     "xt:2026-05-20": [
       {
         "duration": 60,
@@ -173,7 +179,15 @@
       "sleepScore": 85,
       "hrv": 91,
       "sleep": 8.1,
-      "rhr": 52
+      "rhr": 52,
+      "soreLocs": [
+        "Left Foot"
+      ],
+      "soreness": 1,
+      "fatigue": 5,
+      "sleepQuality": 3,
+      "mood": 3,
+      "water": 64
     },
     "health:2026-06-04": {
       "fatigue": 3,
