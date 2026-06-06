@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T11:40:27.471Z",
+  "lastUpdated": "2026-06-06T16:22:17.443Z",
   "data": {
     "elyte:2026-06-01": 1,
     "health:2026-05-26": {
@@ -49,21 +49,6 @@
       "tiredness": 1,
       "hrv": 83
     },
-    "health:2026-05-30": {
-      "mood": 3,
-      "hrv": 86,
-      "sleepQuality": 4,
-      "water": 104,
-      "fatigue": 7,
-      "soreness": 1,
-      "sleepScore": 62,
-      "sleep": 7.8,
-      "rhr": 50,
-      "soreLocs": [
-        "Left Knee"
-      ],
-      "hrvBaseline": 101
-    },
     "elyte:2026-05-25": 1,
     "runs:2026-05-29": [
       {
@@ -82,6 +67,21 @@
         "elev": 367
       }
     ],
+    "health:2026-05-30": {
+      "mood": 3,
+      "hrv": 86,
+      "sleepQuality": 4,
+      "water": 104,
+      "fatigue": 7,
+      "soreness": 1,
+      "sleepScore": 62,
+      "sleep": 7.8,
+      "rhr": 50,
+      "soreLocs": [
+        "Left Knee"
+      ],
+      "hrvBaseline": 101
+    },
     "runs:2026-05-26": [
       {
         "temp": 65,
@@ -359,7 +359,6 @@
     ],
     "elyte:2026-05-21": 1,
     "xt:2026-05-21": [],
-    "daytype:2026-05-22": "easy",
     "elyte:2026-06-05": 3,
     "runs:2026-06-05": [
       {
@@ -378,6 +377,7 @@
         "hr": 148
       }
     ],
+    "daytype:2026-05-22": "easy",
     "daytype:2026-06-03": "moderate",
     "daytype:2026-05-23": "easy",
     "health:2026-05-29": {
