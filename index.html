@@ -3957,22 +3957,26 @@ function drawStressChart(runs,xtSessions){
   const W=svgW(svg),H=110,PT=8,PB=24,PL=36,PR=6;
   svg.setAttribute('height',H);
   const chartW=W-PL-PR,chartH=H-PT-PB;
-  // Run points
-  const runPts=runs.map(r=>{
-    const dMin=durToMin(r.dur||'');
-    const hr=Number(r.hr);
-    if(!dMin||!hr) return null;
+  // Score every individual session, then group by date
+  const byDate={};
+  runs.forEach(r=>{
+    const dMin=durToMin(r.dur||'');const hr=Number(r.hr);
+    if(!dMin||!hr) return;
     const score=(hr/200)*dMin*_hrIntensityMult(hr);
-    return{date:r._runDate,score,type:r.runType||'',isXT:false};
-  }).filter(Boolean);
-  // XT points — 0.75× duration multiplier
-  const xtPts=(xtSessions||[]).map(x=>{
+    if(!byDate[r._runDate]) byDate[r._runDate]={score:0,labels:[],runType:r.runType||''};
+    byDate[r._runDate].score+=score;
+    byDate[r._runDate].labels.push((r.runType||'run')+` ${score.toFixed(0)}`);
+  });
+  (xtSessions||[]).forEach(x=>{
     const hr=Number(x.hr);const dMin=Number(x.duration);
-    if(!hr||!dMin) return null;
+    if(!hr||!dMin) return;
     const score=(hr/200)*(dMin*0.75)*_hrIntensityMult(hr);
-    return{date:x._xtDate,score,type:x.type||'XT',isXT:true};
-  }).filter(Boolean);
-  const pts=[...runPts,...xtPts].sort((a,b)=>a.date.localeCompare(b.date));
+    if(!byDate[x._xtDate]) byDate[x._xtDate]={score:0,labels:[],runType:''};
+    byDate[x._xtDate].score+=score;
+    byDate[x._xtDate].labels.push(`XT:${x.type||'?'} ${score.toFixed(0)}`);
+  });
+  const pts=Object.entries(byDate).sort(([a],[b])=>a.localeCompare(b))
+    .map(([date,d])=>({date,score:d.score,labels:d.labels,runType:d.runType}));
   if(!pts.length){document.getElementById('stressChartWrap').style.display='none';return;}
   const maxScore=Math.max(...pts.map(p=>p.score),1);
   const colW=chartW/pts.length;
@@ -3996,7 +4000,7 @@ function drawStressChart(runs,xtSessions){
     const x=PL+i*colW+(colW-barW)/2;
     const barH=Math.max((p.score/maxScore)*chartH,1);
     const y=PT+chartH-barH;
-    const color=p.isXT?'#B39DDB':_runTypeColor(p.type);
+    const color=_runTypeColor(p.runType);
     const bar=document.createElementNS('http://www.w3.org/2000/svg','rect');
     bar.setAttribute('x',x);bar.setAttribute('y',y);
     bar.setAttribute('width',barW);bar.setAttribute('height',barH);
@@ -4005,7 +4009,7 @@ function drawStressChart(runs,xtSessions){
     const[,mo,dy]=p.date.split('-').map(Number);
     const yr=Number(p.date.split('-')[0]);
     const dateLabel=new Date(yr,mo-1,dy).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    title.textContent=`${dateLabel} — Stress: ${p.score.toFixed(1)} (${p.isXT?'XT: '+p.type:p.type||'run'})`;
+    title.textContent=`${dateLabel} — Total stress: ${p.score.toFixed(1)}\n${p.labels.join(', ')}`;
     bar.appendChild(title);
     svg.appendChild(bar);
     if(colW>=18){
