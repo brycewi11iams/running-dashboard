@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T01:23:45.025Z",
+  "lastUpdated": "2026-06-06T01:24:28.524Z",
   "data": {
     "runs:2026-06-03": [
       {
@@ -153,6 +153,16 @@
       "sleepQuality": 2
     },
     "elyte:2026-05-21": 1,
+    "goals:2026-06-06": [
+      {
+        "text": "Inhaler",
+        "done": false
+      },
+      {
+        "text": "text hutch 2",
+        "done": false
+      }
+    ],
     "runs:2026-05-21": [
       {
         "shoeId": null,
@@ -558,19 +568,18 @@
     "goals:2026-06-05": [
       {
         "text": "Dishwasher",
-        "done": false
+        "done": true,
+        "doneAt": 1780709026529
       },
       {
-        "done": false,
-        "text": "foot pt"
-      },
-      {
-        "done": false,
-        "text": "Inhaler"
+        "done": true,
+        "text": "foot pt",
+        "doneAt": 1780709025928
       },
       {
         "text": "Back PT",
-        "done": false
+        "done": true,
+        "doneAt": 1780709027241
       }
     ],
     "daytype:2026-06-03": "moderate",
