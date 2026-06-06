@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T16:53:53.401Z",
+  "lastUpdated": "2026-06-06T16:54:21.786Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -18,7 +18,6 @@
         "pace": "7:59 /mi"
       }
     ],
-    "vitamin:2026-05-25": "took",
     "runs:2026-05-30": [
       {
         "effort": 4,
@@ -36,9 +35,7 @@
         "pace": "7:55 /mi"
       }
     ],
-    "iron:2026-05-25": "took",
     "daytype:2026-06-04": "easy",
-    "vitamin:2026-05-26": "took",
     "elyte:2026-06-01": 1,
     "elyte:2026-05-30": 1,
     "health:2026-05-30": {
@@ -125,7 +122,6 @@
         "hr": 135
       }
     ],
-    "vitamin:2026-05-22": "took",
     "runs:2026-06-05": [
       {
         "notes": "more rain + poop break",
@@ -167,7 +163,6 @@
       }
     ],
     "elyte:2026-05-25": 1,
-    "iron:2026-05-27": "took",
     "health:2026-06-06": {
       "rhr": 52,
       "hrv": 91,
@@ -207,9 +202,7 @@
       "fatigue": 4,
       "sleepQuality": 2
     },
-    "vitamin:2026-05-28": "took",
     "daytype:2026-05-21": "easy",
-    "iron:2026-06-02": "skip",
     "strength:2026-05-28": [
       {
         "type": "Core (Abs)",
@@ -238,7 +231,6 @@
         "duration": 7
       }
     ],
-    "iron:2026-05-30": "skip",
     "strength:2026-05-22": [
       {
         "notes": "2X normal routine + plank",
@@ -280,7 +272,6 @@
         "temp": 74
       }
     ],
-    "iron:2026-05-24": "skip",
     "xt:2026-05-19": [
       {
         "type": "Bike",
@@ -319,12 +310,7 @@
         "notes": "2X normal routine + plank"
       }
     ],
-    "vitamin:2026-05-21": "took",
     "elyte:2026-05-27": 1,
-    "vitamin:2026-06-05": "took",
-    "iron:2026-06-01": "took",
-    "iron:2026-05-28": "skip",
-    "iron:2026-05-23": "took",
     "runs:2026-05-28": [
       {
         "humidity": 91,
@@ -452,7 +438,6 @@
         "text": "Metro"
       }
     ],
-    "vitamin:2026-06-01": "took",
     "runs:2026-05-21": [
       {
         "effort": 6,
@@ -467,9 +452,7 @@
         "dist": 5
       }
     ],
-    "iron:2026-06-06": "skip",
     "daytype:2026-05-31": "hard",
-    "iron:2026-05-26": "skip",
     "xt:2026-06-05": [
       {
         "type": "Elliptical",
@@ -478,7 +461,6 @@
         "hr": 147
       }
     ],
-    "vitamin:2026-05-23": "took",
     "health:2026-05-31": {
       "sleepQuality": 3,
       "fatigue": 5,
@@ -495,9 +477,6 @@
       "water": 160,
       "sleep": 6.73
     },
-    "vitamin:2026-05-27": "took",
-    "vitamin:2026-05-24": "took",
-    "iron:2026-05-22": "skip",
     "runs:2026-06-02": [
       {
         "effort": 5,
@@ -533,7 +512,6 @@
         "notes": "easy, just had to poop"
       }
     ],
-    "iron:2026-05-29": "took",
     "runs:2026-06-04": [
       {
         "effort": 5,
@@ -608,7 +586,6 @@
     ],
     "daytype:2026-06-01": "easy",
     "elyte:2026-05-28": 1,
-    "iron:2026-06-04": "skip",
     "health:2026-05-27": {
       "soreLocs": [
         "Left Foot"
@@ -626,7 +603,6 @@
     },
     "daytype:2026-05-25": "easy",
     "daytype:2026-06-05": "moderate",
-    "iron:2026-06-05": "took",
     "strength:2026-06-04": [
       {
         "type": "Core (Abs)",
@@ -642,7 +618,6 @@
       }
     ],
     "elyte:2026-06-05": 3,
-    "iron:2026-05-21": "took",
     "daytype:2026-05-28": "easy",
     "health:2026-05-23": {
       "soreLocs": [
@@ -675,7 +650,15 @@
       }
     ],
     "daytype:2026-05-30": "easy",
-    "vitamin:2026-06-04": "took",
+    "health:2026-06-03": {
+      "fatigue": 6,
+      "hrv": 78,
+      "sleepQuality": 2,
+      "rhr": 54,
+      "hrvBaseline": 100,
+      "sleepScore": 60,
+      "sleep": 7.08
+    },
     "runs:2026-05-24": [
       {
         "dist": 6.01,
@@ -692,17 +675,7 @@
         "effort": 7
       }
     ],
-    "health:2026-06-03": {
-      "fatigue": 6,
-      "hrv": 78,
-      "sleepQuality": 2,
-      "rhr": 54,
-      "hrvBaseline": 100,
-      "sleepScore": 60,
-      "sleep": 7.08
-    },
-    "elyte:2026-05-23": 1,
-    "vitamin:2026-05-29": "took"
+    "elyte:2026-05-23": 1
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
