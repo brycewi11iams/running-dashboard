@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T11:36:47.555Z",
+  "lastUpdated": "2026-06-06T11:37:28.033Z",
   "data": {
     "runs:2026-06-03": [
       {
@@ -271,6 +271,7 @@
       "water": 176,
       "sleepQuality": 3
     },
+    "daytype:2026-06-06": "moderate",
     "elyte:2026-05-25": 1,
     "runs:2026-06-02": [
       {
@@ -573,23 +574,6 @@
       "tiredness": 1,
       "hrv": 83
     },
-    "goals:2026-06-05": [
-      {
-        "text": "Dishwasher",
-        "done": true,
-        "doneAt": 1780709026529
-      },
-      {
-        "done": true,
-        "text": "foot pt",
-        "doneAt": 1780709025928
-      },
-      {
-        "done": true,
-        "text": "Back PT",
-        "doneAt": 1780709027241
-      }
-    ],
     "daytype:2026-06-03": "moderate",
     "elyte:2026-05-27": 1,
     "runs:2026-05-31": [
