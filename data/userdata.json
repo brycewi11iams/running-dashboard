@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T00:00:23.635Z",
+  "lastUpdated": "2026-06-06T00:01:16.699Z",
   "data": {
     "runs:2026-06-03": [
       {
@@ -240,7 +240,7 @@
     },
     "health:2026-06-05": {
       "fatigue": 5,
-      "water": 48,
+      "water": 160,
       "sleepScore": 90,
       "soreLocs": [
         "Other",
@@ -509,7 +509,7 @@
         "effort": "easy"
       }
     ],
-    "daytype:2026-06-05": "moderate",
+    "daytype:2026-06-05": "hard",
     "note:2026-05-23": "i felt very tired for almost all day",
     "daytype:2026-05-29": "moderate",
     "strength:2026-05-21": [
