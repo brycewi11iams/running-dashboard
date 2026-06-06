@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-06T01:44:16.721Z",
+  "lastUpdated": "2026-06-06T01:52:55.352Z",
   "data": {
     "runs:2026-06-03": [
       {
@@ -268,7 +268,7 @@
       "sleepQuality": 3,
       "soreness": 2,
       "sleep": 7.17,
-      "water": 160,
+      "water": 176,
       "hrv": 92
     },
     "elyte:2026-05-25": 1,
