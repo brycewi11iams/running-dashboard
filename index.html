@@ -1399,7 +1399,7 @@ const GITHUB_REPO   = 'brycewi11iams/running-dashboard';
 const GITHUB_BRANCH = 'main';
 const USERDATA_PATH = 'data/userdata.json';
 // Keys whose prefixes are synced to GitHub (health data, not UI prefs)
-const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:','xt:','strength:','runs:','daytype:','recurring_goals'];
+const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:','xt:','strength:','runs:','daytype:','recurring_goals','iron:','vitamin:'];
 
 // Weekday: 4:30 AM–8:30 PM  |  Weekend: 6:00 AM–10:00 PM
 function getDayBounds(){
@@ -1442,7 +1442,7 @@ let _db = null;
 function storeGet(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
 function storeSet(k,v){
   localStorage.setItem(k,JSON.stringify(v));
-  localStorage.removeItem('_shadow:'+k); // mark as locally modified — loadGhUserdata won't overwrite
+  localStorage.setItem('_shadow:'+k,'__LOCAL__'); // sentinel: locally modified — loadGhUserdata won't overwrite
   if(k.startsWith('goals:')) window.dispatchEvent(new CustomEvent('goals-changed'));
   if(_db) _db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS write]',e));
   if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))) _scheduleGhPush();
@@ -3421,17 +3421,14 @@ async function loadGhUserdata(){
       // coros_daily: is always fetched fresh from daily.json — never apply a stale synced copy
       if(k.startsWith('coros_daily:')) return;
       const ghVal=JSON.stringify(v);
-      const localVal=localStorage.getItem(k);
-      const shadowVal=localStorage.getItem('_shadow:'+k); // last value this device received from GitHub
-      // 3-way merge: only accept GitHub's value if local hasn't changed since we last loaded.
-      // If localVal !== shadowVal, this device modified the data locally — keep it.
-      // This lets a phone (no PAT) keep its edits even when the laptop keeps pushing.
-      if(localVal!==null && localVal!==shadowVal){
-        // Local was modified — update shadow so we track this GitHub version, but keep local
-        localStorage.setItem('_shadow:'+k,ghVal);
-        return;
+      const shadowVal=localStorage.getItem('_shadow:'+k);
+      // '__LOCAL__' sentinel means storeSet was called on this device since last GitHub load — keep local.
+      // null shadow means first time seeing this key — accept GitHub normally.
+      if(shadowVal==='__LOCAL__'){
+        localStorage.setItem('_shadow:'+k,ghVal); // record what GitHub has now
+        return; // keep local data
       }
-      // Local is clean (matches shadow or was never set) — accept GitHub's value
+      // No shadow (first time) or clean — accept GitHub's value
       localStorage.setItem('_shadow:'+k,ghVal);
       // For runs: merge at field level so elev etc. aren't wiped by a stale response
       if(k.startsWith('runs:')&&Array.isArray(v)){
