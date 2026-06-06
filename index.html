@@ -2785,11 +2785,13 @@ function renderElyte(){
 }
 document.getElementById('elyte1Btn').addEventListener('click',()=>{
   if(getDailyElyteMax()<1) return;
-  storeSet('elyte:'+activeDate(),1);renderElyte();updateWeekly();
+  const cur=storeGet('elyte:'+activeDate())||0;
+  storeSet('elyte:'+activeDate(),cur+1);renderElyte();updateWeekly();
 });
 document.getElementById('elyte2Btn').addEventListener('click',()=>{
   const max=getDailyElyteMax();if(max<2) return;
-  storeSet('elyte:'+activeDate(),2);renderElyte();updateWeekly();
+  const cur=storeGet('elyte:'+activeDate())||0;
+  storeSet('elyte:'+activeDate(),cur+2);renderElyte();updateWeekly();
 });
 
 // ═══════════════════════════════════════════════
