@@ -3306,6 +3306,12 @@ loadNarrative();
   });
 })();
 
+// Prune coros_daily: entries older than 35 days to prevent localStorage quota bloat
+(function(){
+  const cutoff=lastNDays(35)[0];
+  storeKeys('coros_daily:').forEach(k=>{if(k.replace('coros_daily:','')< cutoff) localStorage.removeItem(k);});
+})();
+
 // Fetch Coros data/daily.json asynchronously — auto-fills health fields + unlocks Coros panels
 loadCorosData();
 
@@ -3459,7 +3465,7 @@ async function loadGhUserdata(){
 let _ghPushTimer=null;
 function _scheduleGhPush(){
   if(!getGhToken()) return;
-  localStorage.setItem('_needPush','1'); // survives reloads
+  try{localStorage.setItem('_needPush','1');}catch(e){} // quota-safe
   clearTimeout(_ghPushTimer);
   _ghPushTimer=setTimeout(_ghPush,5000);
 }
