@@ -1440,17 +1440,13 @@ let _db = null;
 //   from other devices and triggers a re-render.
 // ═══════════════════════════════════════════════
 function storeGet(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
-let _rerenderTimer=null;
-function _scheduleRerender(){
-  clearTimeout(_rerenderTimer);
-  _rerenderTimer=setTimeout(()=>{if(typeof _reRenderAll==='function') _reRenderAll();},120);
-}
+const _localDirty=new Set();
 function storeSet(k,v){
   localStorage.setItem(k,JSON.stringify(v));
-  localStorage.setItem('_shadow:'+k,'__LOCAL__'); // sentinel: locally modified — loadGhUserdata won't overwrite
+  _localDirty.add(k);
   if(k.startsWith('goals:')) window.dispatchEvent(new CustomEvent('goals-changed'));
   if(_db) _db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS write]',e));
-  if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))){_scheduleGhPush();_scheduleRerender();}
+  if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))) _scheduleGhPush();
 }
 function storeDel(k){
   localStorage.removeItem(k);
@@ -3425,17 +3421,9 @@ async function loadGhUserdata(){
     Object.entries(payload.data).forEach(([k,v])=>{
       // coros_daily: is always fetched fresh from daily.json — never apply a stale synced copy
       if(k.startsWith('coros_daily:')) return;
+      if(_localDirty.has(k)) return; // locally modified this session — don't overwrite
       const ghVal=JSON.stringify(v);
-      const shadowVal=localStorage.getItem('_shadow:'+k);
-      // '__LOCAL__' sentinel means storeSet was called on this device since last GitHub load — keep local.
-      // null shadow means first time seeing this key — accept GitHub normally.
-      if(shadowVal==='__LOCAL__'){
-        localStorage.setItem('_shadow:'+k,ghVal); // record what GitHub has now
-        return; // keep local data
-      }
-      // No shadow (first time) or clean — accept GitHub's value
       const curVal=localStorage.getItem(k);
-      localStorage.setItem('_shadow:'+k,ghVal);
       // For runs: merge at field level so elev etc. aren't wiped by a stale response
       if(k.startsWith('runs:')&&Array.isArray(v)){
         const local=storeGet(k);
@@ -4165,8 +4153,7 @@ if(_db){
         const d=doc.data();
         if(d&&d.v!==undefined){
           const nv=JSON.stringify(d.v);
-          const shadowVal=localStorage.getItem('_shadow:'+doc.id);
-          if(shadowVal==='__LOCAL__') return; // locally modified — don't overwrite
+          if(_localDirty.has(doc.id)) return; // locally modified this session — don't overwrite
           if(localStorage.getItem(doc.id)!==nv){localStorage.setItem(doc.id,nv);changed=true;}
         }
       });
