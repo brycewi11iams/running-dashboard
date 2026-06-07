@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T02:10:36.808Z",
+  "lastUpdated": "2026-06-07T02:11:01.321Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
@@ -481,9 +481,8 @@
       },
       {
         "text": "foot pt",
-        "done": true,
-        "recurring": true,
-        "doneAt": 1780798231750
+        "done": false,
+        "recurring": true
       }
     ],
     "runs:2026-05-31": [
@@ -579,7 +578,7 @@
       "hrvBaseline": 99,
       "rhr": 52,
       "fatigue": 5,
-      "water": 144,
+      "water": 152,
       "hrv": 91
     },
     "health:2026-06-04": {
