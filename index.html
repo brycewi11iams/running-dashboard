@@ -3429,6 +3429,7 @@ async function loadGhUserdata(){
         return; // keep local data
       }
       // No shadow (first time) or clean — accept GitHub's value
+      const curVal=localStorage.getItem(k);
       localStorage.setItem('_shadow:'+k,ghVal);
       // For runs: merge at field level so elev etc. aren't wiped by a stale response
       if(k.startsWith('runs:')&&Array.isArray(v)){
@@ -3440,11 +3441,11 @@ async function loadGhUserdata(){
             return out;
           });
           const nv=JSON.stringify(merged);
-          if(localVal!==nv){localStorage.setItem(k,nv);changed=true;}
+          if(curVal!==nv){localStorage.setItem(k,nv);changed=true;}
           return;
         }
       }
-      if(localVal!==ghVal){localStorage.setItem(k,ghVal);changed=true;}
+      if(curVal!==ghVal){localStorage.setItem(k,ghVal);changed=true;}
     });
     if(changed) _reRenderAll();
     console.info('[GH sync] loaded from GitHub',Object.keys(payload.data).length,'keys');
