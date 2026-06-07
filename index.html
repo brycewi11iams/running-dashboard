@@ -1440,12 +1440,17 @@ let _db = null;
 //   from other devices and triggers a re-render.
 // ═══════════════════════════════════════════════
 function storeGet(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
+let _rerenderTimer=null;
+function _scheduleRerender(){
+  clearTimeout(_rerenderTimer);
+  _rerenderTimer=setTimeout(()=>{if(typeof _reRenderAll==='function') _reRenderAll();},120);
+}
 function storeSet(k,v){
   localStorage.setItem(k,JSON.stringify(v));
   localStorage.setItem('_shadow:'+k,'__LOCAL__'); // sentinel: locally modified — loadGhUserdata won't overwrite
   if(k.startsWith('goals:')) window.dispatchEvent(new CustomEvent('goals-changed'));
   if(_db) _db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS write]',e));
-  if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))) _scheduleGhPush();
+  if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))){_scheduleGhPush();_scheduleRerender();}
 }
 function storeDel(k){
   localStorage.removeItem(k);
