@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T02:14:41.859Z",
+  "lastUpdated": "2026-06-07T02:15:10.052Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
@@ -16,6 +16,7 @@
       "mood": 3,
       "hrv": 125
     },
+    "strength:2026-06-06": [],
     "elyte:2026-05-22": 1,
     "strength:2026-05-25": [
       {
@@ -481,9 +482,8 @@
       },
       {
         "text": "foot pt",
-        "done": true,
-        "recurring": true,
-        "doneAt": 1780798477179
+        "done": false,
+        "recurring": true
       }
     ],
     "runs:2026-05-31": [
