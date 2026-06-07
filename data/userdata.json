@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T16:00:01.140Z",
+  "lastUpdated": "2026-06-07T16:01:27.637Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -450,7 +450,13 @@
         "hr": 163,
         "elev": 256,
         "rest": false,
-        "date": "2026-06-07"
+        "date": "2026-06-07",
+        "runType": "long",
+        "effort": 8,
+        "shoeId": "shoe_1779503438773",
+        "notes": "with luke and dash, rig fest",
+        "temp": 76,
+        "humidity": 89
       }
     ],
     "health:2026-06-02": {
