@@ -1440,12 +1440,11 @@ let _db = null;
 //   from other devices and triggers a re-render.
 // ═══════════════════════════════════════════════
 function storeGet(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
-// _localDirty persists across reloads so GitHub sync never overwrites unsaved local changes
-const _localDirty=new Set(JSON.parse(localStorage.getItem('_localDirtyKeys')||'[]'));
-function _persistDirty(){localStorage.setItem('_localDirtyKeys',JSON.stringify([..._localDirty]));}
+// In-session dirty set — prevents loadGhUserdata from overwriting keys the user touched this session
+const _localDirty=new Set();
 function storeSet(k,v){
   localStorage.setItem(k,JSON.stringify(v));
-  _localDirty.add(k);_persistDirty();
+  _localDirty.add(k);
   if(k.startsWith('goals:')) window.dispatchEvent(new CustomEvent('goals-changed'));
   if(_db) _db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS write]',e));
   if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))) _scheduleGhPush();
@@ -3496,11 +3495,8 @@ async function _ghPush(){
   if(sha) body.sha=sha;
   try{
     const r=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body)});
-    if(r.ok){
-      localStorage.removeItem('_needPush');
-      _localDirty.clear();localStorage.removeItem('_localDirtyKeys');
-      console.info('[GH sync] pushed',Object.keys(syncData).length,'keys');
-    }else console.warn('[GH sync] push failed HTTP',r.status);
+    if(r.ok){localStorage.removeItem('_needPush');console.info('[GH sync] pushed',Object.keys(syncData).length,'keys');}
+    else console.warn('[GH sync] push failed HTTP',r.status);
   }catch(e){console.warn('[GH sync] push error',e);}
 }
 
