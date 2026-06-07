@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T15:52:43.388Z",
+  "lastUpdated": "2026-06-07T16:00:01.140Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -442,6 +442,17 @@
     ],
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "xt:2026-05-21": [],
+    "runs:2026-06-07": [
+      {
+        "dist": 13,
+        "dur": "1:30:14",
+        "pace": "6:57 /mi",
+        "hr": 163,
+        "elev": 256,
+        "rest": false,
+        "date": "2026-06-07"
+      }
+    ],
     "health:2026-06-02": {
       "sleepScore": 88,
       "sleep": 8.33,
@@ -470,6 +481,13 @@
       }
     ],
     "vitamin:2026-06-01": "took",
+    "health:2026-06-07": {
+      "rhr": 53,
+      "hrv": 88,
+      "sleep": 7.53,
+      "sleepScore": 96,
+      "hrvBaseline": 98
+    },
     "runs:2026-05-21": [
       {
         "notes": "Tired from poor sleep, chest was a bit tight + stuffy nose",
