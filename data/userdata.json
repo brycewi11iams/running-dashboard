@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T18:55:06.808Z",
+  "lastUpdated": "2026-06-07T18:55:20.979Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
@@ -392,8 +392,9 @@
         "text": "Metro"
       },
       {
-        "done": false,
-        "text": "laundry"
+        "done": true,
+        "text": "laundry",
+        "doneAt": 1780858515946
       },
       {
         "done": false,
@@ -835,7 +836,7 @@
     "strength:2026-05-23": 0,
     "runs:2026-06-07": 1780854456678,
     "elyte:2026-05-28": 0,
-    "goals:2026-06-07": 0,
+    "goals:2026-06-07": 1780858515947,
     "recurring_goals": 0,
     "health:2026-05-28": 0,
     "runs:2026-05-24": 0,
