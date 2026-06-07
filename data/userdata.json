@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T16:14:22.706Z",
+  "lastUpdated": "2026-06-07T16:14:29.941Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -500,8 +500,7 @@
         "Other"
       ],
       "fatigue": 5,
-      "sleepQuality": 4,
-      "water": 92
+      "sleepQuality": 4
     },
     "runs:2026-05-21": [
       {
