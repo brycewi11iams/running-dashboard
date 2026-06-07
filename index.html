@@ -1953,7 +1953,8 @@ function _injectRecurringGoals(){
   const today=activeDate();const gs=storeGet('goals:'+today)||[];
   const seen=new Set(gs.map(g=>g.text));let changed=false;
   recurring.forEach(txt=>{if(!seen.has(txt)){gs.push({text:txt,done:false,recurring:true});changed=true;}});
-  if(changed){storeSet('goals:'+today,gs);loadToday();}
+  // Write directly — do NOT go through storeSet so goals:today stays clean for GitHub sync
+  if(changed){localStorage.setItem('goals:'+today,JSON.stringify(gs));loadToday();}
 }
 function wireInlineEdit(el,idx,key){
   let orig='';
@@ -3411,6 +3412,8 @@ window.addEventListener('storage',()=>_reRenderAll());
 // ═══════════════════════════════════════════════
 
 async function loadGhUserdata(){
+  // If a previous session had unsaved changes (reloaded before push fired), push first
+  if(getGhToken()&&localStorage.getItem('_needPush')) await _ghPush();
   const rawUrl=`https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${USERDATA_PATH}?t=${Date.now()}`;
   try{
     const r=await fetch(rawUrl);
@@ -3454,6 +3457,7 @@ async function loadGhUserdata(){
 let _ghPushTimer=null;
 function _scheduleGhPush(){
   if(!getGhToken()) return;
+  localStorage.setItem('_needPush','1'); // survives reloads
   clearTimeout(_ghPushTimer);
   _ghPushTimer=setTimeout(_ghPush,5000);
 }
@@ -3489,7 +3493,7 @@ async function _ghPush(){
   if(sha) body.sha=sha;
   try{
     const r=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body)});
-    if(r.ok) console.info('[GH sync] pushed',Object.keys(syncData).length,'keys');
+    if(r.ok){localStorage.removeItem('_needPush');console.info('[GH sync] pushed',Object.keys(syncData).length,'keys');}
     else console.warn('[GH sync] push failed HTTP',r.status);
   }catch(e){console.warn('[GH sync] push error',e);}
 }
