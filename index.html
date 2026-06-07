@@ -3390,7 +3390,11 @@ window.addEventListener('resize',()=>{
 // visibilitychange fires every time the user switches back to this tab/app.
 let _trackedDate=activeDate();
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden) return;
+  if(document.hidden){
+    // Flush any pending push immediately so reloads/tab-switches don't lose data
+    if(_ghPushTimer){clearTimeout(_ghPushTimer);_ghPushTimer=null;_ghPush();}
+    return;
+  }
   const now=activeDate();
   if(now!==_trackedDate){_trackedDate=now;onNewDay();storeSet('lastVisitDate',now);}
 });
@@ -3451,7 +3455,7 @@ let _ghPushTimer=null;
 function _scheduleGhPush(){
   if(!getGhToken()) return;
   clearTimeout(_ghPushTimer);
-  _ghPushTimer=setTimeout(_ghPush,30000);
+  _ghPushTimer=setTimeout(_ghPush,5000);
 }
 
 async function _ghPush(){
