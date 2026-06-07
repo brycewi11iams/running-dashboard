@@ -1449,8 +1449,9 @@ function _tsSet(k,t){try{localStorage.setItem('_ts:'+k,t);}catch(e){}}
 function storeSet(k,v,t){
   localStorage.setItem(k,JSON.stringify(v));
   _tsSet(k,t!==undefined?t:Date.now());
-  if(k.startsWith('goals:')) window.dispatchEvent(new CustomEvent('goals-changed'));
-  if(_db) _db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS write]',e));
+  // Wrapped in try/catch so errors here never prevent the caller's render from running
+  try{if(k.startsWith('goals:')) window.dispatchEvent(new CustomEvent('goals-changed'));}catch(e){console.warn('[goals-changed]',e);}
+  try{if(_db) _db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS write]',e));}catch(e){console.warn('[FS write sync]',e);}
   if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))) _scheduleGhPush();
 }
 function storeDel(k){
