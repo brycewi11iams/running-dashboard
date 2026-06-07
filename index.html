@@ -1409,6 +1409,7 @@ function getDayBounds(){
 const WATER_CUP  = 8;
 // Water goal is dynamic — see getDailyWaterGoal()
 const RING_C     = 2 * Math.PI * 52; // 326.73 — circumference for r=52
+let _ghPushTimer=null;
 
 // ═══════════════════════════════════════════════
 // FIREBASE CONFIG — paste your project values here
@@ -3466,7 +3467,6 @@ async function loadGhUserdata(){
   }
 }
 
-let _ghPushTimer=null;
 function _scheduleGhPush(){
   if(!getGhToken()) return;
   clearTimeout(_ghPushTimer);
