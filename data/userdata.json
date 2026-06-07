@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T17:07:10.573Z",
+  "lastUpdated": "2026-06-07T17:07:14.951Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -519,8 +519,7 @@
     "goals:2026-06-07": [
       {
         "text": "text hutch 2",
-        "done": true,
-        "doneAt": 1780852030071
+        "done": false
       },
       {
         "text": "Metro",
