@@ -4152,6 +4152,7 @@ if(_db){
         .catch(e=>console.warn('[FS] Migration failed',e));
     } else {
       // Firestore has data — pull anything newer into localStorage and re-render
+      // Respect the shadow system: skip keys the user has modified locally on this device.
       let changed=false;
       const fsKeys=new Set();
       snap.forEach(doc=>{
@@ -4159,6 +4160,8 @@ if(_db){
         const d=doc.data();
         if(d&&d.v!==undefined){
           const nv=JSON.stringify(d.v);
+          const shadowVal=localStorage.getItem('_shadow:'+doc.id);
+          if(shadowVal==='__LOCAL__') return; // locally modified — don't overwrite
           if(localStorage.getItem(doc.id)!==nv){localStorage.setItem(doc.id,nv);changed=true;}
         }
       });
