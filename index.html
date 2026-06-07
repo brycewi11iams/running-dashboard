@@ -1440,11 +1440,15 @@ let _db = null;
 //   from other devices and triggers a re-render.
 // ═══════════════════════════════════════════════
 function storeGet(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
-// In-session dirty set — prevents loadGhUserdata from overwriting keys the user touched this session
-const _localDirty=new Set();
-function storeSet(k,v){
+// Per-key timestamps — newer timestamp wins on cross-device merge.
+// t=Date.now() for user actions; t=0 for system/auto writes (Coros fill, etc.)
+function _tsGet(k){return parseInt(localStorage.getItem('_ts:'+k))||0;}
+function _tsSet(k,t){try{localStorage.setItem('_ts:'+k,t);}catch(e){}}
+// storeSet(k, v)        — user action: timestamps with Date.now()
+// storeSet(k, v, 0)     — system write: timestamp 0, GitHub can always overwrite
+function storeSet(k,v,t){
   localStorage.setItem(k,JSON.stringify(v));
-  _localDirty.add(k);
+  _tsSet(k,t!==undefined?t:Date.now());
   if(k.startsWith('goals:')) window.dispatchEvent(new CustomEvent('goals-changed'));
   if(_db) _db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS write]',e));
   if(GH_SYNC_PREFIXES.some(p=>k.startsWith(p))) _scheduleGhPush();
@@ -1860,7 +1864,7 @@ function doRollover(){
   });
   // Only write today's goals if new items were actually added — avoids overwriting
   // Firestore's version (from another device) with stale local data during init.
-  if(added) storeSet('goals:'+today,todayGs);
+  if(added) storeSet('goals:'+today,todayGs,0);// t=0: rollover is system action
 }
 function doGoalStreak(){
   const today=activeDate();
@@ -2095,7 +2099,7 @@ function seedPlaceholders(){
 // HEALTH METRICS
 // ═══════════════════════════════════════════════
 function hGet(d){return storeGet('health:'+d)||{};}
-function hSet(d,v){storeSet('health:'+d,v);}
+function hSet(d,v,t){storeSet('health:'+d,v,t);}
 
 function buildStars(container,val,onChange){
   container.innerHTML='';
@@ -3419,27 +3423,26 @@ window.addEventListener('storage',()=>_reRenderAll());
 // ═══════════════════════════════════════════════
 
 async function loadGhUserdata(){
-  // Unsaved local changes: push them and skip the read — local is authoritative.
-  // (Reading back after a push risks stale CDN data overwriting the change we just pushed.)
-  if(getGhToken()&&localStorage.getItem('_needPush')){await _ghPush();return;}
   const rawUrl=`https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${USERDATA_PATH}?t=${Date.now()}`;
   try{
     const r=await fetch(rawUrl);
-    if(!r.ok) return; // file may not exist yet — silent no-op
+    if(!r.ok) return;
     const payload=await r.json();
     if(!payload||!payload.data) return;
-    // Cache password hash if this device doesn't have one yet
     if(payload._pwHash&&!localStorage.getItem('dash_pw_hash')){
       localStorage.setItem('dash_pw_hash',payload._pwHash);
     }
+    const ghTs=payload.timestamps||{};
     let changed=false;
     Object.entries(payload.data).forEach(([k,v])=>{
-      // coros_daily: is always fetched fresh from daily.json — never apply a stale synced copy
       if(k.startsWith('coros_daily:')) return;
-      if(_localDirty.has(k)) return; // locally modified this session — don't overwrite
+      const remoteTs=ghTs[k]||0;
+      const localTs=_tsGet(k);
+      // Only apply if GitHub's version is strictly newer than what's on this device
+      if(remoteTs<=localTs) return;
       const ghVal=JSON.stringify(v);
       const curVal=localStorage.getItem(k);
-      // For runs: merge at field level so elev etc. aren't wiped by a stale response
+      // runs: field-level merge so elev/effort etc. added locally aren't wiped
       if(k.startsWith('runs:')&&Array.isArray(v)){
         const local=storeGet(k);
         if(Array.isArray(local)&&local.length===v.length){
@@ -3449,11 +3452,11 @@ async function loadGhUserdata(){
             return out;
           });
           const nv=JSON.stringify(merged);
-          if(curVal!==nv){localStorage.setItem(k,nv);changed=true;}
+          if(curVal!==nv){localStorage.setItem(k,nv);_tsSet(k,remoteTs);changed=true;}
           return;
         }
       }
-      if(curVal!==ghVal){localStorage.setItem(k,ghVal);changed=true;}
+      if(curVal!==ghVal){localStorage.setItem(k,ghVal);_tsSet(k,remoteTs);changed=true;}
     });
     if(changed) _reRenderAll();
     console.info('[GH sync] loaded from GitHub',Object.keys(payload.data).length,'keys');
@@ -3465,7 +3468,6 @@ async function loadGhUserdata(){
 let _ghPushTimer=null;
 function _scheduleGhPush(){
   if(!getGhToken()) return;
-  try{localStorage.setItem('_needPush','1');}catch(e){} // quota-safe
   clearTimeout(_ghPushTimer);
   _ghPushTimer=setTimeout(_ghPush,5000);
 }
@@ -3473,35 +3475,34 @@ function _scheduleGhPush(){
 async function _ghPush(){
   const token=getGhToken();
   if(!token) return;
-  // Collect all keys that match sync prefixes
-  const syncData={};
+  // Collect all synced keys + their timestamps
+  const syncData={},syncTs={};
   for(let i=0;i<localStorage.length;i++){
     const k=localStorage.key(i);
     if(k&&GH_SYNC_PREFIXES.some(p=>k.startsWith(p))){
       try{syncData[k]=JSON.parse(localStorage.getItem(k));}catch(e){}
+      syncTs[k]=_tsGet(k);
     }
   }
   const pwHash=localStorage.getItem('dash_pw_hash');
-  const payload={lastUpdated:new Date().toISOString(),data:syncData,...(pwHash?{_pwHash:pwHash}:{})};
+  const payload={lastUpdated:new Date().toISOString(),data:syncData,timestamps:syncTs,...(pwHash?{_pwHash:pwHash}:{})};
   const headers={
     'Authorization':'Bearer '+token,
     'Accept':'application/vnd.github.v3+json',
     'Content-Type':'application/json'
   };
   const apiUrl=`https://api.github.com/repos/${GITHUB_REPO}/contents/${USERDATA_PATH}`;
-  // Get current SHA (required to update an existing file)
   let sha=null;
   try{
     const r=await fetch(apiUrl,{headers});
     if(r.ok){const d=await r.json();sha=d.sha;}
   }catch(e){}
-  // Base64-encode payload
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
   const body={message:'sync: dashboard userdata',content,branch:GITHUB_BRANCH};
   if(sha) body.sha=sha;
   try{
     const r=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body)});
-    if(r.ok){localStorage.removeItem('_needPush');console.info('[GH sync] pushed',Object.keys(syncData).length,'keys');}
+    if(r.ok) console.info('[GH sync] pushed',Object.keys(syncData).length,'keys');
     else console.warn('[GH sync] push failed HTTP',r.status);
   }catch(e){console.warn('[GH sync] push error',e);}
 }
@@ -3562,7 +3563,7 @@ function _applyCorosFill(){
   if(data.rhr!=null&&h.rhr==null){
     h.rhr=data.rhr;changed=true;
   }
-  if(changed){hSet(today,h);loadHealth();updateWeekly();}
+  if(changed){hSet(today,h,0);loadHealth();updateWeekly();}// t=0: Coros auto-fill, GitHub may overwrite
 }
 
 // ═══════════════════════════════════════════════
@@ -4169,7 +4170,7 @@ if(_db){
         const d=doc.data();
         if(d&&d.v!==undefined){
           const nv=JSON.stringify(d.v);
-          if(_localDirty.has(doc.id)) return; // locally modified this session — don't overwrite
+          if(_tsGet(doc.id)>0) return; // user has written to this key locally — don't overwrite
           if(localStorage.getItem(doc.id)!==nv){localStorage.setItem(doc.id,nv);changed=true;}
         }
       });
