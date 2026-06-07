@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T16:01:45.254Z",
+  "lastUpdated": "2026-06-07T16:01:52.790Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -497,7 +497,8 @@
       "soreLocs": [
         "Left Foot",
         "Other"
-      ]
+      ],
+      "fatigue": 5
     },
     "runs:2026-05-21": [
       {
