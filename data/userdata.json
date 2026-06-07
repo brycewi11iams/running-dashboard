@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T16:01:52.790Z",
+  "lastUpdated": "2026-06-07T16:02:04.399Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -498,7 +498,8 @@
         "Left Foot",
         "Other"
       ],
-      "fatigue": 5
+      "fatigue": 5,
+      "sleepQuality": 4
     },
     "runs:2026-05-21": [
       {
@@ -533,6 +534,7 @@
       }
     ],
     "iron:2026-06-06": "skip",
+    "iron:2026-06-07": "took",
     "daytype:2026-05-31": "hard",
     "iron:2026-05-26": "skip",
     "xt:2026-06-05": [
