@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T02:01:30.117Z",
+  "lastUpdated": "2026-06-07T02:02:12.818Z",
   "data": {
     "elyte:2026-06-01": 1,
     "health:2026-05-26": {
@@ -476,14 +476,6 @@
         "done": true,
         "text": "Inhaler",
         "doneAt": 1780774396236
-      },
-      {
-        "done": false,
-        "text": "text hutch 2"
-      },
-      {
-        "text": "Metro",
-        "done": false
       },
       {
         "text": "foot pt",
