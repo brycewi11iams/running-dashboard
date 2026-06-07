@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T16:02:04.399Z",
+  "lastUpdated": "2026-06-07T16:14:10.823Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -341,6 +341,7 @@
     "vitamin:2026-05-21": "took",
     "elyte:2026-05-27": 1,
     "vitamin:2026-06-05": "took",
+    "elyte:2026-06-07": 1,
     "iron:2026-06-01": "took",
     "iron:2026-05-28": "skip",
     "iron:2026-05-23": "took",
@@ -499,7 +500,8 @@
         "Other"
       ],
       "fatigue": 5,
-      "sleepQuality": 4
+      "sleepQuality": 4,
+      "water": 56
     },
     "runs:2026-05-21": [
       {
