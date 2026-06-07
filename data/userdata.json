@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T17:02:33.011Z",
+  "lastUpdated": "2026-06-07T17:02:35.025Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -475,6 +475,18 @@
       "rhr": 51,
       "hrv": 84
     },
+    "goals:2026-06-06": [
+      {
+        "text": "Inhaler",
+        "doneAt": 1780774396236,
+        "done": true
+      },
+      {
+        "text": "foot pt",
+        "done": false,
+        "recurring": true
+      }
+    ],
     "vitamin:2026-06-01": "took",
     "health:2026-06-07": {
       "rhr": 53,
@@ -507,8 +519,7 @@
     "goals:2026-06-07": [
       {
         "text": "text hutch 2",
-        "done": true,
-        "doneAt": 1780851749656
+        "done": false
       },
       {
         "text": "Metro",
