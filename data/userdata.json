@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-08T12:26:22.235Z",
+  "lastUpdated": "2026-06-08T12:26:27.728Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
@@ -415,7 +415,8 @@
     ],
     "elyte:2026-05-28": 1,
     "recurring_goals": [
-      "foot pt"
+      "foot pt",
+      "Foot + back pt"
     ],
     "health:2026-05-28": {
       "hrv": 110,
@@ -451,10 +452,6 @@
     ],
     "goals:2026-06-08": [
       {
-        "text": "foot pt",
-        "done": false
-      },
-      {
         "text": "HEB",
         "done": false
       },
@@ -465,6 +462,11 @@
       {
         "text": "Shave",
         "done": false
+      },
+      {
+        "text": "Foot + back pt",
+        "done": false,
+        "recurring": true
       }
     ],
     "vitamin:2026-05-21": "took",
@@ -872,10 +874,10 @@
     "strength:2026-05-23": 0,
     "runs:2026-06-07": 1780854456678,
     "elyte:2026-05-28": 0,
-    "recurring_goals": 0,
+    "recurring_goals": 1780921583074,
     "health:2026-05-28": 0,
     "runs:2026-05-24": 0,
-    "goals:2026-06-08": 1780921577226,
+    "goals:2026-06-08": 1780921585291,
     "vitamin:2026-05-21": 0,
     "xt:2026-05-29": 0,
     "elyte:2026-05-21": 0,
