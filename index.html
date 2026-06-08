@@ -1572,13 +1572,18 @@ const DAY_TYPES={
   hard:     {label:'Hard Day',     waterGoal:180, elyteMax:2},
 };
 function getDayType(){return storeGet('daytype:'+activeDate())||'moderate';}
-function getDailyWaterGoal(){return (DAY_TYPES[getDayType()]||DAY_TYPES.moderate).waterGoal;}
+function getDailyWaterGoal(){
+  const hydration=storeGet('hydration_oz:'+activeDate());
+  if(hydration) return hydration;
+  return (DAY_TYPES[getDayType()]||DAY_TYPES.moderate).waterGoal;
+}
 function getDailyElyteMax(){return (DAY_TYPES[getDayType()]||DAY_TYPES.moderate).elyteMax;}
 function updateDayTypeChips(){
   const dt=DAY_TYPES[getDayType()]||DAY_TYPES.moderate;
   const wc=document.getElementById('dtWaterChip');
   const ec=document.getElementById('dtElyteChip');
-  if(wc) wc.textContent=`💧 ${dt.waterGoal} oz water`;
+  const hydration=storeGet('hydration_oz:'+activeDate());
+  if(wc) wc.textContent=`💧 ${hydration||dt.waterGoal} oz water`;
   if(ec) ec.textContent=dt.elyteMax===0?'💊 No Liquid IV':`💊 ${dt.elyteMax} Liquid IV${dt.elyteMax>1?'s':''}`;
 }
 function loadDayType(){
@@ -3218,6 +3223,12 @@ function renderHydrationCard(){
 
   // Step 4 — Liquid IV
   const liquidIV=dailyTarget>=120?2:1;
+
+  // Store as the water target for today (system write — t=0 so GitHub can overwrite)
+  storeSet('hydration_oz:'+today, dailyTarget, 0);
+  // Refresh water bar and day-type chip to reflect new target
+  updateDayTypeChips();
+  renderWater(hGet(today).water||0);
 
   const humStr=humidity!=null?`${humidity}%`:'—';
   const tempStr=temp!=null?`${temp}°F`:'—';
