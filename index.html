@@ -354,6 +354,21 @@ select.hm-input option{background:#1a1a1e;color:var(--text-primary);}
 .wk-target-bar-fill.hit{background:linear-gradient(90deg,#6BE3A4,#5BC4E8);}
 .wk-target-status{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);}
 
+/* ── HYDRATION CARD ── */
+.hydration-target{display:flex;flex-direction:column;gap:4px;padding:14px 16px;
+  background:rgba(91,196,232,.06);border:1px solid rgba(91,196,232,.14);border-radius:12px;margin-bottom:0;}
+.hydration-oz{font-family:var(--font-mono);font-size:32px;font-weight:800;color:#5BC4E8;
+  font-variant-numeric:tabular-nums;line-height:1;}
+.hydration-oz-unit{font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);}
+.hydration-iv{font-size:12px;color:var(--text-secondary);margin-top:4px;}
+.hydration-iv strong{color:#6BE3A4;}
+.hydration-empty{font-size:12px;color:var(--text-tertiary);font-style:italic;padding:4px 0;}
+.hydration-breakdown{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);
+  margin-top:8px;padding-top:8px;border-top:1px solid rgba(91,196,232,.10);line-height:1.7;}
+.auto-filled-tag{font-size:8.5px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;
+  color:#5BC4E8;background:rgba(91,196,232,.12);border:1px solid rgba(91,196,232,.22);
+  border-radius:99px;padding:1px 6px;margin-left:5px;vertical-align:middle;}
+
 /* ── HEAT/HUMIDITY ── */
 .heat-result{margin-top:10px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
 .heat-label{font-size:13px;font-weight:600;color:var(--text-primary);}
@@ -922,6 +937,14 @@ select.run-edit-inp option{background:#1a1a1e;}
   </div>
 
 </div><!-- /running section -->
+
+<!-- Hydration Card -->
+<div class="gm-card">
+  <div class="gm-ey" style="margin-bottom:12px;">Hydration Target</div>
+  <div id="hydrationContent">
+    <div class="hydration-empty">Log today's run to see your hydration target.</div>
+  </div>
+</div>
 
 <!-- Cross-Training Log -->
 <div class="gm-card">
@@ -2459,6 +2482,7 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
   loadRunLog();updateWeekly();
   renderWater(hGet(today).water||0);
   updateSweatCalc();
+  renderHydrationCard();
   renderShoes();
   renderFeelRecap();
   renderConditionsChart();
@@ -3100,6 +3124,123 @@ document.getElementById('sweatRateInp').addEventListener('blur',function(){
 });
 
 // ═══════════════════════════════════════════════
+// AUTO WEATHER FETCH (Open-Meteo)
+// ═══════════════════════════════════════════════
+async function fetchAndFillWeather(){
+  const tempInp=document.getElementById('runTemp');
+  const humInp=document.getElementById('runHumidity');
+  if(!tempInp||!humInp) return;
+  if(tempInp.value.trim()!==''&&humInp.value.trim()!=='') return; // already filled
+
+  // Try to get coords from today's most recent run (Coros sync may have stored them)
+  const today=activeDate();
+  const runs=storeGet('runs:'+today)||[];
+  const runWithCoords=runs.find(r=>r.lat!=null&&r.lon!=null);
+  const lat=runWithCoords?runWithCoords.lat:29.667;
+  const lon=runWithCoords?runWithCoords.lon:-98.500;
+
+  try{
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m&temperature_unit=fahrenheit`;
+    const res=await fetch(url);
+    if(!res.ok) return;
+    const data=await res.json();
+    const temp=data?.current?.temperature_2m;
+    const humidity=data?.current?.relative_humidity_2m;
+    if(temp!=null&&tempInp.value.trim()===''){
+      tempInp.value=Math.round(temp);
+      markAutoFilled(tempInp);
+    }
+    if(humidity!=null&&humInp.value.trim()===''){
+      humInp.value=Math.round(humidity);
+      markAutoFilled(humInp);
+    }
+  }catch(e){}
+}
+
+function markAutoFilled(inp){
+  let tag=inp.parentElement.querySelector('.auto-filled-tag');
+  if(!tag){
+    tag=document.createElement('span');
+    tag.className='auto-filled-tag';
+    tag.textContent='auto';
+    inp.parentElement.appendChild(tag);
+  }
+  inp.addEventListener('input',()=>{tag.remove();},{once:true});
+}
+
+// Auto-fetch when user focuses either weather field and it's empty
+['runTemp','runHumidity'].forEach(id=>{
+  document.getElementById(id).addEventListener('focus',function(){
+    if(this.value.trim()==='') fetchAndFillWeather();
+  },{once:false});
+});
+
+// ═══════════════════════════════════════════════
+// HYDRATION CARD
+// ═══════════════════════════════════════════════
+function renderHydrationCard(){
+  const el=document.getElementById('hydrationContent');
+  if(!el) return;
+  const today=activeDate();
+  const runs=(storeGet('runs:'+today)||[]).filter(r=>!r.rest&&(r.dist||0)>0);
+  if(!runs.length){
+    el.innerHTML='<div class="hydration-empty">Log today\'s run to see your hydration target.</div>';
+    return;
+  }
+  const run=runs[0];
+  const dist=run.dist||0;
+  const humidity=run.humidity!=null?run.humidity:null;
+  const temp=run.temp!=null?run.temp:null;
+  const hr=run.hr||null;
+
+  // Duration in minutes from pace × distance
+  let paceSecPerMi=600;
+  if(run.pace){const p=paceToSec(run.pace);if(p) paceSecPerMi=p;}
+  const durationMin=(paceSecPerMi*dist)/60;
+
+  // Step 1 — adjusted sweat rate
+  let rate=56;
+  if(humidity!=null){
+    if(humidity>=90) rate*=1.13;
+    else if(humidity>=80) rate*=1.08;
+  }
+  if(hr!=null){
+    if(hr>=150) rate*=1.12;
+    else if(hr>=130) rate*=1.07;
+  }
+
+  // Step 2 — sweat lost
+  const sweatLost=Math.round(rate*(durationMin/60));
+
+  // Step 3 — daily water target (round to nearest 5)
+  const rawTotal=80+sweatLost+18;
+  const dailyTarget=Math.round(rawTotal/5)*5;
+
+  // Step 4 — Liquid IV
+  const liquidIV=dailyTarget>=120?2:1;
+
+  const humStr=humidity!=null?`${humidity}%`:'—';
+  const tempStr=temp!=null?`${temp}°F`:'—';
+  const hrStr=hr!=null?`${hr} bpm`:'—';
+
+  el.innerHTML=`
+    <div class="hydration-target">
+      <div>
+        <span class="hydration-oz">${dailyTarget}</span>
+        <span class="hydration-oz-unit">oz today</span>
+      </div>
+      <div class="hydration-iv">
+        Liquid IV: <strong>${liquidIV} serving${liquidIV>1?'s':''}</strong>
+        ${liquidIV===2?'<span style="font-size:11px;color:var(--text-tertiary);"> — 1 post-run · 1 late afternoon</span>':''}
+      </div>
+      <div class="hydration-breakdown">
+        ${dist.toFixed(1)} mi · ${Math.round(durationMin)} min · temp ${tempStr} · humidity ${humStr} · avg HR ${hrStr}<br>
+        base 80 oz + sweat ~${sweatLost} oz + buffer 18 oz = ${dailyTarget} oz
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════
 // STRENGTH / ABS LOGGER
 // ═══════════════════════════════════════════════
 function loadStrength(){
@@ -3295,6 +3436,7 @@ renderFeelRecap();
 renderConditionsChart();
 renderStressChart();
 renderHeatAdjCallout();
+renderHydrationCard();
 loadNarrative();
 
 // One-time migration: seed elev into localStorage so _ghPush can write it to GitHub.
@@ -3530,6 +3672,7 @@ function _reRenderAll(){
   renderFeelRecap(); renderConditionsChart(); renderStressChart();
   renderRecoveryTrend(); renderTrainingLoadPanel();
   renderHeatAdjCallout();
+  renderHydrationCard();
   loadNarrative();
   const sr=storeGet('sweat_rate');const ri=document.getElementById('sweatRateInp');if(sr&&ri) ri.value=sr;
   // Re-apply Coros fill after any sync overwrites health:today nulls
