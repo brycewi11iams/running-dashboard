@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-08T22:45:17.870Z",
+  "lastUpdated": "2026-06-08T22:45:29.710Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
@@ -453,11 +453,6 @@
         "text": "Foot + back pt",
         "done": false,
         "recurring": true
-      },
-      {
-        "text": "foot pt",
-        "done": false,
-        "recurring": true
       }
     ],
     "runs:2026-05-24": [
@@ -884,7 +879,7 @@
     "elyte:2026-05-28": 0,
     "recurring_goals": 1780921583074,
     "health:2026-05-28": 0,
-    "goals:2026-06-08": 1780921585291,
+    "goals:2026-06-08": 1780958724702,
     "runs:2026-05-24": 0,
     "vitamin:2026-05-21": 0,
     "xt:2026-05-29": 0,
