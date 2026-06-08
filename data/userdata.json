@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-08T10:46:41.956Z",
+  "lastUpdated": "2026-06-08T10:46:59.403Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -501,7 +501,13 @@
         "hr": 145,
         "elev": 266,
         "rest": false,
-        "date": "2026-06-08"
+        "date": "2026-06-08",
+        "runType": "easy",
+        "effort": 4,
+        "shoeId": "shoe_1779503449191",
+        "notes": "trying to fix cadence",
+        "temp": null,
+        "humidity": null
       }
     ],
     "health:2026-06-07": {
@@ -859,7 +865,7 @@
     "health:2026-06-02": 0,
     "daytype:2026-06-08": 1780915568183,
     "vitamin:2026-06-01": 0,
-    "runs:2026-06-08": 0,
+    "runs:2026-06-08": 1780915614399,
     "health:2026-06-07": 1780877502096,
     "runs:2026-05-21": 0,
     "goals:2026-06-08": 0,
