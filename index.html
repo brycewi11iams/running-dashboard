@@ -3955,11 +3955,13 @@ function _runTypeColor(type){
   return '#9B9590';
 }
 function renderStressChart(){
-  const runs=getAllRuns().filter(r=>!r.rest&&r.hr&&r.dur).reverse();
+  const cutoff=lastNDays(14)[0];
+  const runs=getAllRuns().filter(r=>!r.rest&&r.hr&&r.dur&&r._runDate>=cutoff).reverse();
   // Collect XT sessions that have HR data
   const xtSessions=[];
   storeKeys('xt:').sort().reverse().forEach(k=>{
     const date=k.replace('xt:','');
+    if(date<cutoff) return;
     (storeGet(k)||[]).forEach(x=>{if(x.hr&&x.duration) xtSessions.push({...x,_xtDate:date});});
   });
   const wrap=document.getElementById('stressChartWrap');
