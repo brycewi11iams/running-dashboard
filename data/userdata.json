@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-08T12:24:29.380Z",
+  "lastUpdated": "2026-06-08T12:26:22.235Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
@@ -461,6 +461,10 @@
       {
         "text": "Text Joe’s mom",
         "done": false
+      },
+      {
+        "text": "Shave",
+        "done": false
       }
     ],
     "vitamin:2026-05-21": "took",
@@ -871,7 +875,7 @@
     "recurring_goals": 0,
     "health:2026-05-28": 0,
     "runs:2026-05-24": 0,
-    "goals:2026-06-08": 1780921464376,
+    "goals:2026-06-08": 1780921577226,
     "vitamin:2026-05-21": 0,
     "xt:2026-05-29": 0,
     "elyte:2026-05-21": 0,
