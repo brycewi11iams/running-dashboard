@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-09T18:02:47.760Z",
+  "lastUpdated": "2026-06-09T18:02:56.284Z",
   "data": {
     "elyte:2026-06-01": 1,
     "health:2026-05-26": {
@@ -17,8 +17,9 @@
     },
     "goals:2026-06-09": [
       {
-        "done": false,
-        "text": "Text Joe’s mom"
+        "done": true,
+        "text": "Text Joe’s mom",
+        "doneAt": 1781028172633
       },
       {
         "done": false,
@@ -843,7 +844,7 @@
   "timestamps": {
     "elyte:2026-06-01": 0,
     "health:2026-05-26": 0,
-    "goals:2026-06-09": 1781010572803,
+    "goals:2026-06-09": 1781028172633,
     "daytype:2026-06-07": 1780855623532,
     "strength:2026-06-06": 0,
     "strength:2026-05-25": 0,
