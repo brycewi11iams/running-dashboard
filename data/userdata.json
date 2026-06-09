@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-09T00:08:18.199Z",
+  "lastUpdated": "2026-06-09T00:08:28.029Z",
   "data": {
     "elyte:2026-06-01": 1,
     "health:2026-05-26": {
@@ -444,11 +444,13 @@
       },
       {
         "text": "Text Joe’s mom",
-        "done": false
+        "done": true,
+        "doneAt": 1780963703026
       },
       {
         "text": "Shave",
-        "done": false
+        "done": true,
+        "doneAt": 1780963702840
       },
       {
         "text": "Foot + back pt",
@@ -885,7 +887,7 @@
     "elyte:2026-05-28": 0,
     "recurring_goals": 1780921583074,
     "health:2026-05-28": 0,
-    "goals:2026-06-08": 1780958739491,
+    "goals:2026-06-08": 1780963703026,
     "runs:2026-05-24": 0,
     "vitamin:2026-05-21": 0,
     "strength:2026-05-28": 0,
