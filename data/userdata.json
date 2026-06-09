@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-09T00:11:14.139Z",
+  "lastUpdated": "2026-06-09T10:50:23.398Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -284,6 +284,7 @@
       }
     ],
     "daytype:2026-06-07": "hard",
+    "daytype:2026-06-09": "moderate",
     "runs:2026-06-01": [
       {
         "pace": "7:47 /mi",
@@ -542,31 +543,6 @@
         "shoeId": null
       }
     ],
-    "goals:2026-06-08": [
-      {
-        "text": "HEB",
-        "done": true,
-        "doneAt": 1780958739490
-      },
-      {
-        "text": "Text Joe’s mom",
-        "done": false
-      },
-      {
-        "text": "Shave",
-        "done": false
-      },
-      {
-        "text": "Foot + back pt",
-        "done": false,
-        "recurring": true
-      },
-      {
-        "text": "foot pt",
-        "done": false,
-        "recurring": true
-      }
-    ],
     "iron:2026-06-06": "skip",
     "iron:2026-06-07": "took",
     "daytype:2026-05-31": "hard",
@@ -675,6 +651,24 @@
         "duration": 7,
         "type": "Core (Abs)",
         "notes": "2 X normal + plank"
+      }
+    ],
+    "goals:2026-06-09": [
+      {
+        "text": "Text Joe’s mom",
+        "done": false
+      },
+      {
+        "text": "Shave",
+        "done": false
+      },
+      {
+        "text": "Foot + back pt",
+        "done": false
+      },
+      {
+        "text": "foot pt",
+        "done": false
       }
     ],
     "daytype:2026-05-26": "easy",
@@ -851,6 +845,7 @@
     "strength:2026-05-22": 0,
     "runs:2026-05-26": 0,
     "daytype:2026-06-07": 1780855623532,
+    "daytype:2026-06-09": 1781002220121,
     "runs:2026-06-01": 0,
     "iron:2026-05-24": 0,
     "xt:2026-05-19": 0,
@@ -888,7 +883,6 @@
     "runs:2026-06-08": 1780915655548,
     "health:2026-06-07": 1780877502096,
     "runs:2026-05-21": 0,
-    "goals:2026-06-08": 1780963870626,
     "iron:2026-06-06": 0,
     "iron:2026-06-07": 0,
     "daytype:2026-05-31": 0,
@@ -910,6 +904,7 @@
     "xt:2026-05-29": 0,
     "elyte:2026-06-08": 1780923807569,
     "strength:2026-05-30": 0,
+    "goals:2026-06-09": 0,
     "daytype:2026-05-26": 0,
     "daytype:2026-05-23": 0,
     "daytype:2026-05-27": 0,
