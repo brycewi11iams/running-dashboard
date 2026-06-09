@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-09T10:55:33.596Z",
+  "lastUpdated": "2026-06-09T10:55:41.035Z",
   "data": {
     "runs:2026-05-29": [
       {
@@ -699,8 +699,9 @@
         "text": "Foot + back pt"
       },
       {
+        "text": "foot pt",
         "done": false,
-        "text": "foot pt"
+        "recurring": true
       }
     ],
     "daytype:2026-05-26": "easy",
@@ -940,7 +941,7 @@
     "xt:2026-05-29": 0,
     "elyte:2026-06-08": 1780923807569,
     "strength:2026-05-30": 0,
-    "goals:2026-06-09": 1781002528591,
+    "goals:2026-06-09": 1781002536028,
     "daytype:2026-05-26": 0,
     "daytype:2026-05-23": 0,
     "daytype:2026-05-27": 0,
