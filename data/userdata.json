@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-09T13:10:02.977Z",
+  "lastUpdated": "2026-06-09T16:01:21.547Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
@@ -395,20 +395,6 @@
       "sleepQuality": 4,
       "water": 172
     },
-    "health:2026-05-21": {
-      "sleep": 5.5,
-      "soreLocs": [
-        "Left Foot",
-        "Right Foot"
-      ],
-      "soreness": 2,
-      "tiredness": 2,
-      "hr": 51,
-      "water": 128,
-      "sleepQuality": 2,
-      "mood": 4,
-      "hrv": 121
-    },
     "iron:2026-06-02": "skip",
     "daytype:2026-06-09": "moderate",
     "elyte:2026-05-23": 1,
@@ -448,13 +434,23 @@
         "humidity": 95
       }
     ],
-    "strength:2026-05-23": [
-      {
-        "notes": "2X normal routine + plank",
-        "duration": 7,
-        "type": "Core (Abs)"
-      }
-    ],
+    "health:2026-06-09": {
+      "sleep": 5.82,
+      "hrvBaseline": 96,
+      "rhr": 52,
+      "sleepScore": 70,
+      "hrv": 106,
+      "soreness": 2,
+      "soreLocs": [
+        "Left Foot",
+        "Right Foot",
+        "Other"
+      ],
+      "fatigue": 4,
+      "sleepQuality": 2,
+      "mood": 2,
+      "water": 80
+    },
     "recurring_goals": [
       "foot pt",
       "Foot + back pt"
@@ -475,6 +471,13 @@
       ],
       "fatigue": 7
     },
+    "strength:2026-05-23": [
+      {
+        "notes": "2X normal routine + plank",
+        "duration": 7,
+        "type": "Core (Abs)"
+      }
+    ],
     "runs:2026-05-24": [
       {
         "elev": 223,
@@ -491,22 +494,19 @@
         "temp": 69
       }
     ],
-    "health:2026-06-09": {
-      "sleep": 5.82,
-      "hrvBaseline": 96,
-      "rhr": 52,
-      "sleepScore": 70,
-      "hrv": 106,
-      "soreness": 2,
+    "health:2026-05-21": {
+      "sleep": 5.5,
       "soreLocs": [
         "Left Foot",
-        "Right Foot",
-        "Other"
+        "Right Foot"
       ],
-      "fatigue": 4,
+      "soreness": 2,
+      "tiredness": 2,
+      "hr": 51,
+      "water": 128,
       "sleepQuality": 2,
-      "mood": 2,
-      "water": 80
+      "mood": 4,
+      "hrv": 121
     },
     "vitamin:2026-05-21": "took",
     "xt:2026-05-29": [
@@ -518,15 +518,8 @@
       }
     ],
     "elyte:2026-05-21": 1,
-    "daytype:2026-05-22": "easy",
     "xt:2026-05-21": [],
-    "strength:2026-05-28": [
-      {
-        "notes": "2xnormal + 1 min plank",
-        "type": "Core (Abs)",
-        "duration": 7
-      }
-    ],
+    "daytype:2026-05-22": "easy",
     "iron:2026-06-04": "skip",
     "elyte:2026-06-05": 3,
     "vitamin:2026-05-24": "took",
@@ -545,6 +538,13 @@
         "pace": "8:01 /mi",
         "dur": "1:12:07",
         "rest": false
+      }
+    ],
+    "strength:2026-05-28": [
+      {
+        "notes": "2xnormal + 1 min plank",
+        "type": "Core (Abs)",
+        "duration": 7
       }
     ],
     "daytype:2026-06-03": "moderate",
@@ -911,7 +911,6 @@
     "vitamin:2026-05-23": 0,
     "daytype:2026-05-24": 0,
     "health:2026-06-07": 1780877502096,
-    "health:2026-05-21": 0,
     "iron:2026-06-02": 0,
     "daytype:2026-06-09": 1781007760790,
     "elyte:2026-05-23": 0,
@@ -919,21 +918,22 @@
     "runs:2026-06-07": 1780854456678,
     "elyte:2026-05-28": 0,
     "runs:2026-06-09": 1781002464652,
-    "strength:2026-05-23": 0,
+    "health:2026-06-09": 1781007769830,
     "recurring_goals": 1780921583074,
     "health:2026-05-28": 0,
+    "strength:2026-05-23": 0,
     "runs:2026-05-24": 0,
-    "health:2026-06-09": 1781007769830,
+    "health:2026-05-21": 0,
     "vitamin:2026-05-21": 0,
     "xt:2026-05-29": 0,
     "elyte:2026-05-21": 0,
-    "daytype:2026-05-22": 0,
     "xt:2026-05-21": 0,
-    "strength:2026-05-28": 0,
+    "daytype:2026-05-22": 0,
     "iron:2026-06-04": 0,
     "elyte:2026-06-05": 0,
     "vitamin:2026-05-24": 0,
     "runs:2026-06-05": 0,
+    "strength:2026-05-28": 0,
     "daytype:2026-06-03": 0,
     "iron:2026-06-07": 0,
     "daytype:2026-05-23": 0,
