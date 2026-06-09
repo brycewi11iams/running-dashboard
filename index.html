@@ -1572,8 +1572,30 @@ const DAY_TYPES={
   hard:     {label:'Hard Day',     waterGoal:180, elyteMax:2},
 };
 function getDayType(){return storeGet('daytype:'+activeDate())||'moderate';}
+function calcHydrationTarget(date){
+  const runs=(storeGet('runs:'+date)||[]).filter(r=>!r.rest&&(r.dist||0)>0);
+  if(!runs.length) return null;
+  const run=runs[0];
+  const dist=run.dist||0;
+  const humidity=run.humidity;
+  const hr=run.hr;
+  let paceSecPerMi=600;
+  if(run.pace){const p=paceToSec(run.pace);if(p) paceSecPerMi=p;}
+  const durationMin=(paceSecPerMi*dist)/60;
+  let rate=56;
+  if(humidity!=null){
+    if(humidity>=90) rate*=1.13;
+    else if(humidity>=80) rate*=1.08;
+  }
+  if(hr!=null){
+    if(hr>=150) rate*=1.12;
+    else if(hr>=130) rate*=1.07;
+  }
+  const sweatLost=Math.round(rate*(durationMin/60));
+  return Math.round((80+sweatLost+18)/5)*5;
+}
 function getDailyWaterGoal(){
-  const hydration=storeGet('hydration_oz:'+activeDate());
+  const hydration=calcHydrationTarget(activeDate());
   if(hydration) return hydration;
   return (DAY_TYPES[getDayType()]||DAY_TYPES.moderate).waterGoal;
 }
@@ -1582,8 +1604,7 @@ function updateDayTypeChips(){
   const dt=DAY_TYPES[getDayType()]||DAY_TYPES.moderate;
   const wc=document.getElementById('dtWaterChip');
   const ec=document.getElementById('dtElyteChip');
-  const hydration=storeGet('hydration_oz:'+activeDate());
-  if(wc) wc.textContent=`💧 ${hydration||dt.waterGoal} oz water`;
+  if(wc) wc.textContent=`💧 ${getDailyWaterGoal()} oz water`;
   if(ec) ec.textContent=dt.elyteMax===0?'💊 No Liquid IV':`💊 ${dt.elyteMax} Liquid IV${dt.elyteMax>1?'s':''}`;
 }
 function loadDayType(){
@@ -3187,48 +3208,26 @@ function renderHydrationCard(){
   const el=document.getElementById('hydrationContent');
   if(!el) return;
   const today=activeDate();
-  const runs=(storeGet('runs:'+today)||[]).filter(r=>!r.rest&&(r.dist||0)>0);
-  if(!runs.length){
+  const dailyTarget=calcHydrationTarget(today);
+  if(!dailyTarget){
     el.innerHTML='<div class="hydration-empty">Log today\'s run to see your hydration target.</div>';
     return;
   }
+
+  const runs=(storeGet('runs:'+today)||[]).filter(r=>!r.rest&&(r.dist||0)>0);
   const run=runs[0];
   const dist=run.dist||0;
-  const humidity=run.humidity!=null?run.humidity:null;
-  const temp=run.temp!=null?run.temp:null;
-  const hr=run.hr||null;
-
-  // Duration in minutes from pace × distance
+  const humidity=run.humidity;
+  const temp=run.temp;
+  const hr=run.hr;
   let paceSecPerMi=600;
   if(run.pace){const p=paceToSec(run.pace);if(p) paceSecPerMi=p;}
   const durationMin=(paceSecPerMi*dist)/60;
-
-  // Step 1 — adjusted sweat rate
   let rate=56;
-  if(humidity!=null){
-    if(humidity>=90) rate*=1.13;
-    else if(humidity>=80) rate*=1.08;
-  }
-  if(hr!=null){
-    if(hr>=150) rate*=1.12;
-    else if(hr>=130) rate*=1.07;
-  }
-
-  // Step 2 — sweat lost
+  if(humidity!=null){if(humidity>=90) rate*=1.13;else if(humidity>=80) rate*=1.08;}
+  if(hr!=null){if(hr>=150) rate*=1.12;else if(hr>=130) rate*=1.07;}
   const sweatLost=Math.round(rate*(durationMin/60));
-
-  // Step 3 — daily water target (round to nearest 5)
-  const rawTotal=80+sweatLost+18;
-  const dailyTarget=Math.round(rawTotal/5)*5;
-
-  // Step 4 — Liquid IV
   const liquidIV=dailyTarget>=120?2:1;
-
-  // Store as the water target for today (system write — t=0 so GitHub can overwrite)
-  storeSet('hydration_oz:'+today, dailyTarget, 0);
-  // Refresh water bar and day-type chip to reflect new target
-  updateDayTypeChips();
-  renderWater(hGet(today).water||0);
 
   const humStr=humidity!=null?`${humidity}%`:'—';
   const tempStr=temp!=null?`${temp}°F`:'—';
