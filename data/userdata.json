@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-10T00:06:28.593Z",
+  "lastUpdated": "2026-06-10T00:07:22.667Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
@@ -23,17 +23,15 @@
         "doneAt": 1781028172633
       },
       {
-        "done": false,
-        "text": "Foot + back pt"
+        "done": true,
+        "text": "Foot + back pt",
+        "doneAt": 1781050035620
       },
       {
         "text": "foot pt",
-        "done": false,
-        "recurring": true
-      },
-      {
-        "text": "Download albums",
-        "done": false
+        "done": true,
+        "recurring": true,
+        "doneAt": 1781050035106
       }
     ],
     "strength:2026-06-06": [],
@@ -270,6 +268,12 @@
       "soreness": 1,
       "hrv": 86
     },
+    "goals:2026-06-10": [
+      {
+        "text": "Download albums",
+        "done": false
+      }
+    ],
     "iron:2026-05-24": "skip",
     "runs:2026-06-06": [
       {
@@ -853,7 +857,7 @@
     "elyte:2026-06-01": 0,
     "iron:2026-05-21": 0,
     "health:2026-05-26": 0,
-    "goals:2026-06-09": 1781028172633,
+    "goals:2026-06-09": 1781050037174,
     "strength:2026-06-06": 0,
     "elyte:2026-05-22": 0,
     "strength:2026-05-25": 0,
@@ -899,6 +903,7 @@
     "iron:2026-06-05": 0,
     "strength:2026-06-01": 0,
     "health:2026-05-25": 0,
+    "goals:2026-06-10": 1781050037173,
     "iron:2026-05-24": 0,
     "runs:2026-06-06": 0,
     "elyte:2026-05-29": 0,
