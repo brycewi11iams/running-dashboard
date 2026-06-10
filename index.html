@@ -3704,17 +3704,17 @@ function _scheduleGhPush(){
 async function _ghPush(){
   const token=getGhToken();
   if(!token) return;
-  // Collect all synced keys + their timestamps
-  const syncData={},syncTs={};
+
+  // Collect this device's local data + timestamps
+  const localData={},localTs={};
   for(let i=0;i<localStorage.length;i++){
     const k=localStorage.key(i);
     if(k&&GH_SYNC_PREFIXES.some(p=>k.startsWith(p))){
-      try{syncData[k]=JSON.parse(localStorage.getItem(k));}catch(e){}
-      syncTs[k]=_tsGet(k);
+      try{localData[k]=JSON.parse(localStorage.getItem(k));}catch(e){}
+      localTs[k]=_tsGet(k);
     }
   }
-  const pwHash=localStorage.getItem('dash_pw_hash');
-  const payload={lastUpdated:new Date().toISOString(),data:syncData,timestamps:syncTs,...(pwHash?{_pwHash:pwHash}:{})};
+
   const headers={
     'Authorization':'Bearer '+token,
     'Accept':'application/vnd.github.v3+json',
@@ -3722,30 +3722,69 @@ async function _ghPush(){
   };
   const apiUrl=`https://api.github.com/repos/${GITHUB_REPO}/contents/${USERDATA_PATH}`;
 
-  // Helper: fetch current SHA from GitHub
-  async function _fetchSha(){
-    try{const r=await fetch(apiUrl,{headers});if(r.ok){const d=await r.json();return d.sha||null;}}catch(e){}
-    return null;
-  }
+  // ── Download current GitHub file so we can MERGE, not replace ──
+  // Without this, a device with missing data (e.g. phone) would overwrite
+  // keys that only exist on another device (e.g. laptop's XT session).
+  let sha=null,ghData={},ghTs={};
+  try{
+    const r=await fetch(apiUrl,{headers});
+    if(r.ok){
+      const d=await r.json();
+      sha=d.sha||null;
+      try{
+        const existing=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+        ghData=existing.data||{};
+        ghTs=existing.timestamps||{};
+      }catch(e){}
+    }
+  }catch(e){}
 
+  // ── Merge: winner = whichever timestamp is higher; local wins on tie ──
+  const mergedData=Object.assign({},ghData);
+  const mergedTs=Object.assign({},ghTs);
+  Object.keys(localData).forEach(k=>{
+    const lt=localTs[k]||0,rt=ghTs[k]||0;
+    if(lt>=rt){mergedData[k]=localData[k];mergedTs[k]=lt;}
+  });
+
+  const pwHash=localStorage.getItem('dash_pw_hash');
+  const payload={lastUpdated:new Date().toISOString(),data:mergedData,timestamps:mergedTs,...(pwHash?{_pwHash:pwHash}:{})};
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
-  let sha=await _fetchSha();
   const body={message:'sync: dashboard userdata',content,branch:GITHUB_BRANCH};
   if(sha) body.sha=sha;
+
   try{
     const r=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body)});
     if(r.ok){
-      console.info('[GH sync] pushed',Object.keys(syncData).length,'keys');
+      console.info('[GH sync] pushed',Object.keys(mergedData).length,'keys');
     } else if(r.status===409||r.status===422){
       // SHA conflict — another device pushed between our fetch and PUT.
-      // Re-fetch the SHA and retry once.
+      // Re-fetch the full file and retry with fresh SHA + re-merged content.
       console.info('[GH sync] SHA conflict, retrying…');
-      const sha2=await _fetchSha();
-      const body2={message:'sync: dashboard userdata',content,branch:GITHUB_BRANCH};
-      if(sha2) body2.sha=sha2;
-      const r2=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body2)});
-      if(r2.ok) console.info('[GH sync] retry pushed OK');
-      else console.warn('[GH sync] retry failed HTTP',r2.status);
+      try{
+        const r2=await fetch(apiUrl,{headers});
+        if(r2.ok){
+          const d2=await r2.json();
+          const sha2=d2.sha||null;
+          let ghData2={},ghTs2={};
+          try{
+            const ex2=JSON.parse(decodeURIComponent(escape(atob(d2.content.replace(/\n/g,'')))));
+            ghData2=ex2.data||{};ghTs2=ex2.timestamps||{};
+          }catch(e){}
+          const md2=Object.assign({},ghData2),mt2=Object.assign({},ghTs2);
+          Object.keys(localData).forEach(k=>{
+            const lt=localTs[k]||0,rt=ghTs2[k]||0;
+            if(lt>=rt){md2[k]=localData[k];mt2[k]=lt;}
+          });
+          const p2={lastUpdated:new Date().toISOString(),data:md2,timestamps:mt2,...(pwHash?{_pwHash:pwHash}:{})};
+          const c2=btoa(unescape(encodeURIComponent(JSON.stringify(p2,null,2))));
+          const b2={message:'sync: dashboard userdata',content:c2,branch:GITHUB_BRANCH};
+          if(sha2) b2.sha=sha2;
+          const r3=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(b2)});
+          if(r3.ok) console.info('[GH sync] retry pushed OK');
+          else console.warn('[GH sync] retry failed HTTP',r3.status);
+        }
+      }catch(e){console.warn('[GH sync] retry error',e);}
     } else {
       console.warn('[GH sync] push failed HTTP',r.status);
     }
