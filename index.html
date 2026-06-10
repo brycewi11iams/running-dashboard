@@ -3625,14 +3625,19 @@ window.addEventListener('resize',()=>{
 // Catch day rollovers when the app is resumed from background (iOS homescreen, tab switching).
 // visibilitychange fires every time the user switches back to this tab/app.
 let _trackedDate=activeDate();
+let _lastGhPull=0;
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){
     // Flush any pending push immediately so reloads/tab-switches don't lose data
     if(_ghPushTimer){clearTimeout(_ghPushTimer);_ghPushTimer=null;_ghPush();}
     return;
   }
+  // Page returned to foreground — re-pull from GitHub so data logged on another
+  // device (laptop, phone, etc.) appears without a full reload.
+  // Throttled to at most once every 60 s to avoid hammering the API.
   const now=activeDate();
   if(now!==_trackedDate){_trackedDate=now;onNewDay();storeSet('lastVisitDate',now);}
+  if(Date.now()-_lastGhPull>60000){_lastGhPull=Date.now();loadGhUserdata();}
 });
 
 // Keep other open tabs in sync — when one tab writes to localStorage,
