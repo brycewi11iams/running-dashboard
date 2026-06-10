@@ -1574,24 +1574,42 @@ const DAY_TYPES={
 function getDayType(){return storeGet('daytype:'+activeDate())||'moderate';}
 function calcHydrationTarget(date){
   const runs=(storeGet('runs:'+date)||[]).filter(r=>!r.rest&&(r.dist||0)>0);
-  if(!runs.length) return null;
-  const run=runs[0];
-  const dist=run.dist||0;
-  const humidity=run.humidity;
-  const hr=run.hr;
-  let paceSecPerMi=600;
-  if(run.pace){const p=paceToSec(run.pace);if(p) paceSecPerMi=p;}
-  const durationMin=(paceSecPerMi*dist)/60;
-  let rate=56;
-  if(humidity!=null){
-    if(humidity>=90) rate*=1.13;
-    else if(humidity>=80) rate*=1.08;
-  }
-  if(hr!=null){
-    if(hr>=150) rate*=1.12;
-    else if(hr>=130) rate*=1.07;
-  }
-  const sweatLost=Math.round(rate*(durationMin/60));
+  const xts=(storeGet('xt:'+date)||[]);
+  const strengths=(storeGet('strength:'+date)||[]);
+  if(!runs.length&&!xts.length&&!strengths.length) return null;
+
+  let totalSweat=0;
+
+  // ── Runs: 56 oz/hr base + humidity + HR multipliers ──
+  runs.forEach(run=>{
+    const dist=run.dist||0;
+    const humidity=run.humidity;
+    const hr=run.hr;
+    let paceSecPerMi=600;
+    if(run.pace){const p=paceToSec(run.pace);if(p) paceSecPerMi=p;}
+    const durationMin=(paceSecPerMi*dist)/60;
+    let rate=56;
+    if(humidity!=null){if(humidity>=90) rate*=1.13;else if(humidity>=80) rate*=1.08;}
+    if(hr!=null){if(hr>=150) rate*=1.12;else if(hr>=130) rate*=1.07;}
+    totalSweat+=rate*(durationMin/60);
+  });
+
+  // ── XT: 40 oz/hr base + HR multiplier only ──
+  xts.forEach(s=>{
+    const durationMin=s.duration||0;
+    const hr=s.hr||null;
+    let rate=40;
+    if(hr!=null){if(hr>=150) rate*=1.12;else if(hr>=130) rate*=1.07;}
+    totalSweat+=rate*(durationMin/60);
+  });
+
+  // ── Strength: 28 oz/hr base, no multipliers ──
+  strengths.forEach(s=>{
+    const durationMin=s.duration||0;
+    totalSweat+=28*(durationMin/60);
+  });
+
+  const sweatLost=Math.round(totalSweat);
   return Math.round((80+sweatLost+18)/5)*5;
 }
 function getDailyWaterGoal(){
@@ -3041,6 +3059,7 @@ document.getElementById('logXTBtn').addEventListener('click',()=>{
   document.getElementById('xtHR').value='';
   loadXT();updateWeekly();
   renderWater(hGet(today).water||0);
+  renderHydrationCard();
 });
 
 // ═══════════════════════════════════════════════
@@ -3231,28 +3250,57 @@ function renderHydrationCard(){
   const today=activeDate();
   const dailyTarget=calcHydrationTarget(today);
   if(!dailyTarget){
-    el.innerHTML='<div class="hydration-empty">Log today\'s run to see your hydration target.</div>';
+    el.innerHTML='<div class="hydration-empty">Log today\'s run, XT, or strength session to see your hydration target.</div>';
     return;
   }
 
   const runs=(storeGet('runs:'+today)||[]).filter(r=>!r.rest&&(r.dist||0)>0);
-  const run=runs[0];
-  const dist=run.dist||0;
-  const humidity=run.humidity;
-  const temp=run.temp;
-  const hr=run.hr;
-  let paceSecPerMi=600;
-  if(run.pace){const p=paceToSec(run.pace);if(p) paceSecPerMi=p;}
-  const durationMin=(paceSecPerMi*dist)/60;
-  let rate=56;
-  if(humidity!=null){if(humidity>=90) rate*=1.13;else if(humidity>=80) rate*=1.08;}
-  if(hr!=null){if(hr>=150) rate*=1.12;else if(hr>=130) rate*=1.07;}
-  const sweatLost=Math.round(rate*(durationMin/60));
-  const liquidIV=dailyTarget>=120?2:1;
+  const xts=(storeGet('xt:'+today)||[]);
+  const strengths=(storeGet('strength:'+today)||[]);
 
-  const humStr=humidity!=null?`${humidity}%`:'—';
-  const tempStr=temp!=null?`${temp}°F`:'—';
-  const hrStr=hr!=null?`${hr} bpm`:'—';
+  // Rebuild sweat totals per activity for display
+  let totalSweat=0;
+  const lines=[];
+
+  runs.forEach(run=>{
+    const dist=run.dist||0;
+    const humidity=run.humidity;
+    const temp=run.temp;
+    const hr=run.hr;
+    let paceSecPerMi=600;
+    if(run.pace){const p=paceToSec(run.pace);if(p) paceSecPerMi=p;}
+    const durationMin=(paceSecPerMi*dist)/60;
+    let rate=56;
+    if(humidity!=null){if(humidity>=90) rate*=1.13;else if(humidity>=80) rate*=1.08;}
+    if(hr!=null){if(hr>=150) rate*=1.12;else if(hr>=130) rate*=1.07;}
+    const sweat=rate*(durationMin/60);
+    totalSweat+=sweat;
+    const humStr=humidity!=null?` · ${humidity}% RH`:'';
+    const tempStr=temp!=null?` · ${temp}°F`:'';
+    const hrStr=hr!=null?` · ${hr} bpm`:'';
+    lines.push(`🏃 ${dist.toFixed(1)} mi · ${Math.round(durationMin)} min${tempStr}${humStr}${hrStr} → ~${Math.round(sweat)} oz sweat`);
+  });
+
+  xts.forEach(s=>{
+    const durationMin=s.duration||0;
+    const hr=s.hr||null;
+    let rate=40;
+    if(hr!=null){if(hr>=150) rate*=1.12;else if(hr>=130) rate*=1.07;}
+    const sweat=rate*(durationMin/60);
+    totalSweat+=sweat;
+    const hrStr=hr!=null?` · ${hr} bpm`:'';
+    lines.push(`🚴 ${s.type||'XT'} · ${durationMin} min${hrStr} → ~${Math.round(sweat)} oz sweat`);
+  });
+
+  strengths.forEach(s=>{
+    const durationMin=s.duration||0;
+    const sweat=28*(durationMin/60);
+    totalSweat+=sweat;
+    lines.push(`💪 ${s.type||'Strength'} · ${durationMin} min → ~${Math.round(sweat)} oz sweat`);
+  });
+
+  const sweatLost=Math.round(totalSweat);
+  const liquidIV=dailyTarget>=120?2:1;
 
   el.innerHTML=`
     <div class="hydration-target">
@@ -3262,11 +3310,11 @@ function renderHydrationCard(){
       </div>
       <div class="hydration-iv">
         Liquid IV: <strong>${liquidIV} serving${liquidIV>1?'s':''}</strong>
-        ${liquidIV===2?'<span style="font-size:11px;color:var(--text-tertiary);"> — 1 post-run · 1 late afternoon</span>':''}
+        ${liquidIV===2?'<span style="font-size:11px;color:var(--text-tertiary);"> — 1 post-activity · 1 late afternoon</span>':''}
       </div>
       <div class="hydration-breakdown">
-        ${dist.toFixed(1)} mi · ${Math.round(durationMin)} min · temp ${tempStr} · humidity ${humStr} · avg HR ${hrStr}<br>
-        base 80 oz + sweat ~${sweatLost} oz + buffer 18 oz = ${dailyTarget} oz
+        ${lines.join('<br>')}
+        <br>base 80 oz + sweat ~${sweatLost} oz + buffer 18 oz = ${dailyTarget} oz
       </div>
     </div>`;
 }
@@ -3316,6 +3364,7 @@ document.getElementById('logStrengthBtn').addEventListener('click',()=>{
   document.getElementById('strengthDur').value='';
   document.getElementById('strengthNotes').value='';
   loadStrength();updateWeekly();
+  renderHydrationCard();
 });
 
 // ═══════════════════════════════════════════════
