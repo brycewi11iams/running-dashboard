@@ -1422,7 +1422,7 @@ const GITHUB_REPO   = 'brycewi11iams/running-dashboard';
 const GITHUB_BRANCH = 'main';
 const USERDATA_PATH = 'data/userdata.json';
 // Keys whose prefixes are synced to GitHub (health data, not UI prefs)
-const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:','xt:','strength:','runs:','daytype:','recurring_goals','iron:','vitamin:'];
+const GH_SYNC_PREFIXES = ['health:','elyte:','note:','goals:','narrative:','xt:','strength:','runs:','daytype:','recurring_goals','iron:','vitamin:','dismissed_recurring:'];
 
 // Weekday: 4:30 AM–8:30 PM  |  Weekend: 6:00 AM–10:00 PM
 function getDayBounds(){
@@ -1999,7 +1999,18 @@ function buildGoalRow(g,idx,key,readOnly){
   });
   li.appendChild(qb);
   const db=document.createElement('button');db.className='g-del';db.textContent='×';
-  db.addEventListener('click',()=>{const gs=storeGet(key)||[];gs.splice(idx,1);storeSet(key,gs);reloadList(key);});
+  db.addEventListener('click',()=>{
+    if(g.recurring){
+      // Remove permanently from recurring list so it never comes back
+      const rec=(storeGet('recurring_goals')||[]).filter(t=>t!==g.text);
+      storeSet('recurring_goals',rec);
+      // Also dismiss for today in case inject runs again this session
+      const today=activeDate();
+      const dis=storeGet('dismissed_recurring:'+today)||[];
+      if(!dis.includes(g.text)){dis.push(g.text);storeSet('dismissed_recurring:'+today,dis);}
+    }
+    const gs=storeGet(key)||[];gs.splice(idx,1);storeSet(key,gs);reloadList(key);
+  });
   li.appendChild(db);
   return li;
 }
@@ -2007,8 +2018,11 @@ function reloadList(key){if(key==='goals:'+activeDate()) loadToday(); else loadT
 function _injectRecurringGoals(){
   const recurring=storeGet('recurring_goals')||[];if(!recurring.length) return;
   const today=activeDate();const gs=storeGet('goals:'+today)||[];
+  const dismissed=new Set(storeGet('dismissed_recurring:'+today)||[]);
   const seen=new Set(gs.map(g=>g.text));let changed=false;
-  recurring.forEach(txt=>{if(!seen.has(txt)){gs.push({text:txt,done:false,recurring:true});changed=true;}});
+  recurring.forEach(txt=>{
+    if(!seen.has(txt)&&!dismissed.has(txt)){gs.push({text:txt,done:false,recurring:true});changed=true;}
+  });
   // Write directly — do NOT go through storeSet so goals:today stays clean for GitHub sync
   if(changed){localStorage.setItem('goals:'+today,JSON.stringify(gs));loadToday();}
 }
@@ -2131,10 +2145,17 @@ function makeAddHandlers(getKey,inpEl,addBtn,polBtn,statusEl,reload){
 }
 document.getElementById('pushBtn').addEventListener('click',()=>{
   if(!confirm('Push all unchecked goals to tomorrow?')) return;
-  const tk='goals:'+activeDate(),tmk='goals:'+tomorrowDate();
+  const today=activeDate();
+  const tk='goals:'+today,tmk='goals:'+tomorrowDate();
   const tgs=storeGet(tk)||[],tmgs=storeGet(tmk)||[];
   const seen=new Set(tmgs.map(g=>g.text));
-  tgs.filter(g=>!g.done).forEach(g=>{if(!seen.has(g.text)) tmgs.push({text:g.text,done:false});});
+  const dis=storeGet('dismissed_recurring:'+today)||[];
+  tgs.filter(g=>!g.done).forEach(g=>{
+    if(!seen.has(g.text)) tmgs.push({text:g.text,done:false});
+    // Dismiss recurring goals for today so _injectRecurringGoals won't re-add them on other devices
+    if(g.recurring&&!dis.includes(g.text)) dis.push(g.text);
+  });
+  storeSet('dismissed_recurring:'+today,dis);
   storeSet(tmk,tmgs);storeSet(tk,tgs.filter(g=>g.done));
   loadToday();loadTomorrow();
 });
