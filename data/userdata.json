@@ -1,89 +1,89 @@
 {
-  "lastUpdated": "2026-06-10T22:46:00.782Z",
+  "lastUpdated": "2026-06-10T22:46:44.707Z",
   "data": {
     "elyte:2026-06-01": 1,
     "iron:2026-05-21": "took",
     "health:2026-05-26": {
-      "soreLocs": [
-        "Left Foot"
-      ],
       "soreness": 2,
       "mood": 3,
       "sleepQuality": 2,
       "sleep": 6,
-      "rhr": 48,
+      "fatigue": 6,
       "water": 144,
-      "hrv": 125,
-      "fatigue": 6
+      "soreLocs": [
+        "Left Foot"
+      ],
+      "rhr": 48,
+      "hrv": 125
     },
     "daytype:2026-06-07": "hard",
     "strength:2026-06-06": [],
     "strength:2026-05-25": [
       {
-        "type": "Core (Abs)",
         "notes": "2X normal routine + plank",
-        "duration": 7
+        "duration": 7,
+        "type": "Core (Abs)"
       }
     ],
     "elyte:2026-05-22": 1,
     "vitamin:2026-06-06": "took",
     "runs:2026-05-23": [
       {
-        "notes": "Felt really good, hr was a bit high at the end bc of hills and stuff i think",
-        "pace": "8:55 /mi",
-        "elev": 230,
-        "dist": 5.01,
         "effort": 4,
-        "date": "2026-05-23",
+        "notes": "Felt really good, hr was a bit high at the end bc of hills and stuff i think",
         "hr": 148,
-        "shoeId": "shoe_1779503431806",
         "dur": "44:42",
-        "rest": false
+        "date": "2026-05-23",
+        "rest": false,
+        "elev": 230,
+        "pace": "8:55 /mi",
+        "shoeId": "shoe_1779503431806",
+        "dist": 5.01
       }
     ],
     "health:2026-05-23": {
       "hrv": 83,
-      "water": 110,
-      "rhr": 53,
       "tiredness": 1,
-      "mood": 2,
-      "sleep": 5,
-      "soreness": 1,
       "soreLocs": [
         "Quads"
-      ]
+      ],
+      "rhr": 53,
+      "water": 110,
+      "mood": 2,
+      "sleep": 5,
+      "soreness": 1
     },
     "vitamin:2026-06-04": "took",
     "elyte:2026-05-25": 1,
     "health:2026-05-30": {
-      "rhr": 50,
       "sleepScore": 62,
-      "sleep": 7.8,
-      "fatigue": 7,
-      "water": 104,
-      "hrv": 86,
-      "sleepQuality": 4,
-      "mood": 3,
-      "hrvBaseline": 101,
       "soreness": 1,
+      "mood": 3,
+      "sleep": 7.8,
+      "hrvBaseline": 101,
+      "sleepQuality": 4,
+      "fatigue": 7,
+      "rhr": 50,
       "soreLocs": [
         "Left Knee"
-      ]
+      ],
+      "water": 104,
+      "hrv": 86
     },
     "runs:2026-05-29": [
       {
-        "elev": 367,
         "pace": "7:59 /mi",
-        "effort": 7,
+        "elev": 367,
         "shoeId": "shoe_1779503449191",
         "dur": "55:56",
-        "rest": false,
-        "humidity": 92,
-        "notes": "humid + hilly",
-        "dist": 7,
-        "date": "2026-05-29",
         "hr": 149,
+        "notes": "humid + hilly",
+        "rest": false,
         "temp": 72,
+        "humidity": 92,
+        "dist": 7,
+        "effort": 7,
+        "date": "2026-05-29",
         "runType": "easy"
       }
     ],
@@ -91,19 +91,19 @@
     "iron:2026-05-25": "took",
     "runs:2026-05-26": [
       {
-        "runType": "easy",
-        "temp": 65,
+        "rest": false,
         "hr": 143,
         "notes": "very easy + strides",
-        "humidity": 91,
-        "date": "2026-05-26",
-        "dist": 6,
-        "shoeId": "shoe_1779503449191",
-        "rest": false,
         "dur": "47:13",
-        "pace": "7:52 /mi",
+        "shoeId": "shoe_1779503449191",
         "elev": 262,
-        "effort": 3
+        "pace": "7:52 /mi",
+        "runType": "easy",
+        "date": "2026-05-26",
+        "effort": 3,
+        "dist": 6,
+        "humidity": 91,
+        "temp": 65
       }
     ],
     "vitamin:2026-06-05": "took",
@@ -111,17 +111,17 @@
     "vitamin:2026-05-22": "took",
     "health:2026-06-03": {
       "fatigue": 6,
-      "hrv": 78,
       "sleepQuality": 2,
       "sleepScore": 60,
-      "rhr": 54,
       "sleep": 7.08,
-      "hrvBaseline": 100
+      "hrvBaseline": 100,
+      "hrv": 78,
+      "rhr": 54
     },
     "strength:2026-05-22": [
       {
-        "type": "Core (Abs)",
         "notes": "2X normal routine + plank",
+        "type": "Core (Abs)",
         "duration": 7
       }
     ],
@@ -153,51 +153,51 @@
     "elyte:2026-06-08": 1,
     "runs:2026-06-03": [
       {
-        "dist": 0,
         "date": "2026-06-03",
-        "notes": "",
-        "humidity": null,
-        "hr": null,
         "runType": null,
-        "temp": null,
         "effort": null,
-        "pace": "",
-        "elev": null,
-        "dur": "",
+        "dist": 0,
+        "temp": null,
+        "humidity": null,
         "rest": true,
-        "shoeId": null
+        "dur": "",
+        "hr": null,
+        "notes": "",
+        "shoeId": null,
+        "pace": "",
+        "elev": null
       }
     ],
     "health:2026-06-01": {
-      "sleepQuality": 3,
-      "mood": 3,
-      "soreness": 1,
+      "hrv": 83,
+      "water": 88,
+      "rhr": 53,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "hrvBaseline": 102,
       "fatigue": 6,
-      "water": 88,
-      "hrv": 83,
+      "sleepQuality": 3,
+      "hrvBaseline": 102,
+      "sleep": 8.1,
+      "mood": 3,
       "sleepScore": 68,
-      "rhr": 53,
-      "sleep": 8.1
+      "soreness": 1
     },
     "health:2026-05-27": {
-      "mood": 3,
-      "sleepQuality": 4,
-      "hrvBaseline": 98,
+      "hrv": 103,
+      "water": 136,
+      "rhr": 51,
       "soreLocs": [
         "Left Foot"
       ],
-      "soreness": 2,
-      "rhr": 51,
-      "sleepScore": 89,
-      "sleep": 7.18,
       "fatigue": 6,
-      "hrv": 103,
-      "water": 136
+      "hrvBaseline": 98,
+      "sleep": 7.18,
+      "sleepQuality": 4,
+      "mood": 3,
+      "soreness": 2,
+      "sleepScore": 89
     },
     "runs:2026-06-08": [
       {
@@ -234,39 +234,39 @@
     "runs:2026-06-06": [
       {
         "hr": 158,
-        "temp": 73,
-        "runType": "easy",
-        "humidity": 92,
         "notes": "with reagan guys, rigged",
-        "dist": 6.05,
-        "date": "2026-06-06",
-        "shoeId": "shoe_1779503431806",
         "dur": "43:47",
         "rest": false,
         "elev": 89,
         "pace": "7:14 /mi",
-        "effort": 7
+        "shoeId": "shoe_1779503431806",
+        "effort": 7,
+        "date": "2026-06-06",
+        "runType": "easy",
+        "humidity": 92,
+        "temp": 73,
+        "dist": 6.05
       }
     ],
     "health:2026-05-25": {
-      "fatigue": 6,
-      "water": 136,
-      "hrv": 86,
-      "rhr": 52,
-      "sleep": 7.78,
-      "sleepQuality": 3,
       "mood": 3,
       "soreness": 1,
+      "fatigue": 6,
+      "sleep": 7.78,
+      "sleepQuality": 3,
+      "hrv": 86,
+      "rhr": 52,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
-      ]
+      ],
+      "water": 136
     },
     "strength:2026-06-01": [
       {
         "duration": 7,
-        "notes": "2 X normal + plank",
-        "type": "Core (Abs)"
+        "type": "Core (Abs)",
+        "notes": "2 X normal + plank"
       }
     ],
     "iron:2026-06-10": "skip",
@@ -274,8 +274,8 @@
     "strength:2026-05-30": [
       {
         "duration": 7,
-        "notes": "2 X normal + plank",
-        "type": "Core (Abs)"
+        "type": "Core (Abs)",
+        "notes": "2 X normal + plank"
       }
     ],
     "elyte:2026-05-29": 1,
@@ -298,19 +298,19 @@
     "elyte:2026-05-26": 1,
     "runs:2026-06-02": [
       {
-        "hr": 151,
-        "runType": "mlr",
-        "temp": 74,
-        "notes": "humid ",
-        "humidity": 95,
-        "dist": 9,
-        "date": "2026-06-02",
-        "shoeId": "shoe_1779503449191",
-        "dur": "1:12:06",
         "rest": false,
-        "pace": "8:01 /mi",
+        "notes": "humid ",
+        "hr": 151,
+        "dur": "1:12:06",
+        "shoeId": "shoe_1779503449191",
         "elev": 157,
-        "effort": 5
+        "pace": "8:01 /mi",
+        "runType": "mlr",
+        "date": "2026-06-02",
+        "effort": 5,
+        "dist": 9,
+        "humidity": 95,
+        "temp": 74
       }
     ],
     "health:2026-06-08": {
@@ -332,8 +332,8 @@
     "elyte:2026-05-30": 1,
     "strength:2026-05-20": [
       {
-        "duration": 7,
         "notes": "7 min core session",
+        "duration": 7,
         "type": "Core"
       }
     ],
@@ -363,31 +363,31 @@
     "daytype:2026-06-04": "easy",
     "xt:2026-05-24": [
       {
-        "hr": 143,
-        "effort": "easy",
+        "type": "Bike",
         "duration": 30,
-        "type": "Bike"
+        "hr": 143,
+        "effort": "easy"
       },
       {
-        "type": "Other",
         "effort": "easy",
+        "type": "Other",
         "duration": 30
       }
     ],
     "elyte:2026-06-04": 1,
     "health:2026-06-02": {
-      "water": 120,
-      "hrv": 84,
-      "fatigue": 4,
-      "sleep": 8.33,
-      "sleepScore": 88,
-      "rhr": 51,
+      "sleepQuality": 4,
       "hrvBaseline": 101,
-      "soreness": 1,
+      "sleep": 8.33,
+      "fatigue": 4,
       "soreLocs": [
         "Right Foot"
       ],
-      "sleepQuality": 4,
+      "rhr": 51,
+      "water": 120,
+      "hrv": 84,
+      "soreness": 1,
+      "sleepScore": 88,
       "mood": 2
     },
     "daytype:2026-05-25": "easy",
@@ -411,24 +411,24 @@
     },
     "iron:2026-06-02": "skip",
     "health:2026-05-21": {
-      "sleep": 5.5,
-      "hr": 51,
-      "water": 128,
-      "hrv": 121,
+      "soreness": 2,
       "mood": 4,
-      "sleepQuality": 2,
-      "tiredness": 2,
+      "water": 128,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "soreness": 2
+      "hrv": 121,
+      "tiredness": 2,
+      "hr": 51,
+      "sleep": 5.5,
+      "sleepQuality": 2
     },
     "strength:2026-05-23": [
       {
+        "type": "Core (Abs)",
         "duration": 7,
-        "notes": "2X normal routine + plank",
-        "type": "Core (Abs)"
+        "notes": "2X normal routine + plank"
       }
     ],
     "iron:2026-05-27": "took",
@@ -491,43 +491,43 @@
       "Foot + back pt"
     ],
     "health:2026-05-28": {
-      "sleep": 7.47,
       "rhr": 50,
-      "sleepScore": 88,
       "water": 112,
-      "hrv": 110,
-      "fatigue": 7,
-      "soreness": 2,
       "soreLocs": [
         "Left Foot",
         "Left Knee"
       ],
+      "hrv": 110,
       "hrvBaseline": 99,
-      "mood": 3,
-      "sleepQuality": 4
+      "sleep": 7.47,
+      "sleepQuality": 4,
+      "fatigue": 7,
+      "soreness": 2,
+      "sleepScore": 88,
+      "mood": 3
     },
     "runs:2026-05-24": [
       {
-        "date": "2026-05-24",
         "effort": 7,
-        "dist": 6.01,
-        "pace": "7:50 /mi",
-        "elev": 223,
         "notes": "Rigged the second half of the run",
-        "humidity": 90,
-        "rest": false,
+        "hr": 156,
         "dur": "47:04",
-        "shoeId": "shoe_1779503449191",
+        "date": "2026-05-24",
+        "rest": false,
+        "humidity": 90,
+        "elev": 223,
+        "pace": "7:50 /mi",
         "temp": 69,
-        "hr": 156
+        "shoeId": "shoe_1779503449191",
+        "dist": 6.01
       }
     ],
     "vitamin:2026-05-21": "took",
     "strength:2026-05-28": [
       {
         "notes": "2xnormal + 1 min plank",
-        "duration": 7,
-        "type": "Core (Abs)"
+        "type": "Core (Abs)",
+        "duration": 7
       }
     ],
     "elyte:2026-05-21": 1,
@@ -538,18 +538,18 @@
     "vitamin:2026-05-24": "took",
     "runs:2026-06-05": [
       {
-        "dist": 9,
+        "effort": 6,
         "date": "2026-06-05",
-        "notes": "more rain + poop break",
-        "humidity": 94,
-        "hr": 148,
         "runType": "mlr",
         "temp": 73,
-        "effort": 6,
+        "humidity": 94,
+        "dist": 9,
+        "dur": "1:12:07",
+        "hr": 148,
+        "notes": "more rain + poop break",
+        "rest": false,
         "pace": "8:01 /mi",
         "elev": 413,
-        "dur": "1:12:07",
-        "rest": false,
         "shoeId": "shoe_1779503449191"
       }
     ],
@@ -565,27 +565,27 @@
     "iron:2026-06-07": "took",
     "daytype:2026-05-23": "easy",
     "health:2026-05-29": {
-      "sleepQuality": 2,
+      "sleepScore": 77,
+      "soreness": 2,
       "mood": 2,
+      "sleep": 6.27,
+      "hrvBaseline": 101,
+      "sleepQuality": 2,
+      "fatigue": 4,
+      "water": 168,
       "soreLocs": [
         "Other"
       ],
-      "soreness": 2,
-      "hrvBaseline": 101,
       "rhr": 47,
-      "sleepScore": 77,
-      "sleep": 6.27,
-      "fatigue": 4,
-      "water": 168,
       "hrv": 127
     },
     "note:2026-05-21": "Today felt pretty good. Felt my knee during the peloton but that was all",
     "iron:2026-05-30": "skip",
     "strength:2026-06-02": [
       {
-        "type": "Core (Abs)",
+        "notes": "2 X normal + plank",
         "duration": 7,
-        "notes": "2 X normal + plank"
+        "type": "Core (Abs)"
       }
     ],
     "xt:2026-06-05": [
@@ -598,19 +598,19 @@
     ],
     "runs:2026-05-31": [
       {
-        "notes": "rig fest",
-        "humidity": 85,
         "dist": 11,
-        "date": "2026-05-31",
-        "hr": 159,
-        "runType": "long",
         "temp": 72,
-        "pace": "7:12 /mi",
-        "elev": 194,
+        "humidity": 85,
+        "date": "2026-05-31",
+        "runType": "long",
         "effort": 8,
         "shoeId": "shoe_1779503449191",
+        "pace": "7:12 /mi",
+        "elev": 194,
+        "rest": false,
         "dur": "1:19:13",
-        "rest": false
+        "notes": "rig fest",
+        "hr": 159
       }
     ],
     "daytype:2026-05-30": "easy",
@@ -624,61 +624,61 @@
     "vitamin:2026-06-09": "took",
     "runs:2026-05-28": [
       {
-        "effort": 3,
-        "elev": 262,
-        "pace": "7:58 /mi",
-        "rest": false,
-        "dur": "47:51",
-        "shoeId": "shoe_1779503431806",
         "date": "2026-05-28",
+        "runType": "easy",
+        "effort": 3,
         "dist": 6,
         "humidity": 91,
-        "notes": "easy, felt foot a bit",
         "temp": 62,
-        "runType": "easy",
-        "hr": 141
+        "rest": false,
+        "hr": 141,
+        "notes": "easy, felt foot a bit",
+        "dur": "47:51",
+        "shoeId": "shoe_1779503431806",
+        "elev": 262,
+        "pace": "7:58 /mi"
       }
     ],
     "iron:2026-06-08": "skip",
     "elyte:2026-05-27": 1,
     "runs:2026-06-04": [
       {
-        "runType": "easy",
-        "temp": 71,
-        "hr": 144,
-        "date": "2026-06-04",
-        "dist": 6,
-        "notes": "rain",
-        "humidity": 97,
-        "rest": false,
-        "dur": "47:27",
-        "shoeId": "shoe_1779503431806",
-        "effort": 5,
+        "elev": 279,
         "pace": "7:54 /mi",
-        "elev": 279
+        "shoeId": "shoe_1779503431806",
+        "hr": 144,
+        "notes": "rain",
+        "dur": "47:27",
+        "rest": false,
+        "humidity": 97,
+        "temp": 71,
+        "dist": 6,
+        "effort": 5,
+        "runType": "easy",
+        "date": "2026-06-04"
       }
     ],
     "iron:2026-05-29": "took",
     "daytype:2026-05-21": "easy",
     "strength:2026-05-26": [
       {
-        "duration": 7,
         "notes": "2x normal routine, 1 minute plank",
+        "duration": 7,
         "type": "Core (Abs)"
       }
     ],
     "runs:2026-05-21": [
       {
-        "shoeId": null,
-        "hr": 152,
-        "rest": false,
-        "dur": "40:10",
-        "elev": 207,
-        "pace": "8:02 /mi",
-        "notes": "Tired from poor sleep, chest was a bit tight + stuffy nose",
         "date": "2026-05-21",
+        "rest": false,
+        "effort": 6,
+        "hr": 152,
+        "notes": "Tired from poor sleep, chest was a bit tight + stuffy nose",
+        "dur": "40:10",
+        "shoeId": null,
         "dist": 5,
-        "effort": 6
+        "elev": 207,
+        "pace": "8:02 /mi"
       }
     ],
     "xt:2026-05-19": [
@@ -689,70 +689,70 @@
       }
     ],
     "health:2026-05-24": {
-      "sleep": 8.43,
-      "rhr": 53,
-      "water": 152,
-      "hrv": 100,
-      "fatigue": 5,
       "soreness": 2,
+      "mood": 2,
+      "water": 152,
       "soreLocs": [
         "Left Foot",
         "Quads"
       ],
+      "rhr": 53,
+      "hrv": 100,
       "tiredness": 3,
+      "sleep": 8.43,
       "sleepQuality": 3,
-      "mood": 2
+      "fatigue": 5
     },
     "daytype:2026-05-27": "easy",
     "iron:2026-06-01": "took",
     "vitamin:2026-06-01": "took",
     "runs:2026-05-22": [
       {
-        "dur": "41:01",
-        "rest": false,
-        "hr": 151,
-        "shoeId": null,
-        "effort": 7,
         "dist": 5.05,
-        "date": "2026-05-22",
-        "notes": "First run back so I felt tired and chest was kinda tight",
+        "shoeId": null,
+        "pace": "8:07 /mi",
         "elev": 223,
-        "pace": "8:07 /mi"
+        "rest": false,
+        "date": "2026-05-22",
+        "dur": "41:01",
+        "hr": 151,
+        "notes": "First run back so I felt tired and chest was kinda tight",
+        "effort": 7
       }
     ],
     "health:2026-06-06": {
       "fatigue": 5,
-      "water": 152,
-      "hrv": 91,
-      "rhr": 52,
-      "sleepScore": 85,
-      "sleep": 8.1,
-      "mood": 3,
       "sleepQuality": 3,
+      "hrvBaseline": 99,
+      "sleep": 8.1,
+      "hrv": 91,
+      "water": 152,
+      "rhr": 52,
       "soreLocs": [
         "Left Foot"
       ],
-      "soreness": 1,
-      "hrvBaseline": 99
+      "mood": 3,
+      "sleepScore": 85,
+      "soreness": 1
     },
     "daytype:2026-06-01": "easy",
     "daytype:2026-06-08": "moderate",
     "iron:2026-05-22": "skip",
     "health:2026-06-04": {
-      "mood": 2,
+      "fatigue": 3,
+      "hrvBaseline": 100,
+      "sleep": 5.3,
       "sleepQuality": 2,
-      "soreness": 1,
+      "hrv": 89,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
-      "hrvBaseline": 100,
-      "fatigue": 3,
-      "hrv": 89,
-      "water": 144,
-      "sleepScore": 60,
       "rhr": 54,
-      "sleep": 5.3
+      "water": 144,
+      "mood": 2,
+      "sleepScore": 60,
+      "soreness": 1
     },
     "daytype:2026-06-06": "moderate",
     "daytype:2026-05-31": "hard",
@@ -761,75 +761,75 @@
       "foot pt"
     ],
     "health:2026-05-22": {
-      "water": 124,
+      "tiredness": 2,
       "hrv": 96,
-      "sleep": 5,
+      "water": 124,
       "soreLocs": [
         "Left Foot",
         "Right Foot"
       ],
+      "mood": 3,
       "soreness": 2,
-      "tiredness": 2,
       "sleepQuality": 2,
-      "mood": 3
+      "sleep": 5
     },
     "iron:2026-06-09": "took",
     "runs:2026-05-25": [
       {
-        "dur": "47:50",
-        "rest": false,
-        "shoeId": "shoe_1779503431806",
         "effort": 4,
+        "runType": "easy",
+        "date": "2026-05-25",
+        "temp": 69,
+        "humidity": 90,
+        "dist": 6,
+        "dur": "47:50",
+        "notes": "easy, just had to poop",
+        "hr": 148,
+        "rest": false,
         "pace": "7:58 /mi",
         "elev": 220,
-        "hr": 148,
-        "runType": "easy",
-        "temp": 69,
-        "dist": 6,
-        "date": "2026-05-25",
-        "notes": "easy, just had to poop",
-        "humidity": 90
+        "shoeId": "shoe_1779503431806"
       }
     ],
     "iron:2026-05-26": "skip",
     "health:2026-05-31": {
-      "hrvBaseline": 101,
+      "mood": 3,
       "soreness": 1,
+      "sleepScore": 96,
+      "fatigue": 5,
+      "sleepQuality": 3,
+      "hrvBaseline": 101,
+      "sleep": 6.73,
+      "hrv": 92,
       "soreLocs": [
         "Left Foot",
         "Left Knee"
       ],
-      "mood": 3,
-      "sleepQuality": 3,
-      "sleep": 6.73,
       "rhr": 50,
-      "sleepScore": 96,
-      "water": 160,
-      "hrv": 92,
-      "fatigue": 5
+      "water": 160
     },
     "strength:2026-05-21": [
       {
+        "notes": "7 min core session",
         "type": "Core",
-        "duration": 7,
-        "notes": "7 min core session"
+        "duration": 7
       }
     ],
     "runs:2026-05-30": [
       {
-        "shoeId": "shoe_1779503431806",
+        "hr": 142,
+        "notes": "humid + had to poop",
         "dur": "39:37",
         "rest": false,
-        "pace": "7:55 /mi",
         "elev": 102,
+        "pace": "7:55 /mi",
+        "shoeId": "shoe_1779503431806",
         "effort": 4,
-        "hr": 142,
+        "date": "2026-05-30",
         "runType": "easy",
-        "temp": 72,
-        "notes": "humid + had to poop",
         "humidity": 90,
-        "dist": 5,
-        "date": "2026-05-30"
+        "temp": 72,
+        "dist": 5
       }
     ],
     "health:2026-06-05": {
@@ -849,19 +849,19 @@
     },
     "runs:2026-06-01": [
       {
-        "temp": 74,
-        "runType": "easy",
-        "hr": 146,
-        "humidity": 92,
-        "notes": "hilly",
-        "date": "2026-06-01",
-        "dist": 5,
-        "shoeId": "shoe_1779503431806",
-        "rest": false,
-        "dur": "38:55",
-        "elev": 404,
         "pace": "7:47 /mi",
-        "effort": 6
+        "elev": 404,
+        "shoeId": "shoe_1779503431806",
+        "dur": "38:55",
+        "hr": 146,
+        "notes": "hilly",
+        "rest": false,
+        "temp": 74,
+        "humidity": 92,
+        "dist": 5,
+        "effort": 6,
+        "runType": "easy",
+        "date": "2026-06-01"
       }
     ]
   },
