@@ -3740,11 +3740,14 @@ async function _ghPush(){
   }catch(e){}
 
   // ── Merge: winner = whichever timestamp is higher; local wins on tie ──
+  // Any key with ts=0 is upgraded to Date.now() so all devices (including
+  // those running old cached code with remoteTs<=localTs) recognise it as newer.
+  const _pushNow=Date.now();
   const mergedData=Object.assign({},ghData);
   const mergedTs=Object.assign({},ghTs);
   Object.keys(localData).forEach(k=>{
     const lt=localTs[k]||0,rt=ghTs[k]||0;
-    if(lt>=rt){mergedData[k]=localData[k];mergedTs[k]=lt;}
+    if(lt>=rt){mergedData[k]=localData[k];mergedTs[k]=lt||_pushNow;}
   });
 
   const pwHash=localStorage.getItem('dash_pw_hash');
@@ -3774,7 +3777,7 @@ async function _ghPush(){
           const md2=Object.assign({},ghData2),mt2=Object.assign({},ghTs2);
           Object.keys(localData).forEach(k=>{
             const lt=localTs[k]||0,rt=ghTs2[k]||0;
-            if(lt>=rt){md2[k]=localData[k];mt2[k]=lt;}
+            if(lt>=rt){md2[k]=localData[k];mt2[k]=lt||_pushNow;}
           });
           const p2={lastUpdated:new Date().toISOString(),data:md2,timestamps:mt2,...(pwHash?{_pwHash:pwHash}:{})};
           const c2=btoa(unescape(encodeURIComponent(JSON.stringify(p2,null,2))));
