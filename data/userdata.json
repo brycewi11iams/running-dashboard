@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-12T12:02:07.222Z",
+  "lastUpdated": "2026-06-12T12:03:06.356Z",
   "data": {
     "elyte:2026-06-01": 1,
     "daytype:2026-06-07": "hard",
@@ -941,15 +941,19 @@
     "daytype:2026-06-12": "moderate",
     "goals:2026-06-12": [
       {
-        "text": "Download albums",
-        "done": false
+        "done": false,
+        "text": "Download albums"
       },
       {
         "text": "Foot + back pt",
         "done": false
       },
       {
-        "text": "Retainer",
+        "done": false,
+        "text": "Retainer"
+      },
+      {
+        "text": "Charge watch",
         "done": false
       }
     ],
@@ -1139,7 +1143,7 @@
     "strength:2026-06-11": 1781218523171,
     "xt:2026-06-11": 1781218528921,
     "daytype:2026-06-12": 1781265663804,
-    "goals:2026-06-12": 1781261544073,
+    "goals:2026-06-12": 1781265780890,
     "runs:2026-06-12": 1781265722998,
     "health:2026-06-12": 1781265692190,
     "iron:2026-06-12": 1781265685154
