@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-11T22:55:45.396Z",
+  "lastUpdated": "2026-06-12T10:52:24.076Z",
   "data": {
     "elyte:2026-06-01": 1,
     "daytype:2026-06-07": "hard",
@@ -937,6 +937,21 @@
         "effort": "easy",
         "hr": 146
       }
+    ],
+    "daytype:2026-06-12": "moderate",
+    "goals:2026-06-12": [
+      {
+        "text": "Download albums",
+        "done": false
+      },
+      {
+        "text": "Foot + back pt",
+        "done": false
+      },
+      {
+        "text": "Retainer",
+        "done": false
+      }
     ]
   },
   "timestamps": {
@@ -1089,7 +1104,9 @@
     "elyte:2026-06-11": 1781175234037,
     "iron:2026-06-11": 1781175222729,
     "strength:2026-06-11": 1781218523171,
-    "xt:2026-06-11": 1781218528921
+    "xt:2026-06-11": 1781218528921,
+    "daytype:2026-06-12": 1781261540470,
+    "goals:2026-06-12": 1781261544073
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
