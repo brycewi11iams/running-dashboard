@@ -202,14 +202,16 @@ body::after{
 .expand-chevron.open{transform:rotate(180deg);}
 
 /* MANUAL PAST SESSION PANEL */
-.manual-toggle{display:flex;align-items:center;justify-content:center;gap:8px;
+#manualPanel{margin-bottom:16px;}
+#manualPanel summary.manual-toggle{
+  display:flex;align-items:center;gap:8px;list-style:none;
   padding:11px 16px;border:1px dashed rgba(255,255,255,.13);border-radius:10px;
   color:var(--text-tertiary);font-size:12px;cursor:pointer;transition:all .2s;
-  margin-bottom:16px;width:100%;background:none;}
-.manual-toggle:hover{border-color:rgba(255,255,255,.28);color:var(--text-primary);}
-.manual-chev{font-size:10px;transition:transform .25s;margin-left:auto;}
-.manual-chev.open{transform:rotate(180deg);}
-.manual-body{display:none;}
+  width:100%;user-select:none;}
+#manualPanel summary.manual-toggle::-webkit-details-marker{display:none;}
+#manualPanel summary.manual-toggle::marker{display:none;}
+#manualPanel summary.manual-toggle:hover{border-color:rgba(255,255,255,.28);color:var(--text-primary);}
+#manualPanel[open] summary.manual-toggle{border-style:solid;border-color:rgba(255,255,255,.15);color:var(--text-primary);}
 .manual-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
 .manual-grid .full{grid-column:1/-1;}
 @media(max-width:480px){.manual-grid{grid-template-columns:1fr 1fr;}.manual-grid .full{grid-column:1/-1;}}
@@ -295,12 +297,9 @@ body::after{
   </div>
 
   <!-- MANUAL PAST SESSION PANEL -->
-  <div id="manualPanel">
-    <button class="manual-toggle" id="manualToggleBtn">
-      <span>📋 Log a Past Session</span>
-      <span class="manual-chev" id="manualChev">▾</span>
-    </button>
-    <div class="manual-body" id="manualBody">
+  <details id="manualPanel">
+    <summary class="manual-toggle">📋 Log a Past Session <span style="margin-left:auto;font-size:10px;">▾</span></summary>
+    <div id="manualBody">
       <div class="card">
         <div class="section-title">Past Session Details</div>
         <div class="manual-grid">
@@ -327,7 +326,7 @@ body::after{
         <button class="btn-primary" id="saveManBtn">Save Past Session</button>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- LOGGING PANEL -->
   <div id="loggingPanel" style="display:none;">
@@ -571,13 +570,6 @@ let manSess={exercises:[]};
 
 function initManualPanel(){
   document.getElementById('manDate').value=todayYMD();
-  document.getElementById('manualToggleBtn').addEventListener('click',()=>{
-    const body=document.getElementById('manualBody');
-    const chev=document.getElementById('manualChev');
-    const isOpen=body.style.display==='block';
-    body.style.display=isOpen?'none':'block';
-    chev.style.transform=isOpen?'':'rotate(180deg)';
-  });
   document.getElementById('addManExBtn').addEventListener('click',()=>{
     manSess.exercises.push({name:'',sets:[{reps:'',weightLbs:'',completed:false}]});
     renderManExercises();
@@ -748,8 +740,7 @@ function saveManSession(){
   renderManExercises();
 
   // Collapse panel with success flash
-  document.getElementById('manualBody').classList.remove('open');
-  document.getElementById('manualChev').classList.remove('open');
+  document.getElementById('manualPanel').removeAttribute('open');
   const btn=document.getElementById('saveManBtn');
   const orig=btn.textContent;
   btn.textContent='✓ Saved!';
