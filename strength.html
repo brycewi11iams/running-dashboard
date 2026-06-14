@@ -201,6 +201,20 @@ body::after{
 .expand-chevron{font-size:10px;color:var(--text-tertiary);transition:transform .3s;margin-left:4px;flex-shrink:0;}
 .expand-chevron.open{transform:rotate(180deg);}
 
+/* MANUAL PAST SESSION PANEL */
+.manual-toggle{display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 16px;border:1px dashed rgba(255,255,255,.13);border-radius:10px;
+  color:var(--text-tertiary);font-size:12px;cursor:pointer;transition:all .2s;
+  margin-bottom:16px;width:100%;background:none;}
+.manual-toggle:hover{border-color:rgba(255,255,255,.28);color:var(--text-primary);}
+.manual-chev{font-size:10px;transition:transform .25s;margin-left:auto;}
+.manual-chev.open{transform:rotate(180deg);}
+.manual-body{display:none;}
+.manual-body.open{display:block;}
+.manual-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+.manual-grid .full{grid-column:1/-1;}
+@media(max-width:480px){.manual-grid{grid-template-columns:1fr 1fr;}.manual-grid .full{grid-column:1/-1;}}
+
 /* LOCK SCREEN */
 #lockScreen{position:fixed;inset:0;background:#050506;display:flex;align-items:center;
   justify-content:center;z-index:99999;}
@@ -278,6 +292,41 @@ body::after{
         </div>
       </div>
       <button class="btn-primary" id="startSessionBtn">Start Session</button>
+    </div>
+  </div>
+
+  <!-- MANUAL PAST SESSION PANEL -->
+  <div id="manualPanel">
+    <button class="manual-toggle" id="manualToggleBtn">
+      <span>📋 Log a Past Session</span>
+      <span class="manual-chev" id="manualChev">▾</span>
+    </button>
+    <div class="manual-body" id="manualBody">
+      <div class="card">
+        <div class="section-title">Past Session Details</div>
+        <div class="manual-grid">
+          <div class="rf">
+            <div class="rf-lbl">Date</div>
+            <input class="hm-input" type="date" id="manDate">
+          </div>
+          <div class="rf">
+            <div class="rf-lbl">Start Time (opt.)</div>
+            <input class="hm-input" type="time" id="manStartTime">
+          </div>
+          <div class="rf">
+            <div class="rf-lbl">Duration (min)</div>
+            <input class="hm-input" type="number" inputmode="numeric" min="1" placeholder="45" id="manDuration" autocomplete="off">
+          </div>
+          <div class="rf full">
+            <div class="rf-lbl">Notes (optional)</div>
+            <input class="hm-input" type="text" id="manNotes" placeholder="e.g. post-long-run lift" autocomplete="off" autocorrect="off" autocapitalize="off">
+          </div>
+        </div>
+        <div class="section-title" style="margin-bottom:10px;">Exercises</div>
+        <div id="manExList"></div>
+        <button class="btn-ghost" id="addManExBtn" style="margin-bottom:14px;">+ Add Exercise</button>
+        <button class="btn-primary" id="saveManBtn">Save Past Session</button>
+      </div>
     </div>
   </div>
 
@@ -512,6 +561,199 @@ function initApp(){
   });
 
   syncLibFromFirestore();
+  loadPastSessions();
+  initManualPanel();
+}
+
+// ═══════════════════════════════════════════════
+// MANUAL PAST SESSION
+// ═══════════════════════════════════════════════
+let manSess={exercises:[]};
+
+function initManualPanel(){
+  document.getElementById('manDate').value=todayYMD();
+  document.getElementById('manualToggleBtn').addEventListener('click',()=>{
+    const open=document.getElementById('manualBody').classList.toggle('open');
+    document.getElementById('manualChev').classList.toggle('open',open);
+  });
+  document.getElementById('addManExBtn').addEventListener('click',()=>{
+    manSess.exercises.push({name:'',sets:[{reps:'',weightLbs:'',completed:false}]});
+    renderManExercises();
+    setTimeout(()=>{const ins=document.querySelectorAll('#manExList .ex-name-inp');if(ins.length)ins[ins.length-1].focus();},60);
+  });
+  document.getElementById('saveManBtn').addEventListener('click',saveManSession);
+  renderManExercises();
+}
+
+function addManSet(exIdx){
+  const ex=manSess.exercises[exIdx];
+  const prev=ex.sets[ex.sets.length-1]||{reps:'',weightLbs:''};
+  ex.sets.push({reps:prev.reps,weightLbs:prev.weightLbs,completed:false});
+  renderManExercises();
+}
+function delManSet(exIdx,setIdx){
+  manSess.exercises[exIdx].sets.splice(setIdx,1);
+  if(!manSess.exercises[exIdx].sets.length) manSess.exercises.splice(exIdx,1);
+  renderManExercises();
+}
+function delManEx(exIdx){
+  manSess.exercises.splice(exIdx,1);
+  renderManExercises();
+}
+
+function renderManExercises(){
+  const container=document.getElementById('manExList');
+  if(!container) return;
+  container.innerHTML='';
+  if(!manSess.exercises.length){
+    container.innerHTML='<div style="text-align:center;padding:12px 0;font-size:12px;color:var(--text-tertiary);">No exercises — tap + Add Exercise.</div>';
+    return;
+  }
+  manSess.exercises.forEach((ex,exIdx)=>{
+    const vol=calcExVol(ex);
+    const card=document.createElement('div');
+    card.className='ex-card';
+    card.innerHTML=`
+      <div class="ex-header">
+        <div class="ac-wrap">
+          <input class="ex-name-inp" type="text" placeholder="Exercise name…"
+            value="${escHtml(ex.name)}"
+            autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
+          <div class="ac-dropdown" id="man-ac-${exIdx}"></div>
+        </div>
+        <span class="ex-vol-label" id="man-ex-vol-${exIdx}">${vol>0?vol.toLocaleString()+' lbs':''}</span>
+        <button class="ex-del-btn" title="Remove exercise">✕</button>
+      </div>
+      <table class="sets-table">
+        <thead><tr>
+          <th class="left">Set</th><th>Reps</th><th>Weight (lbs)</th><th>Done</th><th></th>
+        </tr></thead>
+        <tbody id="man-sets-${exIdx}"></tbody>
+      </table>
+      <button class="btn-ghost" style="font-size:11px;padding:7px 14px;" data-man-add="${exIdx}">+ Add Set</button>`;
+    container.appendChild(card);
+
+    const tbody=card.querySelector(`#man-sets-${exIdx}`);
+    ex.sets.forEach((set,sIdx)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td class="set-num-cell"><span class="set-num">Set ${sIdx+1}</span></td>
+        <td><input class="set-inp" type="number" inputmode="numeric" min="0" placeholder="10"
+          value="${set.reps!==''&&set.reps!=null?set.reps:''}"
+          data-mex="${exIdx}" data-mset="${sIdx}" data-field="reps"></td>
+        <td><input class="set-inp" type="number" inputmode="decimal" min="0" step="2.5" placeholder="135"
+          value="${set.weightLbs!==''&&set.weightLbs!=null?set.weightLbs:''}"
+          data-mex="${exIdx}" data-mset="${sIdx}" data-field="weightLbs"></td>
+        <td><input type="checkbox" class="set-done-cb" ${set.completed?'checked':''}
+          data-mex="${exIdx}" data-mset="${sIdx}"></td>
+        <td><button class="set-del-btn" data-mdel="${exIdx}-${sIdx}">×</button></td>`;
+      tbody.appendChild(tr);
+    });
+
+    // name autocomplete
+    const nameInp=card.querySelector('.ex-name-inp');
+    nameInp.addEventListener('focus',()=>showManAc(exIdx,nameInp.value));
+    nameInp.addEventListener('input',e=>{manSess.exercises[exIdx].name=e.target.value;showManAc(exIdx,e.target.value);});
+    nameInp.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){closeAllAc();return;}
+      if(e.key==='Enter'){const f=document.querySelector(`#man-ac-${exIdx} .ac-item.focused`);if(f){e.preventDefault();selManAcItem(exIdx,f.dataset.val);}}
+    });
+
+    card.querySelector('.ex-del-btn').addEventListener('click',()=>delManEx(exIdx));
+    card.querySelector(`[data-man-add="${exIdx}"]`).addEventListener('click',()=>addManSet(exIdx));
+
+    card.querySelectorAll('.set-inp').forEach(inp=>{
+      inp.addEventListener('input',e=>{
+        const ei=+e.target.dataset.mex,si=+e.target.dataset.mset,f=e.target.dataset.field;
+        manSess.exercises[ei].sets[si][f]=e.target.value===''?'':+e.target.value;
+        const v=calcExVol(manSess.exercises[ei]);
+        const el=document.getElementById(`man-ex-vol-${ei}`);
+        if(el) el.textContent=v>0?v.toLocaleString()+' lbs':'';
+      });
+    });
+    card.querySelectorAll('.set-done-cb').forEach(cb=>{
+      cb.addEventListener('change',e=>{
+        const ei=+e.target.dataset.mex,si=+e.target.dataset.mset;
+        manSess.exercises[ei].sets[si].completed=e.target.checked;
+        const v=calcExVol(manSess.exercises[ei]);
+        const el=document.getElementById(`man-ex-vol-${ei}`);
+        if(el) el.textContent=v>0?v.toLocaleString()+' lbs':'';
+      });
+    });
+    card.querySelectorAll('.set-del-btn').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        const[ei,si]=e.currentTarget.dataset.mdel.split('-').map(Number);
+        delManSet(ei,si);
+      });
+    });
+  });
+}
+
+function showManAc(exIdx,query){
+  closeAllAc();
+  const dd=document.getElementById(`man-ac-${exIdx}`);
+  if(!dd) return;
+  const lib=getExLib();
+  const q=(query||'').toLowerCase().trim();
+  const matches=q?lib.filter(e=>e.toLowerCase().includes(q)).slice(0,8):lib.slice(0,8);
+  if(!matches.length){dd.classList.remove('open');return;}
+  dd.innerHTML=matches.map(m=>`<div class="ac-item" data-val="${escHtml(m)}">${escHtml(m)}</div>`).join('');
+  dd.querySelectorAll('.ac-item').forEach(item=>{
+    item.addEventListener('mousedown',e=>{e.preventDefault();selManAcItem(exIdx,item.dataset.val);});
+  });
+  dd.classList.add('open');
+}
+function selManAcItem(exIdx,val){
+  manSess.exercises[exIdx].name=val;
+  closeAllAc();
+  renderManExercises();
+}
+
+function saveManSession(){
+  const date=document.getElementById('manDate').value;
+  const duration=parseInt(document.getElementById('manDuration').value)||0;
+  const exercises=manSess.exercises.filter(e=>e.name.trim()&&e.sets.length>0);
+  if(!date){alert('Please enter a date.');return;}
+  if(duration<=0){alert('Please enter the session duration in minutes.');return;}
+  if(!exercises.length){alert('Add at least one exercise.');return;}
+
+  const startTime=document.getElementById('manStartTime').value||'';
+  const notes=document.getElementById('manNotes').value.trim();
+  let totalVolumeLbs=0;
+  exercises.forEach(ex=>ex.sets.forEach(s=>{if(s.completed)totalVolumeLbs+=(+s.reps||0)*(+s.weightLbs||0);}));
+
+  const doc={
+    type:'Strength',duration,notes,date,startTime,endTime:'',detailed:true,
+    exercises:exercises.map((ex,i)=>({
+      name:ex.name.trim(),
+      sets:ex.sets.map((s,si)=>({setNumber:si+1,reps:+s.reps||0,weightLbs:+s.weightLbs||0,completed:!!s.completed}))
+    })),
+    totalVolumeLbs,createdAt:Date.now()
+  };
+
+  const key='strength:'+date;
+  const existing=storeGet(key)||[];
+  existing.unshift(doc);
+  storeSet(key,existing);
+  exercises.forEach(ex=>addToLib(ex.name.trim()));
+
+  // Reset form
+  manSess={exercises:[]};
+  document.getElementById('manDate').value=todayYMD();
+  document.getElementById('manDuration').value='';
+  document.getElementById('manStartTime').value='';
+  document.getElementById('manNotes').value='';
+  renderManExercises();
+
+  // Collapse panel with success flash
+  document.getElementById('manualBody').classList.remove('open');
+  document.getElementById('manualChev').classList.remove('open');
+  const btn=document.getElementById('saveManBtn');
+  const orig=btn.textContent;
+  btn.textContent='✓ Saved!';
+  btn.style.cssText='background:linear-gradient(180deg,var(--success) 0%,#4fc98a 100%);color:#0A0A0B;';
+  setTimeout(()=>{btn.textContent=orig;btn.style.cssText='';},2000);
+
   loadPastSessions();
 }
 
