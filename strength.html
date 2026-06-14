@@ -210,7 +210,6 @@ body::after{
 .manual-chev{font-size:10px;transition:transform .25s;margin-left:auto;}
 .manual-chev.open{transform:rotate(180deg);}
 .manual-body{display:none;}
-.manual-body.open{display:block;}
 .manual-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
 .manual-grid .full{grid-column:1/-1;}
 @media(max-width:480px){.manual-grid{grid-template-columns:1fr 1fr;}.manual-grid .full{grid-column:1/-1;}}
@@ -573,8 +572,11 @@ let manSess={exercises:[]};
 function initManualPanel(){
   document.getElementById('manDate').value=todayYMD();
   document.getElementById('manualToggleBtn').addEventListener('click',()=>{
-    const open=document.getElementById('manualBody').classList.toggle('open');
-    document.getElementById('manualChev').classList.toggle('open',open);
+    const body=document.getElementById('manualBody');
+    const chev=document.getElementById('manualChev');
+    const isOpen=body.style.display==='block';
+    body.style.display=isOpen?'none':'block';
+    chev.style.transform=isOpen?'':'rotate(180deg)';
   });
   document.getElementById('addManExBtn').addEventListener('click',()=>{
     manSess.exercises.push({name:'',sets:[{reps:'',weightLbs:'',completed:false}]});
