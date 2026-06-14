@@ -2563,6 +2563,7 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
   document.getElementById('runType').value='';
   document.getElementById('runRest').checked=false;
   document.getElementById('paceDisp').textContent='—';
+  fetchAndFillWeather(); // re-fill weather on cleared form
   loadRunLog();updateWeekly();
   renderWater(hGet(today).water||0);
   updateSweatCalc();
@@ -3215,10 +3216,20 @@ async function fetchAndFillWeather(){
   const tempInp=document.getElementById('runTemp');
   const humInp=document.getElementById('runHumidity');
   if(!tempInp||!humInp) return;
-  if(tempInp.value.trim()!==''&&humInp.value.trim()!=='') return; // already filled
 
-  // Try to get coords from today's most recent run (Coros sync may have stored them)
+  // If both already have a value, nothing to do
+  if(tempInp.value.trim()!==''&&humInp.value.trim()!=='') return;
+
+  // Check if we already fetched for today and cached it
   const today=activeDate();
+  const cached=storeGet('weather_auto:'+today);
+  if(cached){
+    if(tempInp.value.trim()===''&&cached.temp!=null){tempInp.value=cached.temp;markAutoFilled(tempInp);}
+    if(humInp.value.trim()===''&&cached.humidity!=null){humInp.value=cached.humidity;markAutoFilled(humInp);}
+    return;
+  }
+
+  // Fall back to Stone Oak if no GPS coords on today's runs
   const runs=storeGet('runs:'+today)||[];
   const runWithCoords=runs.find(r=>r.lat!=null&&r.lon!=null);
   const lat=runWithCoords?runWithCoords.lat:29.667;
@@ -3229,16 +3240,12 @@ async function fetchAndFillWeather(){
     const res=await fetch(url);
     if(!res.ok) return;
     const data=await res.json();
-    const temp=data?.current?.temperature_2m;
-    const humidity=data?.current?.relative_humidity_2m;
-    if(temp!=null&&tempInp.value.trim()===''){
-      tempInp.value=Math.round(temp);
-      markAutoFilled(tempInp);
-    }
-    if(humidity!=null&&humInp.value.trim()===''){
-      humInp.value=Math.round(humidity);
-      markAutoFilled(humInp);
-    }
+    const temp=data?.current?.temperature_2m!=null?Math.round(data.current.temperature_2m):null;
+    const humidity=data?.current?.relative_humidity_2m!=null?Math.round(data.current.relative_humidity_2m):null;
+    // Cache so refreshes don't re-fetch
+    storeSet('weather_auto:'+today,{temp,humidity},0);
+    if(temp!=null&&tempInp.value.trim()===''){tempInp.value=temp;markAutoFilled(tempInp);}
+    if(humidity!=null&&humInp.value.trim()===''){humInp.value=humidity;markAutoFilled(humInp);}
   }catch(e){}
 }
 
@@ -3253,12 +3260,8 @@ function markAutoFilled(inp){
   inp.addEventListener('input',()=>{tag.remove();},{once:true});
 }
 
-// Auto-fetch when user focuses either weather field and it's empty
-['runTemp','runHumidity'].forEach(id=>{
-  document.getElementById(id).addEventListener('focus',function(){
-    if(this.value.trim()==='') fetchAndFillWeather();
-  },{once:false});
-});
+// Fetch on page load so fields are pre-filled before user touches the form
+fetchAndFillWeather();
 
 // ═══════════════════════════════════════════════
 // HYDRATION CARD
