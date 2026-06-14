@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strength Session · Dashboard</title>
+<style>
+:root{
+  --text-primary:#FAFAFA;--text-secondary:#B8B6B0;--text-tertiary:#76746E;
+  --success:#6BE3A4;--warning:#F2C063;--danger:#FF6B6B;
+  --card-bg:rgba(255,255,255,0.04);--card-radius:16px;--card-pad:20px;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  background:#050506;color:var(--text-primary);
+  font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  min-height:100vh;
+  padding:max(env(safe-area-inset-top,0px),24px) 20px 130px;
+  max-width:680px;margin:0 auto;position:relative;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;top:14%;left:82%;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(139,159,232,0.12) 0%,transparent 70%);
+  filter:blur(40px);pointer-events:none;z-index:0;
+  animation:bg-drift 36s alternate infinite ease-in-out;
+}
+body::after{
+  content:'';position:fixed;bottom:10%;left:18%;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(107,227,164,0.06) 0%,transparent 70%);
+  filter:blur(40px);pointer-events:none;z-index:0;
+}
+@keyframes bg-drift{0%{transform:translate(0,0);}100%{transform:translate(-40px,30px);}}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='3' height='3'%3E%3Crect width='1' height='1' x='1' y='1' fill='rgba(255,255,255,0.014)'/%3E%3C/svg%3E");}
+.content{position:relative;z-index:1;}
+
+/* HEADER */
+.page-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.back-link{color:var(--text-tertiary);text-decoration:none;font-size:12px;
+  font-family:var(--font-mono);letter-spacing:.06em;transition:color .15s;
+  display:inline-flex;align-items:center;gap:4px;padding:5px 10px;
+  border:1px solid rgba(255,255,255,.08);border-radius:8px;}
+.back-link:hover{color:var(--text-primary);border-color:rgba(255,255,255,.18);}
+.page-title{font-size:24px;font-weight:700;letter-spacing:-.025em;
+  background:linear-gradient(180deg,#FFFFFF 0%,#C7C4BC 120%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* CARD */
+.card{background:var(--card-bg);border-radius:var(--card-radius);padding:var(--card-pad);
+  backdrop-filter:blur(24px) saturate(1.2);box-shadow:0 12px 40px rgba(0,0,0,.45);margin-bottom:16px;}
+
+/* SECTION TITLE */
+.section-title{font-size:10.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text-tertiary);display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.section-title::before{content:'';width:18px;height:1px;background:var(--text-tertiary);opacity:.6;}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.08),transparent);}
+
+/* FORM */
+.rf{display:flex;flex-direction:column;gap:4px;}
+.rf-lbl{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);}
+.hm-input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;
+  color:var(--text-primary);font-family:var(--font-mono);font-size:13px;padding:8px 10px;
+  width:100%;outline:none;transition:border-color .2s;}
+.hm-input:focus{border-color:rgba(255,255,255,.25);}
+.hm-input::placeholder{color:var(--text-tertiary);}
+
+/* BUTTONS */
+.btn-primary{
+  background:linear-gradient(180deg,#FFFFFF 0%,#E8E5DD 100%);color:#0A0A0B;
+  border:none;border-radius:10px;font-size:13px;font-weight:700;padding:12px 24px;
+  cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.6);
+  transition:transform .15s,box-shadow .15s;width:100%;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.6);}
+.btn-secondary{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;color:var(--text-primary);font-size:13px;font-weight:600;
+  padding:10px 20px;cursor:pointer;transition:background .2s;width:100%;}
+.btn-secondary:hover{background:rgba(255,255,255,.10);}
+.btn-danger-outline{background:none;border:1px solid rgba(255,107,107,.25);border-radius:8px;
+  color:var(--danger);font-size:12px;font-weight:600;padding:8px 16px;cursor:pointer;
+  transition:all .2s;width:100%;margin-top:4px;}
+.btn-danger-outline:hover{background:rgba(255,107,107,.10);}
+.btn-ghost{background:none;border:1px dashed rgba(255,255,255,.14);border-radius:8px;
+  color:var(--text-tertiary);font-size:12px;padding:9px 16px;cursor:pointer;transition:all .2s;width:100%;}
+.btn-ghost:hover{border-color:rgba(255,255,255,.28);color:var(--text-primary);}
+
+/* SETUP GRID */
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.setup-grid .full{grid-column:1/-1;}
+
+/* EXERCISE CARD */
+.ex-card{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:16px;margin-bottom:12px;}
+.ex-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.ac-wrap{position:relative;flex:1;min-width:0;}
+.ex-name-inp{width:100%;background:transparent;border:none;
+  border-bottom:1px solid rgba(255,255,255,.14);
+  color:var(--text-primary);font-size:15px;font-weight:600;padding:4px 0;
+  outline:none;transition:border-color .2s;font-family:inherit;}
+.ex-name-inp:focus{border-bottom-color:rgba(255,255,255,.4);}
+.ex-name-inp::placeholder{color:var(--text-tertiary);font-weight:400;}
+.ex-vol-label{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);
+  white-space:nowrap;flex-shrink:0;}
+.ex-del-btn{background:none;border:none;cursor:pointer;color:var(--text-tertiary);
+  font-size:17px;padding:3px 5px;transition:color .15s;line-height:1;flex-shrink:0;}
+.ex-del-btn:hover{color:var(--danger);}
+
+/* AUTOCOMPLETE */
+.ac-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;
+  background:#1c1c20;border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  z-index:300;max-height:220px;overflow-y:auto;display:none;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);}
+.ac-dropdown.open{display:block;}
+.ac-item{padding:10px 14px;font-size:13px;color:var(--text-secondary);cursor:pointer;transition:background .1s;}
+.ac-item:first-child{border-radius:10px 10px 0 0;}
+.ac-item:last-child{border-radius:0 0 10px 10px;}
+.ac-item:hover,.ac-item.focused{background:rgba(255,255,255,.08);color:var(--text-primary);}
+
+/* SETS TABLE */
+.sets-table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+.sets-table th{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-tertiary);padding:4px 6px 8px;text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.06);}
+.sets-table th.left{text-align:left;}
+.sets-table td{padding:5px 4px;vertical-align:middle;text-align:center;}
+.set-num-cell{text-align:left!important;}
+.set-num{font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);padding-left:2px;}
+.set-inp{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;
+  color:var(--text-primary);font-family:var(--font-mono);font-size:13px;padding:7px 4px;
+  width:68px;text-align:center;outline:none;transition:border-color .2s;
+  -moz-appearance:textfield;appearance:textfield;}
+.set-inp:focus{border-color:rgba(255,255,255,.28);}
+.set-inp::-webkit-inner-spin-button,.set-inp::-webkit-outer-spin-button{-webkit-appearance:none;}
+.set-done-cb{width:20px;height:20px;min-width:20px;border-radius:6px;
+  border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03);
+  appearance:none;-webkit-appearance:none;cursor:pointer;position:relative;transition:all .2s;display:block;margin:0 auto;}
+.set-done-cb:checked{background:var(--success);border-color:var(--success);}
+.set-done-cb:checked::after{content:'';position:absolute;left:5px;top:2px;width:5px;height:9px;
+  border:2px solid #0A0A0B;border-left:none;border-top:none;transform:rotate(45deg);}
+.set-del-btn{background:none;border:none;cursor:pointer;color:var(--text-tertiary);
+  font-size:15px;padding:3px 5px;transition:color .15s;line-height:1;}
+.set-del-btn:hover{color:var(--danger);}
+
+/* STICKY FOOTER */
+.sticky-footer{position:fixed;bottom:0;left:0;right:0;
+  background:rgba(5,5,6,.94);backdrop-filter:blur(28px) saturate(1.4);
+  border-top:1px solid rgba(255,255,255,.07);
+  padding:12px 20px max(env(safe-area-inset-bottom,0px),12px);
+  z-index:200;}
+.footer-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.footer-stats{display:flex;gap:14px;flex:1;flex-wrap:wrap;}
+.footer-stat{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.footer-stat-val{font-family:var(--font-mono);font-size:14px;font-weight:700;
+  color:var(--text-primary);font-variant-numeric:tabular-nums;}
+.footer-stat-lbl{font-size:8.5px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-tertiary);}
+.finish-btn{
+  background:linear-gradient(180deg,var(--success) 0%,#4fc98a 100%);color:#0A0A0B;
+  border:none;border-radius:10px;font-size:13px;font-weight:700;padding:12px 22px;
+  cursor:pointer;box-shadow:0 2px 8px rgba(107,227,164,.3);transition:all .15s;white-space:nowrap;}
+.finish-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(107,227,164,.45);}
+
+/* CONFIRM CARD */
+.confirm-card{background:rgba(107,227,164,.06);border:1px solid rgba(107,227,164,.2);
+  border-radius:var(--card-radius);padding:var(--card-pad);margin-bottom:16px;text-align:center;}
+.confirm-icon{font-size:36px;margin-bottom:8px;}
+.confirm-title{font-size:19px;font-weight:700;color:var(--success);margin-bottom:4px;}
+.confirm-sub{font-size:11px;color:var(--text-secondary);margin-bottom:18px;font-family:var(--font-mono);}
+.confirm-stats{display:flex;gap:10px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
+.confirm-stat{display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px 14px;background:rgba(255,255,255,.04);border-radius:10px;}
+.confirm-stat-val{font-family:var(--font-mono);font-size:17px;font-weight:700;color:var(--text-primary);}
+.confirm-stat-lbl{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);}
+.confirm-ex-list{text-align:left;margin-bottom:16px;}
+.confirm-ex-row{font-size:12px;color:var(--text-secondary);padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;gap:8px;}
+.confirm-ex-row:last-child{border-bottom:none;}
+.view-dash-link{display:inline-block;color:var(--success);font-size:12px;font-family:var(--font-mono);
+  text-decoration:none;padding:9px 20px;border:1px solid rgba(107,227,164,.25);
+  border-radius:8px;transition:all .2s;margin-top:4px;}
+.view-dash-link:hover{background:rgba(107,227,164,.10);}
+
+/* PAST SESSIONS */
+.past-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);
+  border-radius:12px;padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:background .2s;}
+.past-card:hover{background:rgba(255,255,255,.04);}
+.past-card-hdr{display:flex;align-items:center;gap:10px;}
+.past-card-icon{font-size:15px;flex-shrink:0;}
+.past-card-date{font-size:13px;font-weight:600;color:var(--text-primary);flex:1;}
+.past-card-meta{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);
+  text-align:right;line-height:1.6;flex-shrink:0;}
+.past-expand{overflow:hidden;max-height:0;transition:max-height .3s ease;margin-top:0;}
+.past-expand.open{max-height:800px;margin-top:12px;}
+.past-ex-row{font-size:12px;color:var(--text-secondary);padding:5px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);}
+.past-ex-row:last-child{border-bottom:none;}
+.past-ex-name{font-weight:600;color:var(--text-primary);}
+.past-ex-detail{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);margin-top:2px;}
+.past-notes{margin-top:8px;font-size:11px;color:var(--text-tertiary);font-style:italic;}
+.past-empty{font-size:12px;color:var(--text-tertiary);font-style:italic;text-align:center;padding:16px 0;}
+.expand-chevron{font-size:10px;color:var(--text-tertiary);transition:transform .3s;margin-left:4px;flex-shrink:0;}
+.expand-chevron.open{transform:rotate(180deg);}
+
+/* LOCK SCREEN */
+#lockScreen{position:fixed;inset:0;background:#050506;display:flex;align-items:center;
+  justify-content:center;z-index:99999;}
+#lockCard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;padding:36px 32px;width:300px;display:flex;flex-direction:column;gap:14px;
+  box-shadow:0 24px 64px rgba(0,0,0,.6);}
+#lockTitle{font-size:18px;font-weight:700;color:var(--text-primary);letter-spacing:-.01em;text-align:center;}
+#lockSub{font-size:11px;color:var(--text-tertiary);text-align:center;margin-top:-6px;line-height:1.5;}
+#lockInp{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  color:var(--text-primary);font-size:14px;padding:12px 16px;outline:none;
+  transition:border-color .2s;width:100%;font-family:var(--font-mono);}
+#lockInp:focus{border-color:rgba(255,255,255,.3);}
+#lockBtn{background:rgba(139,159,232,.15);border:1px solid rgba(139,159,232,.3);border-radius:10px;
+  color:#8B9FE8;font-size:13px;font-weight:700;padding:12px;width:100%;
+  cursor:pointer;transition:all .2s;letter-spacing:.04em;}
+#lockBtn:hover{background:rgba(139,159,232,.28);}
+#lockErr{font-size:11px;color:#FF6B6B;text-align:center;min-height:14px;font-family:var(--font-mono);}
+
+/* RESPONSIVE */
+@media(max-width:480px){
+  .setup-grid{grid-template-columns:1fr;}
+  .setup-grid .full{grid-column:1;}
+  .footer-stats{gap:10px;}
+  .footer-stat-val{font-size:12px;}
+  .set-inp{width:58px;font-size:12px;}
+  .confirm-stats{gap:6px;}
+  .confirm-stat{padding:8px 10px;}
+  .confirm-stat-val{font-size:14px;}
+  .page-title{font-size:20px;}
+}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="lockScreen" style="display:none;">
+  <div id="lockCard">
+    <div id="lockTitle">Strength Session</div>
+    <div id="lockSub">Your personal dashboard.</div>
+    <input id="lockInp" type="password" placeholder="Password" autocomplete="current-password" spellcheck="false">
+    <button id="lockBtn">Unlock</button>
+    <div id="lockErr"></div>
+  </div>
+</div>
+
+<div class="grain"></div>
+<div class="content" id="appContent" style="display:none;">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <a href="index.html" class="back-link">← Dashboard</a>
+    <h1 class="page-title">🏋️ Strength Session</h1>
+  </div>
+
+  <!-- SETUP PANEL -->
+  <div id="setupPanel">
+    <div class="card">
+      <div class="section-title">New Session</div>
+      <div class="setup-grid">
+        <div class="rf">
+          <div class="rf-lbl">Date</div>
+          <input class="hm-input" type="date" id="sessionDate">
+        </div>
+        <div class="rf">
+          <div class="rf-lbl">Start Time</div>
+          <input class="hm-input" type="time" id="sessionStartTime">
+        </div>
+        <div class="rf full">
+          <div class="rf-lbl">Notes (optional)</div>
+          <input class="hm-input" type="text" id="sessionNotes"
+            placeholder="e.g. post-long-run lift, tired legs…"
+            autocomplete="off" autocorrect="off" autocapitalize="off">
+        </div>
+      </div>
+      <button class="btn-primary" id="startSessionBtn">Start Session</button>
+    </div>
+  </div>
+
+  <!-- LOGGING PANEL -->
+  <div id="loggingPanel" style="display:none;">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <div class="section-title" style="margin-bottom:0;">Exercises</div>
+        <div id="sessionDateLabel" style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);"></div>
+      </div>
+      <div id="exerciseList"></div>
+      <button class="btn-ghost" id="addExerciseBtn">+ Add Exercise</button>
+    </div>
+    <button class="btn-danger-outline" id="cancelSessionBtn">Discard Session</button>
+  </div>
+
+  <!-- CONFIRMATION PANEL -->
+  <div id="confirmPanel" style="display:none;">
+    <div class="confirm-card">
+      <div class="confirm-icon">✓</div>
+      <div class="confirm-title">Session Saved</div>
+      <div class="confirm-sub" id="confirmSub"></div>
+      <div class="confirm-stats" id="confirmStats"></div>
+      <div class="confirm-ex-list" id="confirmExList"></div>
+      <a href="index.html" class="view-dash-link">View on Dashboard →</a>
+    </div>
+    <button class="btn-secondary" id="newSessionBtn" style="margin-bottom:16px;">Log Another Session</button>
+  </div>
+
+  <!-- PAST SESSIONS -->
+  <div id="pastSessionsSection">
+    <div class="section-title">Past Sessions</div>
+    <div id="pastSessionsList"></div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- STICKY FOOTER -->
+<div class="sticky-footer" id="stickyFooter" style="display:none;">
+  <div class="footer-inner">
+    <div class="footer-stats">
+      <div class="footer-stat">
+        <div class="footer-stat-val" id="footerTimer">0:00</div>
+        <div class="footer-stat-lbl">Elapsed</div>
+      </div>
+      <div class="footer-stat">
+        <div class="footer-stat-val" id="footerExCount">0</div>
+        <div class="footer-stat-lbl">Exercises</div>
+      </div>
+      <div class="footer-stat">
+        <div class="footer-stat-val" id="footerSetCount">0</div>
+        <div class="footer-stat-lbl">Sets</div>
+      </div>
+      <div class="footer-stat">
+        <div class="footer-stat-val" id="footerVolume">0</div>
+        <div class="footer-stat-lbl">Vol (lbs)</div>
+      </div>
+    </div>
+    <button class="finish-btn" id="finishSessionBtn">Finish</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// LOCK SCREEN
+// ═══════════════════════════════════════════════
+(async function initLock(){
+  const PW_HASH_KEY  = 'dash_pw_hash';
+  const SESSION_KEY  = 'dash_unlocked';
+  const REMEMBER_KEY = 'dash_remembered';
+
+  function showApp(){
+    sessionStorage.setItem(SESSION_KEY,'1');
+    const ls=document.getElementById('lockScreen');
+    ls.style.opacity='0';ls.style.transition='opacity .3s';
+    setTimeout(()=>{ls.style.display='none';},300);
+    document.getElementById('appContent').style.display='';
+    initApp();
+  }
+
+  // Already unlocked this session or device is remembered
+  if(sessionStorage.getItem(SESSION_KEY)||localStorage.getItem(REMEMBER_KEY)){showApp();return;}
+
+  const storedHash=localStorage.getItem(PW_HASH_KEY);
+  if(!storedHash){showApp();return;} // no password set
+
+  const screen=document.getElementById('lockScreen');
+  const inp=document.getElementById('lockInp');
+  const btn=document.getElementById('lockBtn');
+  const err=document.getElementById('lockErr');
+  screen.style.display='flex';
+  requestAnimationFrame(()=>inp.focus());
+
+  async function sha256(str){
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function tryUnlock(){
+    err.textContent='';
+    if((await sha256(inp.value))===storedHash){showApp();}
+    else{err.textContent='Incorrect password.';inp.value='';inp.focus();}
+  }
+  btn.addEventListener('click',tryUnlock);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter') tryUnlock();});
+})();
+
+// ═══════════════════════════════════════════════
+// FIREBASE
+// ═══════════════════════════════════════════════
+const FIREBASE_CONFIG={
+  apiKey:           "AIzaSyBHeP_iYtgnh2GzP3IcehL8GDPCoGa4im4",
+  authDomain:       "personal-dashboard-dbc2e.firebaseapp.com",
+  projectId:        "personal-dashboard-dbc2e",
+  storageBucket:    "personal-dashboard-dbc2e.firebasestorage.app",
+  messagingSenderId:"251399672627",
+  appId:            "1:251399672627:web:54258e0c33f232755f2446"
+};
+let _db=null;
+(function(){
+  try{firebase.initializeApp(FIREBASE_CONFIG);_db=firebase.firestore();}
+  catch(e){console.warn('[Firebase]',e);}
+})();
+
+// ═══════════════════════════════════════════════
+// STORAGE — same pattern as index.html
+// ═══════════════════════════════════════════════
+function storeGet(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
+function storeSet(k,v){
+  localStorage.setItem(k,JSON.stringify(v));
+  try{if(_db)_db.collection('store').doc(k).set({v}).catch(e=>console.warn('[FS]',e));}catch(e){}
+}
+function storeDel(k){
+  localStorage.removeItem(k);
+  try{if(_db)_db.collection('store').doc(k).delete().catch(()=>{});}catch(e){}
+}
+
+// ═══════════════════════════════════════════════
+// DATE / STRING HELPERS
+// ═══════════════════════════════════════════════
+function localYMD(dt){
+  return[dt.getFullYear(),String(dt.getMonth()+1).padStart(2,'0'),String(dt.getDate()).padStart(2,'0')].join('-');
+}
+function todayYMD(){return localYMD(new Date());}
+function nowHHMM(){
+  const n=new Date();
+  return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+}
+function fmtDate(ymd){
+  if(!ymd||!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return ymd||'';
+  const[y,m,d]=ymd.split('-').map(Number);
+  return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════════
+// EXERCISE LIBRARY
+// ═══════════════════════════════════════════════
+const SEED_EXERCISES=[
+  'Bulgarian Split Squat','Romanian Deadlift','Hip Thrust','Single-Leg Press',
+  'Calf Raise','Nordic Hamstring Curl','Copenhagen Plank','Lateral Band Walk',
+  'Single-Leg Romanian Deadlift','Step-Up','Box Jump','Goblet Squat',
+  'Glute Bridge','Dead Bug','Pallof Press','Cable Pull-Through'
+];
+
+function getExLib(){
+  const stored=storeGet('strength:exerciseLibrary');
+  if(stored&&stored.length){
+    // Merge stored with seeds, keeping stored order (user's recent first)
+    const set=new Set(stored.map(s=>s.toLowerCase()));
+    const merged=[...stored];
+    SEED_EXERCISES.forEach(s=>{if(!set.has(s.toLowerCase())) merged.push(s);});
+    return merged;
+  }
+  return[...SEED_EXERCISES];
+}
+
+function addToLib(name){
+  const trimmed=name.trim();
+  if(!trimmed) return;
+  const lib=getExLib();
+  const lower=trimmed.toLowerCase();
+  // Move to front if already exists, otherwise prepend
+  const idx=lib.findIndex(e=>e.toLowerCase()===lower);
+  if(idx>0) lib.splice(idx,1);
+  if(idx!==0) lib.unshift(trimmed);
+  storeSet('strength:exerciseLibrary',lib);
+}
+
+// Sync library from Firestore on init
+function syncLibFromFirestore(){
+  if(!_db) return;
+  _db.collection('store').doc('strength:exerciseLibrary').get().then(snap=>{
+    if(!snap.exists) return;
+    const data=snap.data();
+    if(!data||!data.v||!data.v.length) return;
+    const local=storeGet('strength:exerciseLibrary')||[];
+    // Merge: local recent first, then firestore, then seeds
+    const merged=[...new Set([...local,...data.v,...SEED_EXERCISES])];
+    localStorage.setItem('strength:exerciseLibrary',JSON.stringify(merged));
+  }).catch(()=>{});
+}
+
+// ═══════════════════════════════════════════════
+// SESSION STATE
+// ═══════════════════════════════════════════════
+let session={
+  active:false,date:'',startTime:'',startTs:null,notes:'',
+  exercises:[] // [{name, sets:[{reps,weightLbs,completed}]}]
+};
+let _timerInterval=null;
+let _activeAcIdx=-1; // which exercise has open autocomplete
+
+// ═══════════════════════════════════════════════
+// APP INIT
+// ═══════════════════════════════════════════════
+function initApp(){
+  document.getElementById('sessionDate').value=todayYMD();
+  document.getElementById('sessionStartTime').value=nowHHMM();
+
+  document.getElementById('startSessionBtn').addEventListener('click',startSession);
+  document.getElementById('addExerciseBtn').addEventListener('click',addExercise);
+  document.getElementById('finishSessionBtn').addEventListener('click',finishSession);
+  document.getElementById('cancelSessionBtn').addEventListener('click',cancelSession);
+  document.getElementById('newSessionBtn').addEventListener('click',resetToSetup);
+
+  // Close autocomplete on outside click
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.ac-wrap')) closeAllAc();
+  });
+
+  syncLibFromFirestore();
+  loadPastSessions();
+}
+
+// ═══════════════════════════════════════════════
+// SESSION LIFECYCLE
+// ═══════════════════════════════════════════════
+function startSession(){
+  const date=document.getElementById('sessionDate').value;
+  const startTime=document.getElementById('sessionStartTime').value;
+  if(!date||!startTime){alert('Please fill in the date and start time.');return;}
+
+  session={
+    active:true,date,startTime,
+    startTs:Date.now(),
+    notes:document.getElementById('sessionNotes').value.trim(),
+    exercises:[]
+  };
+  document.getElementById('sessionDateLabel').textContent=fmtDate(date)+' · '+startTime;
+  document.getElementById('setupPanel').style.display='none';
+  document.getElementById('loggingPanel').style.display='';
+  document.getElementById('stickyFooter').style.display='';
+  renderExercises();
+  startTimer();
+  updateFooter();
+}
+
+function cancelSession(){
+  if(!confirm('Discard this session? All exercise data will be lost.')) return;
+  session={active:false,date:'',startTime:'',startTs:null,notes:'',exercises:[]};
+  clearInterval(_timerInterval);
+  resetToSetup();
+}
+
+function resetToSetup(){
+  document.getElementById('sessionDate').value=todayYMD();
+  document.getElementById('sessionStartTime').value=nowHHMM();
+  document.getElementById('sessionNotes').value='';
+  document.getElementById('exerciseList').innerHTML='';
+  document.getElementById('setupPanel').style.display='';
+  document.getElementById('loggingPanel').style.display='none';
+  document.getElementById('stickyFooter').style.display='none';
+  document.getElementById('confirmPanel').style.display='none';
+  loadPastSessions();
+}
+
+function finishSession(){
+  if(!session.active) return;
+  const exercises=session.exercises.filter(e=>e.name.trim()&&e.sets.length>0);
+  if(!exercises.length){alert('Add at least one exercise before finishing.');return;}
+
+  const endTime=nowHHMM();
+  const endTs=Date.now();
+  const durationMinutes=Math.max(1,Math.round((endTs-session.startTs)/60000));
+
+  let totalVolumeLbs=0;
+  exercises.forEach(ex=>{
+    ex.sets.forEach(s=>{
+      if(s.completed) totalVolumeLbs+=(+s.reps||0)*(+s.weightLbs||0);
+    });
+  });
+
+  const sessionDoc={
+    type:'Strength',
+    duration:durationMinutes,
+    notes:session.notes,
+    date:session.date,
+    startTime:session.startTime,
+    endTime,
+    detailed:true,
+    exercises:exercises.map(ex=>({
+      name:ex.name.trim(),
+      sets:ex.sets.map((s,i)=>({setNumber:i+1,reps:+s.reps||0,weightLbs:+s.weightLbs||0,completed:!!s.completed}))
+    })),
+    totalVolumeLbs,
+    createdAt:endTs
+  };
+
+  const key='strength:'+session.date;
+  const existing=storeGet(key)||[];
+  existing.unshift(sessionDoc);
+  storeSet(key,existing);
+
+  // Update library with new exercise names
+  exercises.forEach(ex=>addToLib(ex.name.trim()));
+
+  clearInterval(_timerInterval);
+  showConfirmation(sessionDoc,durationMinutes,totalVolumeLbs);
+  session.active=false;
+}
+
+// ═══════════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════════
+function startTimer(){
+  clearInterval(_timerInterval);
+  function tick(){
+    if(!session.startTs) return;
+    const elapsed=Math.floor((Date.now()-session.startTs)/1000);
+    const h=Math.floor(elapsed/3600),m=Math.floor((elapsed%3600)/60),s=elapsed%60;
+    const str=h>0?h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'):m+':'+String(s).padStart(2,'0');
+    const el=document.getElementById('footerTimer');
+    if(el) el.textContent=str;
+  }
+  tick();
+  _timerInterval=setInterval(tick,1000);
+}
+
+// ═══════════════════════════════════════════════
+// EXERCISE MANAGEMENT
+// ═══════════════════════════════════════════════
+function addExercise(){
+  session.exercises.push({name:'',sets:[{reps:'',weightLbs:'',completed:false}]});
+  renderExercises();
+  setTimeout(()=>{
+    const inputs=document.querySelectorAll('.ex-name-inp');
+    if(inputs.length) inputs[inputs.length-1].focus();
+  },60);
+}
+
+function addSet(exIdx){
+  const ex=session.exercises[exIdx];
+  const prev=ex.sets[ex.sets.length-1]||{reps:'',weightLbs:''};
+  ex.sets.push({reps:prev.reps,weightLbs:prev.weightLbs,completed:false});
+  renderExercises();
+  updateFooter();
+}
+
+function deleteSet(exIdx,setIdx){
+  session.exercises[exIdx].sets.splice(setIdx,1);
+  if(!session.exercises[exIdx].sets.length) session.exercises.splice(exIdx,1);
+  renderExercises();
+  updateFooter();
+}
+
+function deleteExercise(exIdx){
+  if(!confirm('Remove this exercise?')) return;
+  session.exercises.splice(exIdx,1);
+  renderExercises();
+  updateFooter();
+}
+
+function calcExVol(ex){
+  return ex.sets.reduce((t,s)=>s.completed?t+(+s.reps||0)*(+s.weightLbs||0):t,0);
+}
+
+// ═══════════════════════════════════════════════
+// RENDER EXERCISES
+// ═══════════════════════════════════════════════
+function renderExercises(){
+  const container=document.getElementById('exerciseList');
+  container.innerHTML='';
+
+  if(!session.exercises.length){
+    container.innerHTML='<div style="text-align:center;padding:20px 0;font-size:13px;color:var(--text-tertiary);">No exercises yet — tap <strong style="color:var(--text-secondary);">+ Add Exercise</strong> to begin.</div>';
+    return;
+  }
+
+  session.exercises.forEach((ex,exIdx)=>{
+    const vol=calcExVol(ex);
+    const card=document.createElement('div');
+    card.className='ex-card';
+    card.dataset.exIdx=exIdx;
+
+    card.innerHTML=`
+      <div class="ex-header">
+        <div class="ac-wrap">
+          <input class="ex-name-inp" type="text" placeholder="Exercise name…"
+            value="${escHtml(ex.name)}"
+            autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
+          <div class="ac-dropdown" id="ac-${exIdx}"></div>
+        </div>
+        <span class="ex-vol-label" id="ex-vol-${exIdx}">${vol>0?vol.toLocaleString()+' lbs':''}</span>
+        <button class="ex-del-btn" title="Remove exercise" aria-label="Remove exercise">✕</button>
+      </div>
+      <table class="sets-table">
+        <thead><tr>
+          <th class="left">Set</th>
+          <th>Reps</th>
+          <th>Weight (lbs)</th>
+          <th>Done</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="sets-${exIdx}"></tbody>
+      </table>
+      <button class="btn-ghost" style="font-size:11px;padding:7px 14px;" data-add-set="${exIdx}">+ Add Set</button>
+    `;
+
+    container.appendChild(card);
+
+    // Render set rows
+    const tbody=card.querySelector(`#sets-${exIdx}`);
+    ex.sets.forEach((set,sIdx)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td class="set-num-cell"><span class="set-num">Set ${sIdx+1}</span></td>
+        <td><input class="set-inp" type="number" inputmode="numeric" min="0" placeholder="10"
+          value="${set.reps!==''&&set.reps!=null?set.reps:''}"
+          data-ex="${exIdx}" data-set="${sIdx}" data-field="reps"></td>
+        <td><input class="set-inp" type="number" inputmode="decimal" min="0" step="2.5" placeholder="135"
+          value="${set.weightLbs!==''&&set.weightLbs!=null?set.weightLbs:''}"
+          data-ex="${exIdx}" data-set="${sIdx}" data-field="weightLbs"></td>
+        <td><input type="checkbox" class="set-done-cb" ${set.completed?'checked':''}
+          data-ex="${exIdx}" data-set="${sIdx}"></td>
+        <td><button class="set-del-btn" aria-label="Remove set"
+          data-del="${exIdx}-${sIdx}">×</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // ── Wire events ──
+
+    // Exercise name: autocomplete
+    const nameInp=card.querySelector('.ex-name-inp');
+    nameInp.addEventListener('focus',()=>{showAc(exIdx,nameInp.value);});
+    nameInp.addEventListener('input',e=>{
+      session.exercises[exIdx].name=e.target.value;
+      showAc(exIdx,e.target.value);
+    });
+    nameInp.addEventListener('keydown',e=>{
+      const dd=document.getElementById(`ac-${exIdx}`);
+      const items=dd?[...dd.querySelectorAll('.ac-item')]:[];
+      const focused=dd?dd.querySelector('.ac-item.focused'):null;
+      if(e.key==='ArrowDown'){
+        e.preventDefault();
+        const next=focused?focused.nextElementSibling:items[0];
+        if(next){focused&&focused.classList.remove('focused');next.classList.add('focused');}
+      } else if(e.key==='ArrowUp'){
+        e.preventDefault();
+        const prev=focused?focused.previousElementSibling:items[items.length-1];
+        if(prev){focused&&focused.classList.remove('focused');prev.classList.add('focused');}
+      } else if(e.key==='Enter'){
+        if(focused){e.preventDefault();selectAcItem(exIdx,focused.dataset.val);}
+      } else if(e.key==='Escape'){
+        closeAllAc();
+      }
+    });
+
+    // Delete exercise
+    card.querySelector('.ex-del-btn').addEventListener('click',()=>deleteExercise(exIdx));
+
+    // Add set
+    card.querySelector(`[data-add-set="${exIdx}"]`).addEventListener('click',()=>addSet(exIdx));
+
+    // Set inputs (reps / weight)
+    card.querySelectorAll('.set-inp').forEach(inp=>{
+      inp.addEventListener('input',e=>{
+        const ei=+e.target.dataset.ex,si=+e.target.dataset.set,f=e.target.dataset.field;
+        session.exercises[ei].sets[si][f]=e.target.value===''?'':+e.target.value;
+        updateExVol(ei);
+        updateFooter();
+      });
+    });
+
+    // Set checkboxes
+    card.querySelectorAll('.set-done-cb').forEach(cb=>{
+      cb.addEventListener('change',e=>{
+        const ei=+e.target.dataset.ex,si=+e.target.dataset.set;
+        session.exercises[ei].sets[si].completed=e.target.checked;
+        updateExVol(ei);
+        updateFooter();
+      });
+    });
+
+    // Delete set buttons
+    card.querySelectorAll('.set-del-btn').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        const[ei,si]=e.currentTarget.dataset.del.split('-').map(Number);
+        deleteSet(ei,si);
+      });
+    });
+  });
+
+  updateFooter();
+}
+
+// ═══════════════════════════════════════════════
+// AUTOCOMPLETE
+// ═══════════════════════════════════════════════
+function closeAllAc(){
+  document.querySelectorAll('.ac-dropdown').forEach(d=>d.classList.remove('open'));
+}
+
+function showAc(exIdx,query){
+  closeAllAc();
+  const dd=document.getElementById(`ac-${exIdx}`);
+  if(!dd) return;
+  const lib=getExLib();
+  const q=(query||'').toLowerCase().trim();
+  const matches=q?lib.filter(e=>e.toLowerCase().includes(q)).slice(0,8):lib.slice(0,8);
+  if(!matches.length){dd.classList.remove('open');return;}
+  dd.innerHTML=matches.map(m=>`<div class="ac-item" data-val="${escHtml(m)}">${escHtml(m)}</div>`).join('');
+  dd.querySelectorAll('.ac-item').forEach(item=>{
+    item.addEventListener('mousedown',e=>{
+      e.preventDefault();
+      selectAcItem(exIdx,item.dataset.val);
+    });
+  });
+  dd.classList.add('open');
+}
+
+function selectAcItem(exIdx,val){
+  session.exercises[exIdx].name=val;
+  closeAllAc();
+  renderExercises();
+  // Re-focus the add set button so user can proceed naturally
+  setTimeout(()=>{
+    const addSetBtn=document.querySelector(`[data-add-set="${exIdx}"]`);
+    if(addSetBtn) addSetBtn.focus();
+  },50);
+}
+
+// ═══════════════════════════════════════════════
+// LIVE VOLUME UPDATE (no full re-render)
+// ═══════════════════════════════════════════════
+function updateExVol(exIdx){
+  const vol=calcExVol(session.exercises[exIdx]);
+  const el=document.getElementById(`ex-vol-${exIdx}`);
+  if(el) el.textContent=vol>0?vol.toLocaleString()+' lbs':'';
+}
+
+// ═══════════════════════════════════════════════
+// FOOTER STATS
+// ═══════════════════════════════════════════════
+function updateFooter(){
+  let totalSets=0,totalVol=0;
+  const exCount=session.exercises.filter(e=>e.name.trim()).length;
+  session.exercises.forEach(ex=>{totalSets+=ex.sets.length;totalVol+=calcExVol(ex);});
+  const ec=document.getElementById('footerExCount');if(ec) ec.textContent=exCount;
+  const sc=document.getElementById('footerSetCount');if(sc) sc.textContent=totalSets;
+  const vc=document.getElementById('footerVolume');if(vc) vc.textContent=totalVol>0?totalVol.toLocaleString():'0';
+}
+
+// ═══════════════════════════════════════════════
+// CONFIRMATION
+// ═══════════════════════════════════════════════
+function showConfirmation(doc,durationMinutes,totalVolumeLbs){
+  document.getElementById('loggingPanel').style.display='none';
+  document.getElementById('stickyFooter').style.display='none';
+
+  document.getElementById('confirmSub').textContent=fmtDate(doc.date)+' · '+doc.startTime+'–'+doc.endTime;
+
+  const exCount=doc.exercises.length;
+  const totalSets=doc.exercises.reduce((t,e)=>t+e.sets.length,0);
+  document.getElementById('confirmStats').innerHTML=[
+    {val:durationMinutes+'m',lbl:'Duration'},
+    {val:exCount,lbl:'Exercises'},
+    {val:totalSets,lbl:'Sets'},
+    {val:totalVolumeLbs>0?totalVolumeLbs.toLocaleString()+'lbs':'—',lbl:'Volume'},
+  ].map(s=>`<div class="confirm-stat"><div class="confirm-stat-val">${s.val}</div><div class="confirm-stat-lbl">${s.lbl}</div></div>`).join('');
+
+  const top3=doc.exercises.slice(0,3);
+  const moreCount=doc.exercises.length-3;
+  document.getElementById('confirmExList').innerHTML=top3.map(ex=>{
+    const compSets=ex.sets.filter(s=>s.completed);
+    const vol=compSets.reduce((t,s)=>t+(s.reps||0)*(s.weightLbs||0),0);
+    return`<div class="confirm-ex-row">
+      <span>${escHtml(ex.name)}</span>
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">
+        ${ex.sets.length} set${ex.sets.length!==1?'s':''}${vol>0?' · '+vol.toLocaleString()+' lbs':''}
+      </span>
+    </div>`;
+  }).join('')+(moreCount>0?`<div class="confirm-ex-row" style="color:var(--text-tertiary);font-style:italic;">+${moreCount} more exercise${moreCount!==1?'s':''}</div>`:'');
+
+  document.getElementById('confirmPanel').style.display='';
+  loadPastSessions();
+}
+
+// ═══════════════════════════════════════════════
+// PAST SESSIONS
+// ═══════════════════════════════════════════════
+function loadPastSessions(){
+  const container=document.getElementById('pastSessionsList');
+  container.innerHTML='';
+
+  const allSessions=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(!k||!k.startsWith('strength:')||k==='strength:exerciseLibrary') continue;
+    const date=k.replace('strength:','');
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+    const arr=storeGet(k)||[];
+    arr.forEach((s,idx)=>allSessions.push({...s,_date:date,_key:k,_idx:idx}));
+  }
+
+  // Also pull from Firestore if local is sparse (cross-device)
+  if(_db&&allSessions.length===0){
+    _db.collection('store').orderBy('__name__').startAt('strength:2000').endAt('strength:2099').get()
+      .then(snap=>{
+        snap.forEach(doc=>{
+          const date=doc.id.replace('strength:','');
+          if(!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+          const arr=doc.data().v||[];
+          arr.forEach((s,idx)=>allSessions.push({...s,_date:date,_key:doc.id,_idx:idx}));
+        });
+        renderPastSessions(allSessions,container);
+      }).catch(()=>renderPastSessions(allSessions,container));
+  } else {
+    renderPastSessions(allSessions,container);
+  }
+}
+
+function renderPastSessions(allSessions,container){
+  allSessions.sort((a,b)=>{
+    if(b._date!==a._date) return b._date.localeCompare(a._date);
+    return(b.createdAt||0)-(a.createdAt||0);
+  });
+  const recent=allSessions.slice(0,10);
+
+  if(!recent.length){
+    container.innerHTML='<div class="past-empty">No sessions logged yet.</div>';
+    return;
+  }
+
+  recent.forEach((s,i)=>{
+    const isDetailed=s.detailed&&Array.isArray(s.exercises)&&s.exercises.length>0;
+    const card=document.createElement('div');
+    card.className='past-card';
+
+    const exCount=isDetailed?s.exercises.length:null;
+    const vol=s.totalVolumeLbs&&s.totalVolumeLbs>0?s.totalVolumeLbs.toLocaleString()+' lbs':null;
+
+    card.innerHTML=`
+      <div class="past-card-hdr">
+        <span class="past-card-icon">🏋️</span>
+        <span class="past-card-date">${fmtDate(s._date||s.date)}</span>
+        <div class="past-card-meta">
+          ${s.duration?s.duration+' min':''}
+          ${exCount!=null?'<br>'+exCount+' ex':''}
+          ${vol?'<br>'+vol:''}
+        </div>
+        ${isDetailed?'<span class="expand-chevron" id="chev-'+i+'">▾</span>':''}
+      </div>
+      ${isDetailed?`<div class="past-expand" id="past-expand-${i}">
+        ${s.exercises.map(ex=>{
+          const compSets=ex.sets.filter(st=>st.completed);
+          const detail=compSets.length
+            ?compSets.map(st=>(st.reps||0)+'×'+(st.weightLbs||0)+'lbs').join(', ')
+            :ex.sets.length+' set'+(ex.sets.length!==1?'s':'');
+          return`<div class="past-ex-row">
+            <div class="past-ex-name">${escHtml(ex.name)}</div>
+            <div class="past-ex-detail">${detail}</div>
+          </div>`;
+        }).join('')}
+        ${s.notes?`<div class="past-notes">${escHtml(s.notes)}</div>`:''}
+      </div>`:''}
+    `;
+
+    if(isDetailed){
+      card.addEventListener('click',()=>{
+        const exp=document.getElementById(`past-expand-${i}`);
+        const chev=document.getElementById(`chev-${i}`);
+        if(exp) exp.classList.toggle('open');
+        if(chev) chev.classList.toggle('open');
+      });
+    }
+
+    container.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
