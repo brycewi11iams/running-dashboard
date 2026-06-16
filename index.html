@@ -2554,6 +2554,7 @@ document.getElementById('logRunBtn').addEventListener('click',()=>{
     hr:rest?null:hr,effort:rest?null:effort,notes,rest,shoeId:rest?null:shoeId,
     temp:rest?null:temp,humidity:rest?null:humidity,runType:rest?null:runType,elev:rest?null:elev});
   storeSet('runs:'+today,runs);
+  if(!rest&&dur) _fetchWeatherAtMidpoint(dur,today); // cache weather at run midpoint
   ['runDist','runDur','runHR','runEffort','runNotes','runTemp','runHumidity'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('runType').value='';
   document.getElementById('runRest').checked=false;
@@ -3257,6 +3258,44 @@ function markAutoFilled(inp){
 
 // Fetch on page load so fields are pre-filled before user touches the form
 fetchAndFillWeather();
+
+// Fetch hourly weather at the midpoint of a run (now − dur/2) and update the cache.
+// Called right after a run is saved so the inline edit row gets the correct conditions.
+async function _fetchWeatherAtMidpoint(durStr, date){
+  if(!durStr) return;
+  const parts=durStr.split(':').map(Number);
+  let durMins=0;
+  if(parts.length===3) durMins=parts[0]*60+parts[1]+parts[2]/60;
+  else if(parts.length===2) durMins=parts[0]+parts[1]/60;
+  if(!durMins) return;
+
+  // Midpoint timestamp: we just finished the run, so now ≈ end time
+  const midMs=Date.now()-Math.round((durMins/2)*60000);
+  const midDate=new Date(midMs);
+  // Round to nearest hour for the hourly slot lookup
+  const midHour=midDate.getHours()+(midDate.getMinutes()>=30?1:0);
+
+  const runs=storeGet('runs:'+date)||[];
+  const rc=runs.find(r=>r.lat!=null&&r.lon!=null);
+  const lat=rc?rc.lat:29.667;
+  const lon=rc?rc.lon:-98.500;
+
+  try{
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m&temperature_unit=fahrenheit&timezone=auto&start_date=${date}&end_date=${date}`;
+    const res=await fetch(url);
+    if(!res.ok) return;
+    const data=await res.json();
+    const times=data?.hourly?.time||[];
+    const temps=data?.hourly?.temperature_2m||[];
+    const hums=data?.hourly?.relative_humidity_2m||[];
+    // Find the hourly slot at or just after the midpoint hour
+    let idx=times.findIndex(t=>parseInt((t.split('T')[1]||'').split(':')[0])>=midHour);
+    if(idx===-1) idx=times.length-1;
+    const temp=temps[idx]!=null?Math.round(temps[idx]):null;
+    const humidity=hums[idx]!=null?Math.round(hums[idx]):null;
+    if(temp!=null||humidity!=null) storeSet('weather_auto:'+date,{temp,humidity},0);
+  }catch(e){}
+}
 
 // ═══════════════════════════════════════════════
 // HYDRATION CARD
