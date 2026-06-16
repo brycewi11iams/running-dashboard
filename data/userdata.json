@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-16T08:20:19.166Z",
+  "lastUpdated": "2026-06-16T17:16:35.473Z",
   "data": {
     "elyte:2026-06-01": 1,
     "daytype:2026-06-07": "hard",
@@ -1155,7 +1155,62 @@
       "fatigue": 3
     },
     "elyte:2026-06-15": 2,
-    "vitamin:2026-06-15": "took"
+    "vitamin:2026-06-15": "took",
+    "health:2026-06-16": {
+      "rhr": 46,
+      "hrv": 125,
+      "sleep": 7,
+      "sleepScore": 28,
+      "hrvBaseline": 98
+    },
+    "daytype:2026-06-16": "moderate",
+    "runs:2026-06-16": [
+      {
+        "dist": 11,
+        "dur": "1:27:50",
+        "pace": "7:59 /mi",
+        "hr": 147,
+        "elev": 617,
+        "rest": false,
+        "date": "2026-06-16",
+        "runType": null,
+        "effort": null,
+        "shoeId": null,
+        "notes": "",
+        "temp": 80,
+        "humidity": 81
+      }
+    ],
+    "goals:2026-06-16": [
+      {
+        "text": "Foot + back pt",
+        "done": false
+      },
+      {
+        "text": "Retainer",
+        "done": false
+      },
+      {
+        "text": "Download albums",
+        "done": false
+      },
+      {
+        "text": "Intern video",
+        "done": false
+      },
+      {
+        "text": "Lift site",
+        "done": false
+      },
+      {
+        "text": "Charge watch",
+        "done": false
+      },
+      {
+        "text": "But work pants + polos",
+        "done": false
+      }
+    ]
   },
   "timestamps": {
     "elyte:2026-06-01": 1781175013932,
@@ -1333,7 +1388,11 @@
     "runs:2026-06-15": 1781520852680,
     "health:2026-06-15": 1781566035944,
     "elyte:2026-06-15": 1781563549215,
-    "vitamin:2026-06-15": 1781566039437
+    "vitamin:2026-06-15": 1781566039437,
+    "health:2026-06-16": 1781630195472,
+    "daytype:2026-06-16": 1781630190372,
+    "runs:2026-06-16": 1781630192431,
+    "goals:2026-06-16": 1781630195472
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
