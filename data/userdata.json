@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-16T23:51:13.316Z",
+  "lastUpdated": "2026-06-17T13:26:39.209Z",
   "data": {
     "elyte:2026-06-01": 1,
     "daytype:2026-06-07": "hard",
@@ -1208,7 +1208,38 @@
         "done": false
       }
     ],
-    "elyte:2026-06-16": 1
+    "elyte:2026-06-16": 1,
+    "goals:2026-06-17": [
+      {
+        "text": "Foot + back pt",
+        "done": false
+      },
+      {
+        "text": "Retainer",
+        "done": false
+      },
+      {
+        "text": "Charge watch",
+        "done": false
+      },
+      {
+        "text": "But work pants + polos",
+        "done": false
+      },
+      {
+        "text": "Intern video",
+        "done": false
+      },
+      {
+        "text": "Download albums",
+        "done": false
+      },
+      {
+        "text": "Lift site",
+        "done": false
+      }
+    ],
+    "daytype:2026-06-17": "moderate"
   },
   "timestamps": {
     "elyte:2026-06-01": 1781175013932,
@@ -1391,7 +1422,9 @@
     "daytype:2026-06-16": 1781630621595,
     "runs:2026-06-16": 1781630412649,
     "goals:2026-06-16": 1781647314042,
-    "elyte:2026-06-16": 1781630445808
+    "elyte:2026-06-16": 1781630445808,
+    "goals:2026-06-17": 1781702799208,
+    "daytype:2026-06-17": 1781702796181
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
