@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-18T15:14:44.153Z",
+  "lastUpdated": "2026-06-18T15:15:07.009Z",
   "data": {
     "elyte:2026-06-01": 1,
     "daytype:2026-06-07": "hard",
@@ -1307,8 +1307,14 @@
       "sleepScore": 47,
       "hrvBaseline": 100,
       "soreness": 1,
-      "fatigue": 3
-    }
+      "fatigue": 3,
+      "soreLocs": [
+        "Left Foot",
+        "Other"
+      ],
+      "sleepQuality": 1
+    },
+    "iron:2026-06-18": "took"
   },
   "timestamps": {
     "elyte:2026-06-01": 1781175013932,
@@ -1500,7 +1506,8 @@
     "goals:2026-06-18": 1781780543408,
     "daytype:2026-06-18": 1781795640841,
     "runs:2026-06-18": 1781795665391,
-    "health:2026-06-18": 1781795678883
+    "health:2026-06-18": 1781795701771,
+    "iron:2026-06-18": 1781795699570
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
