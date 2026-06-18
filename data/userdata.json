@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-18T11:02:23.409Z",
+  "lastUpdated": "2026-06-18T11:03:23.977Z",
   "data": {
     "elyte:2026-06-01": 1,
     "daytype:2026-06-07": "hard",
@@ -1282,7 +1282,31 @@
         "done": false
       }
     ],
-    "daytype:2026-06-18": "moderate"
+    "daytype:2026-06-18": "moderate",
+    "runs:2026-06-18": [
+      {
+        "dist": 10,
+        "dur": "1:19:32",
+        "pace": "7:57 /mi",
+        "hr": 156,
+        "elev": 614,
+        "rest": false,
+        "date": "2026-06-18",
+        "runType": null,
+        "effort": null,
+        "shoeId": null,
+        "notes": "",
+        "temp": 76,
+        "humidity": 97
+      }
+    ],
+    "health:2026-06-18": {
+      "rhr": 50,
+      "hrv": 114,
+      "sleep": 5.32,
+      "sleepScore": 47,
+      "hrvBaseline": 100
+    }
   },
   "timestamps": {
     "elyte:2026-06-01": 1781175013932,
@@ -1472,7 +1496,9 @@
     "iron:2026-06-17": 1781740941730,
     "vitamin:2026-06-17": 1781740940412,
     "goals:2026-06-18": 1781780543408,
-    "daytype:2026-06-18": 1781780541002
+    "daytype:2026-06-18": 1781780541002,
+    "runs:2026-06-18": 1781780600593,
+    "health:2026-06-18": 1781780603976
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
