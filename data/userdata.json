@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T20:50:21.780Z",
+  "lastUpdated": "2026-06-28T21:35:07.947Z",
   "data": {
     "elyte:2026-06-01": 1,
     "daytype:2026-06-07": "hard",
@@ -1468,7 +1468,168 @@
         "done": false
       }
     ],
-    "daytype:2026-06-28": "moderate"
+    "daytype:2026-06-28": "moderate",
+    "runs:2026-06-24": [
+      {
+        "dist": 6,
+        "dur": "47:00",
+        "pace": "7:50 /mi",
+        "hr": 141,
+        "rest": false,
+        "date": "2026-06-24"
+      }
+    ],
+    "xt:2026-06-23": [
+      {
+        "type": "Elliptical",
+        "duration": 38,
+        "effort": "easy",
+        "hr": 136
+      }
+    ],
+    "health:2026-06-22": {
+      "rhr": 52,
+      "hrv": 90,
+      "sleep": 7.9,
+      "sleepScore": 86
+    },
+    "health:2026-06-27": {
+      "rhr": 50,
+      "hrv": 95,
+      "sleep": 9.05,
+      "sleepScore": 83
+    },
+    "runs:2026-06-25": [
+      {
+        "dist": 7.5,
+        "dur": "59:00",
+        "pace": "7:52 /mi",
+        "hr": 140,
+        "rest": false,
+        "date": "2026-06-25",
+        "runType": null,
+        "effort": null,
+        "shoeId": null,
+        "notes": "",
+        "temp": 80,
+        "humidity": 80
+      }
+    ],
+    "runs:2026-06-19": [
+      {
+        "dist": 12,
+        "dur": "1:36:13",
+        "pace": "8:01 /mi",
+        "hr": 155,
+        "rest": false,
+        "date": "2026-06-19",
+        "elev": 564
+      }
+    ],
+    "health:2026-06-20": {
+      "rhr": 50,
+      "hrv": 105,
+      "sleep": 9.25,
+      "sleepScore": 76
+    },
+    "runs:2026-06-21": [
+      {
+        "dist": 15,
+        "dur": "1:50:23",
+        "pace": "7:20 /mi",
+        "hr": 151,
+        "rest": false,
+        "date": "2026-06-21",
+        "elev": 312
+      }
+    ],
+    "health:2026-06-23": {
+      "rhr": 50,
+      "hrv": 107,
+      "sleep": 8.27,
+      "sleepScore": 89
+    },
+    "runs:2026-06-27": [
+      {
+        "dist": 6.5,
+        "dur": "52:24",
+        "pace": "8:03 /mi",
+        "hr": 141,
+        "rest": false,
+        "date": "2026-06-27",
+        "elev": 161,
+        "runType": null,
+        "effort": null,
+        "shoeId": null,
+        "notes": "",
+        "temp": 86,
+        "humidity": 65
+      }
+    ],
+    "health:2026-06-21": {
+      "rhr": 50,
+      "hrv": 107,
+      "sleep": 7.82,
+      "sleepScore": 98
+    },
+    "runs:2026-06-20": [
+      {
+        "dist": 7,
+        "dur": "55:47",
+        "pace": "7:58 /mi",
+        "hr": 142,
+        "rest": false,
+        "date": "2026-06-20",
+        "elev": 203
+      }
+    ],
+    "health:2026-06-28": {
+      "rhr": 51,
+      "hrv": 108,
+      "sleep": 7.97,
+      "sleepScore": 79
+    },
+    "health:2026-06-19": {},
+    "health:2026-06-24": {
+      "rhr": 54,
+      "hrv": 84,
+      "sleep": 7.78,
+      "sleepScore": 69
+    },
+    "runs:2026-06-26": [
+      {
+        "dist": 10,
+        "dur": "1:19:19",
+        "pace": "7:56 /mi",
+        "hr": 147,
+        "rest": false,
+        "date": "2026-06-26",
+        "elev": 407,
+        "runType": null,
+        "effort": null,
+        "shoeId": null,
+        "notes": "",
+        "temp": 74,
+        "humidity": 93
+      }
+    ],
+    "runs:2026-06-28": [
+      {
+        "dist": 12,
+        "dur": "1:23:21",
+        "pace": "6:57 /mi",
+        "hr": 161,
+        "rest": false,
+        "date": "2026-06-28",
+        "elev": 249,
+        "runType": null,
+        "effort": null,
+        "shoeId": null,
+        "notes": "",
+        "temp": 91,
+        "humidity": 53
+      }
+    ]
   },
   "timestamps": {
     "elyte:2026-06-01": 1781175013932,
@@ -1675,7 +1836,24 @@
     "goals:2026-06-27": 1782579716841,
     "daytype:2026-06-27": 1782579714266,
     "goals:2026-06-28": 1782679821780,
-    "daytype:2026-06-28": 1782679795419
+    "daytype:2026-06-28": 1782679795419,
+    "runs:2026-06-24": 1782682507946,
+    "xt:2026-06-23": 1782682507946,
+    "health:2026-06-22": 1782682507946,
+    "health:2026-06-27": 1782682507946,
+    "runs:2026-06-25": 1782682506563,
+    "runs:2026-06-19": 1782682507946,
+    "health:2026-06-20": 1782682507946,
+    "runs:2026-06-21": 1782682507946,
+    "health:2026-06-23": 1782682507946,
+    "runs:2026-06-27": 1782682506559,
+    "health:2026-06-21": 1782682507946,
+    "runs:2026-06-20": 1782682507946,
+    "health:2026-06-28": 1782682507946,
+    "health:2026-06-19": 1782682507946,
+    "health:2026-06-24": 1782682507946,
+    "runs:2026-06-26": 1782682506561,
+    "runs:2026-06-28": 1782682505230
   },
   "_pwHash": "e146017db3c72af4482184b0a1e462cabbd2755e0553a9369397dd88af68b334"
 }
